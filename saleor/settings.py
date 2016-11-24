@@ -149,6 +149,7 @@ INSTALLED_APPS = [
     'saleor.cart',
     'saleor.checkout',
     'saleor.core',
+    'saleor.graphql',
     'saleor.order',
     'saleor.dashboard',
     'saleor.shipping',
@@ -160,6 +161,7 @@ INSTALLED_APPS = [
     'django_prices',
     'django_prices_openexchangerates',
     'emailit',
+    'graphene_django',
     'mptt',
     'payments',
     'selectable',
@@ -318,3 +320,12 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_USERNAME_REQUIRED = False
 SOCIALACCOUNT_EMAIL_VERIFICATION = False
 ACCOUNT_LOGOUT_ON_GET = True
+
+
+GRAPHENE = {
+    'SCHEMA': 'saleor.graphql.schema.schema',
+    'MIDDLEWARE': [
+        'graphene_django.debug.DjangoDebugMiddleware'
+    ]
+}
+
