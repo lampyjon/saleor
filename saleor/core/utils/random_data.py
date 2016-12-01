@@ -11,8 +11,9 @@ from faker.providers import BaseProvider
 from prices import Price
 
 from ...order.models import DeliveryGroup, Order, OrderedItem, Payment
-from ...product.models import (Category, Product, ProductClass, ProductImage,
-                               ProductVariant, Stock, StockLocation)
+from ...product.models import (Category, Product, ProductAttribute,
+                               ProductClass, ProductImage, ProductVariant,
+                               Stock, StockLocation)
 from ...shipping.models import ANY_COUNTRY, ShippingMethod
 from ...userprofile.models import Address, User
 
@@ -102,7 +103,23 @@ def create_product_images(product, how_many, placeholder_dir):
         create_product_image(product, placeholder_dir)
 
 
+def create_attributes():
+    color_attr = ProductAttribute.objects.get_or_create(
+        name="color", display="Color")[0]
+    size_attr = ProductAttribute.objects.get_or_create(
+        name="size", display="Size")[0]
+    if not color_attr.values.exists():
+        color_attr.values.create(display="red")
+        color_attr.values.create(display="green")
+        color_attr.values.create(display="blue")
+    if not size_attr.values.exists():
+        size_attr.values.create(display="S")
+        size_attr.values.create(display="M")
+        size_attr.values.create(display="L")
+
+
 def create_items(placeholder_dir, how_many=10, create_images=True):
+    create_attributes()
     default_category = get_or_create_category('Default')
     default_product_class = get_or_create_product_class('Default')
 
