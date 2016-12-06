@@ -6,12 +6,12 @@ $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
 }
 
 .navbar {
-	margin-bottom: $grid-gutter-width;
+  margin-bottom: $grid-gutter-width;
 }
 
 .price {
-	&.undiscounted {
-		position: relative;
+  &.undiscounted {
+    position: relative;
     &:before {
       border-top: 1px solid;
       border-color: inherit;
@@ -22,13 +22,13 @@ $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
       top: 50%;
       transform: rotate(-5deg);
     }
-	}
+  }
 }
 
 .address-details {
-	border-bottom: 1px dashed;
-	color: #3a87ad;
-	cursor: pointer;
+  border-bottom: 1px dashed;
+  color: #3a87ad;
+  cursor: pointer;
 }
 
 .i18n-address {
@@ -45,55 +45,55 @@ $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
 }
 
 .popover {
-	min-width: 200px;
+  min-width: 200px;
 }
 
 .product-list-item-name {
-	display: block;
-	margin-top: $grid-gutter-width/4;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+  display: block;
+  margin-top: $grid-gutter-width/4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .product-gallery {
-	margin-top: $grid-gutter-width;
+  margin-top: $grid-gutter-width;
 }
 
 .product-related {
-	.active {
-		border: 1px solid $btn-primary-border;
-		box-shadow: 0 0 5px $btn-primary-border;
-	}
+  .active {
+    border: 1px solid $btn-primary-border;
+    box-shadow: 0 0 5px $btn-primary-border;
+  }
 }
 
 .product-form {
-	.btn-group {
-		display: block;
-		overflow: hidden;
-	}
+  .btn-group {
+    display: block;
+    overflow: hidden;
+  }
 }
 
 .breadcrumb {
-	> li+li {
-		&:before {
-			content: '/';
-		}
-	}
+  > li+li {
+    &:before {
+      content: '/';
+    }
+  }
 }
 
 .nav {
-	> li {
-		> a {
-			@extend .text-info;
-		}
+  > li {
+    > a {
+      @extend .text-info;
+    }
 
-		&.active {
-			> a, a:hover {
-				background-color: $brand-info;
-			}
-		}
-	}
+    &.active {
+      > a, a:hover {
+        background-color: $brand-info;
+      }
+    }
+  }
 }
 
 .product-filters {
@@ -121,25 +121,25 @@ $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
 }
 
 .page-header {
-	&--order {
-		margin-top: $grid-gutter-width/3;
-	}
+  &--order {
+    margin-top: $grid-gutter-width/3;
+  }
 }
 
 .js {
-	.js-hidden {
-		display: none;
-	}
+  .js-hidden {
+    display: none;
+  }
 }
 
 .nav-pills {
-	&.nav-wizard {
+  &.nav-wizard {
     display: table;
     a {
       position: relative;
-			overflow: visible;
-			border-right: 15px solid $body-bg;
-			border-left: 15px solid $body-bg;
+      overflow: visible;
+      border-right: 15px solid $body-bg;
+      border-left: 15px solid $body-bg;
       display: block;
       width: 100%;
       padding-top: 10px;
@@ -206,5 +206,5 @@ $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
         background-color: $nav-pills-active-link-hover-bg;
         color: $nav-pills-active-link-hover-color;
     }
-	}
+  }
 }
