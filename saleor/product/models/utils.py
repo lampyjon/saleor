@@ -9,5 +9,5 @@ def get_attributes_display_map(variant, attributes):
             if choice_obj:
                 display_map[attribute.pk] = choice_obj
             else:
-                display_map[attribute.pk] = value
+                display_map[attribute.pk] = value_pk
     return display_map
