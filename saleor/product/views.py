@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import datetime
+import json
 
 from django.conf import settings
 from django.http import HttpResponsePermanentRedirect
@@ -12,7 +13,8 @@ from ..core.utils import get_paginator_items
 from .forms import get_form_class_for_product
 from .models import Category
 from .utils import (products_with_details, get_availability,
-                    products_with_availability, get_product_images)
+                    products_with_availability, get_product_images,
+                    get_variant_picker_data)
 
 
 def product_details(request, slug, product_id):
@@ -52,15 +54,15 @@ def product_details(request, slug, product_id):
     today = datetime.date.today()
     is_visible = (
         product.available_on is None or product.available_on <= today)
-    form_class = get_form_class_for_product(product)
-    cart = get_cart_from_request(request)
+    # form_class = get_form_class_for_product(product)
+    # cart = get_cart_from_request(request)
 
     # add to cart handling
-    form = form_class(cart=cart, product=product,
-                      data=request.POST or None)
-    if form.is_valid():
-        form.save()
-        return redirect('cart:index')
+    # form = form_class(cart=cart, product=product,
+    #                   data=request.POST or None)
+    # if form.is_valid():
+    #     form.save()
+    #     return redirect('cart:index')
 
     availability = get_availability(product, discounts=request.discounts,
                                     local_currency=request.currency)
@@ -69,14 +71,16 @@ def product_details(request, slug, product_id):
         type(product).__name__.lower(),)
     templates = [template_name, 'product/details.html']
     product_images = get_product_images(product)
+    variant_picker_data = get_variant_picker_data(product.variants.all())
     return TemplateResponse(
         request, templates,
         {
             'availability': availability,
             'product_images': product_images,
-            'form': form,
+            # 'form': form,
             'is_visible': is_visible,
-            'product': product})
+            'product': product,
+            'variant_picker_data': json.dumps(variant_picker_data)})
 
 
 def category_index(request, path, category_id):

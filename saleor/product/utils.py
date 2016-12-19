@@ -1,7 +1,8 @@
 from collections import namedtuple
 
 from ..core.utils import to_local_currency
-from .models import Product
+from .models.utils import get_attributes_display_map
+from .models import Product, ProductAttribute
 
 
 def products_visible_to_user(user):
@@ -73,3 +74,26 @@ def get_availability(product, discounts=None, local_currency=None):
         discount=discount,
         price_range_local_currency=price_range_local,
         discount_local_currency=discount_local_currency)
+
+
+def get_variant_picker_data(variants):
+    attributes = ProductAttribute.objects.prefetch_related('values')
+    data = {'attributes': [], 'variants': []}
+    for attribute in attributes:
+        data['attributes'].append({
+            'pk': attribute.pk,
+            'display': attribute.display,
+            'name': attribute.name,
+            'values': [{'pk': value.pk, 'display': value.display}
+                       for value in attribute.values.all()]
+        })
+    for variant in variants:
+        price = variant.get_price_per_item()
+        variant_data = {
+            'id': variant.id,
+            'price': float(price.gross),
+            'currency': price.currency,
+            'attributes': variant.attributes
+        }
+        data['variants'].append(variant_data)
+    return data
