@@ -76,8 +76,7 @@ def get_availability(product, discounts=None, local_currency=None):
         discount_local_currency=discount_local_currency)
 
 
-def get_variant_picker_data(variants):
-    attributes = ProductAttribute.objects.prefetch_related('values')
+def get_variant_picker_data(variants, attributes):
     data = {'attributes': [], 'variants': []}
     for attribute in attributes:
         data['attributes'].append({

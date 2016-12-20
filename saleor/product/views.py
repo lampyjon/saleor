@@ -71,7 +71,9 @@ def product_details(request, slug, product_id):
         type(product).__name__.lower(),)
     templates = [template_name, 'product/details.html']
     product_images = get_product_images(product)
-    variant_picker_data = get_variant_picker_data(product.variants.all())
+    variant_picker_data = get_variant_picker_data(
+        product.variants.all(),
+        product.product_class.variant_attributes.prefetch_related('values'))
     return TemplateResponse(
         request, templates,
         {
