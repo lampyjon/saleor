@@ -54,15 +54,15 @@ def product_details(request, slug, product_id):
     today = datetime.date.today()
     is_visible = (
         product.available_on is None or product.available_on <= today)
-    # form_class = get_form_class_for_product(product)
-    # cart = get_cart_from_request(request)
+    form_class = get_form_class_for_product(product)
+    cart = get_cart_from_request(request)
 
     # add to cart handling
-    # form = form_class(cart=cart, product=product,
-    #                   data=request.POST or None)
-    # if form.is_valid():
-    #     form.save()
-    #     return redirect('cart:index')
+    form = form_class(cart=cart, product=product,
+                      data=request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('cart:index')
 
     availability = get_availability(product, discounts=request.discounts,
                                     local_currency=request.currency)
@@ -79,7 +79,7 @@ def product_details(request, slug, product_id):
         {
             'availability': availability,
             'product_images': product_images,
-            # 'form': form,
+            'form': form,
             'is_visible': is_visible,
             'product': product,
             'variant_picker_data': json.dumps(variant_picker_data)})
