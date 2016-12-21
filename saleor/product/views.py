@@ -14,7 +14,7 @@ from .forms import get_form_class_for_product
 from .models import Category
 from .utils import (products_with_details, get_availability,
                     products_with_availability, get_product_images,
-                    get_variant_picker_data)
+                    get_variant_picker_data, get_product_attributes_data)
 
 
 def product_details(request, slug, product_id):
@@ -74,6 +74,7 @@ def product_details(request, slug, product_id):
     variant_picker_data = get_variant_picker_data(
         product.variants.all(),
         product.product_class.variant_attributes.prefetch_related('values'))
+    product_attributes = get_product_attributes_data(product)
     return TemplateResponse(
         request, templates,
         {
@@ -82,6 +83,7 @@ def product_details(request, slug, product_id):
             'form': form,
             'is_visible': is_visible,
             'product': product,
+            'product_attributes': product_attributes,
             'variant_picker_data': json.dumps(variant_picker_data)})
 
 
