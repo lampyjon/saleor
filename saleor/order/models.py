@@ -84,6 +84,8 @@ class Order(models.Model, ItemSet, index.Indexed):
         blank=True, null=True)
     discount_name = models.CharField(max_length=255, default='', blank=True)
 
+    comment = models.TextField(pgettext_lazy('Order field', 'comment'), default='', blank=True, null=True)
+
     objects = OrderManager()
 
     search_fields = [
@@ -213,6 +215,25 @@ class Order(models.Model, ItemSet, index.Indexed):
     def can_cancel(self):
         return self.status not in {Status.CANCELLED, Status.SHIPPED}
 
+    def get_balance(self):
+	# Jon: adding this based on code in dashboard/orders/views.py - no idea why not on model
+        #    payment = order.payments.last()
+	#    captured = preauthorized = Price(0, currency=order.get_total().currency)
+	#    balance = captured - order.get_total()
+    	#    if payment:
+    	#  	 if payment.status == 'confirmed':
+        #             captured = payment.get_captured_price()
+        #             balance = captured - order.get_total()
+	payment = self.payments.last()
+	captured = Price(0, currency=self.get_total().currency)
+	balance = captured - self.get_total()
+	if payment:
+		if payment.status == 'confirmed':
+			captured = payment.get_captured_price()
+			balance = captured - self.get_total()
+
+	return balance
+
 
 class DeliveryGroup(models.Model, ItemSet):
     status = models.CharField(
@@ -262,11 +283,12 @@ class DeliveryGroup(models.Model, ItemSet):
                 product=product_variant.product,
                 quantity=quantity,
                 unit_price_net=price.net,
-                product_name=smart_text(product_variant),
+		product_name=smart_text(product_variant.product) + " - " + smart_text(product_variant.display_variant()),	# Use same format as cart (index.html) - {{ line.variant.product }} - {{ line.variant.display_variant }}
                 product_sku=product_variant.sku,
                 unit_price_gross=price.gross,
                 stock=stock,
-                stock_location=stock.location.name if stock else None)
+                stock_location=stock.location.name if stock else None,
+		future_shipping=product_variant.future_shipping)
             if stock:
                 # allocate quantity to avoid overselling
                 Stock.objects.allocate_stock(stock, quantity)
@@ -344,6 +366,9 @@ class OrderedItem(models.Model, ItemLine):
         pgettext_lazy('OrderedItem field', 'unit price (gross)'),
         max_digits=12, decimal_places=4)
 
+    future_shipping = models.BooleanField(pgettext_lazy('OrderedItem field', 'future shipping'), default=False)   # Jon patch
+
+
     objects = OrderedItemManager()
 
     def get_price_per_item(self, **kwargs):
@@ -392,10 +417,14 @@ class Payment(BasePayment):
         email = self.order.get_user_current_email()
         order_url = build_absolute_uri(
             reverse('order:details', kwargs={'token': self.order.token}))
-        context = {'order_url': order_url}
+        context = {'order_url': order_url, 'order':self.order}
         emailit.api.send_mail(
             email, context, 'order/payment/emails/confirm_email',
             from_email=settings.ORDER_FROM_EMAIL)
+
+	emailit.api.mail_managers(context, 'order/payment/emails/confirm_email',
+	    from_email=settings.ORDER_FROM_EMAIL)		# So tara gets a copy of the order - could do better here!!!
+
 
     def get_purchased_items(self):
         items = [PurchasedItem(

@@ -12,7 +12,7 @@ from . import forms
 from ...core.utils import get_paginator_items
 from ...product.models import (Product, ProductAttribute, ProductClass,
                                ProductImage, ProductVariant, Stock,
-                               StockLocation)
+                               StockLocation, FeaturedProduct)
 from ..views import staff_member_required
 
 
@@ -416,3 +416,52 @@ def stock_location_delete(request, location_pk):
     return TemplateResponse(
         request, 'dashboard/product/stock_locations/modal_confirm_delete.html',
         ctx)
+
+
+
+@staff_member_required
+def featured_product_list(request):
+    featured_products = FeaturedProduct.objects.all()
+    form = forms.FeaturedProductForm(request.POST or None)
+    if form.is_valid():
+	featured_product = form.save()
+	messages.success(request, "Added a new featured product")
+
+    ctx = {'featured_products':featured_products, 'form':form}
+    return TemplateResponse(request, 'dashboard/product/featured_product_list.html', ctx)
+
+
+@staff_member_required
+def featured_product_update(request):
+    for key, value in request.POST.items():
+  #  	print(key, value)
+        if key.startswith("fi"):
+#	    print "key matches = " + str(key)
+	    fi_id = int(key[2:])
+            
+	    fi = FeaturedProduct.objects.get(pk=fi_id)
+	    fi.display_order = value
+	    fi.save()
+    messages.success(request, "Updated the display order for Featured Products")
+    return redirect('dashboard:featured-products')
+	
+    
+
+@staff_member_required
+def featured_product_delete(request, pk):
+    fp = get_object_or_404(FeaturedProduct, pk=pk)
+    fp.delete()
+    
+    messages.success(request, "Removed a Featured Product")
+    return redirect('dashboard:featured-products')
+
+  
+
+
+@staff_member_required
+def view_allocations(request):
+	# table view of all stock allocations in open orders
+	stock_items = Stock.objects.filter(quantity_allocated__gt=0).order_by('location')
+	ctx = {'items':stock_items}
+	return TemplateResponse(request, 'dashboard/product/view_allocations.html', ctx)
+

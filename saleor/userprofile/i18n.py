@@ -54,7 +54,7 @@ class AddressForm(forms.ModelForm):
     AUTOCOMPLETE_MAPPING = (
         ('first_name', 'given-name'),
         ('last_name', 'family-name'),
-        ('company_name', 'organization'),
+#        ('company_name', 'organization'),
         ('street_address_1', 'address-line1'),
         ('street_address_2', 'address-line2'),
         ('city', 'address-level2'),
@@ -91,7 +91,7 @@ class CountryAwareAddressForm(AddressForm):
         ('street_address', ['street_address_1', 'street_address_2']),
         ('city_area', ['city_area']),
         ('country_area', ['country_area']),
-        ('company_name', ['company_name']),
+#        ('company_name', ['company_name']),
         ('postal_code', ['postal_code']),
         ('city', ['city']),
         ('sorting_code', []),
@@ -146,7 +146,8 @@ def get_form_i18n_lines(form_instance):
 
     def _convert_to_bound_fields(form, i18n_field_names):
         bound_fields = []
-        for field_name in i18n_field_names:
+        for field_name in i18n_field_names:		# jon patch to get rid of this pesky field
+          if field_name != u'company_name': 
             local_fields = field_mapping[field_name]
             for local_name in local_fields:
                 local_field = form_instance.fields[local_name]

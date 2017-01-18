@@ -69,4 +69,15 @@ urlpatterns = [
         name='product-stock-location-edit'),
     url(r'stocklocations/(?P<location_pk>[0-9]+)/delete/$',
         views.stock_location_delete, name='product-stock-location-delete'),
+
+
+### Jon's additions
+    url(r'^featured/$', views.featured_product_list, name='featured-products'),
+    url(r'^featured/update/$',
+        views.featured_product_update, name='update-featured-products'),
+
+    url(r'^featured/(?P<pk>[0-9]+)/delete/$',
+        views.featured_product_delete, name='delete-featured-product'),
+
+    url(r'^view-allocations/$', views.view_allocations, name='view-allocations'),
 ]

@@ -33,14 +33,14 @@ class AddressManager(models.Manager):
 @python_2_unicode_compatible
 class Address(models.Model):
     first_name = models.CharField(
-        pgettext_lazy('Address field', 'given name'),
+        pgettext_lazy('Address field', 'first name'),
         max_length=256, blank=True)
     last_name = models.CharField(
-        pgettext_lazy('Address field', 'family name'),
+        pgettext_lazy('Address field', 'surname'),
         max_length=256, blank=True)
-    company_name = models.CharField(
-        pgettext_lazy('Address field', 'company or organization'),
-        max_length=256, blank=True)
+#    company_name = models.CharField(
+#        pgettext_lazy('Address field', 'company or organization'),
+#        max_length=256, blank=True)
     street_address_1 = models.CharField(
         pgettext_lazy('Address field', 'address'),
         max_length=256, blank=True)
@@ -71,16 +71,16 @@ class Address(models.Model):
         return '%s %s' % (self.first_name, self.last_name)
 
     def __str__(self):
-        if self.company_name:
-            return '%s - %s' % (self.company_name, self.full_name)
+#        if self.company_name:
+#            return '%s - %s' % (self.company_name, self.full_name)
         return self.full_name
 
     def __repr__(self):
         return (
-            'Address(first_name=%r, last_name=%r, company_name=%r, '
+            'Address(first_name=%r, last_name=%r, '
             'street_address_1=%r, street_address_2=%r, city=%r, '
             'postal_code=%r, country=%r, country_area=%r, phone=%r)' % (
-                self.first_name, self.last_name, self.company_name,
+                self.first_name, self.last_name,
                 self.street_address_1, self.street_address_2, self.city,
                 self.postal_code, self.country, self.country_area,
                 self.phone))

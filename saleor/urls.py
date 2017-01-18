@@ -23,10 +23,10 @@ admin.autodiscover()
 urlpatterns = [
     url(r'^', include(core_urls)),
     url(r'^account/', include('allauth.urls')),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^cart/', include(cart_urls, namespace='cart')),
+#    url(r'^admin/', include(admin.site.urls)),
+    url(r'^basket/', include(cart_urls, namespace='cart')),
     url(r'^checkout/', include(checkout_urls, namespace='checkout')),
-    url(r'^dashboard/', include(dashboard_urls, namespace='dashboard')),
+    url(r'^admin-shop/', include(dashboard_urls, namespace='dashboard')),
     url(r'^graphql', GraphQLView.as_view(graphiql=True)),
     url(r'^order/', include(order_urls, namespace='order')),
     url(r'^products/', include(product_urls, namespace='product')),
@@ -39,8 +39,8 @@ urlpatterns = [
     url(r'', include('payments.urls'))
 ]
 
-if settings.DEBUG:
+#if settings.DEBUG:
     # static files (images, css, javascript, etc.)
-    urlpatterns += [
-        url(r'^static/(?P<path>.*)$', serve)
-    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#    urlpatterns += [
+#        url(r'^static/(?P<path>.*)$', serve)
+#    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

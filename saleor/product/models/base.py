@@ -127,9 +127,9 @@ class Product(models.Model, ItemRange, index.Indexed):
     price = PriceField(
         pgettext_lazy('Product field', 'price'),
         currency=settings.DEFAULT_CURRENCY, max_digits=12, decimal_places=2)
-    weight = WeightField(
-        pgettext_lazy('Product field', 'weight'), unit=settings.DEFAULT_WEIGHT,
-        max_digits=6, decimal_places=2)
+#    weight = WeightField(
+#        pgettext_lazy('Product field', 'weight'), unit=settings.DEFAULT_WEIGHT,
+#        max_digits=6, decimal_places=2)
     available_on = models.DateField(
         pgettext_lazy('Product field', 'available on'), blank=True, null=True)
     attributes = HStoreField(pgettext_lazy('Product field', 'attributes'),
@@ -205,14 +205,17 @@ class ProductVariant(models.Model, Item):
         pgettext_lazy('Variant field', 'price override'),
         currency=settings.DEFAULT_CURRENCY, max_digits=12, decimal_places=2,
         blank=True, null=True)
-    weight_override = WeightField(
-        pgettext_lazy('Variant field', 'weight override'),
-        unit=settings.DEFAULT_WEIGHT, max_digits=6, decimal_places=2,
-        blank=True, null=True)
+#    weight_override = WeightField(
+#        pgettext_lazy('Variant field', 'weight override'),
+#        unit=settings.DEFAULT_WEIGHT, max_digits=6, decimal_places=2,
+#        blank=True, null=True)
     product = models.ForeignKey(Product, related_name='variants')
     attributes = HStoreField(
         pgettext_lazy('Variant field', 'attributes'), default={})
     images = models.ManyToManyField('ProductImage', through='VariantImage')
+
+    future_shipping = models.BooleanField(pgettext_lazy('Variant field', 'future shipping'), default=False)
+
 
     class Meta:
         app_label = 'product'
@@ -221,7 +224,8 @@ class ProductVariant(models.Model, Item):
         return self.name or self.sku
 
     def get_weight(self):
-        return self.weight_override or self.product.weight
+	return 0
+#        return self.weight_override or self.product.weight
 
     def check_quantity(self, quantity):
         available_quantity = self.get_stock_quantity()
@@ -297,6 +301,9 @@ class ProductVariant(models.Model, Item):
         stock = self.select_stockrecord()
         if stock:
             return stock.cost_price
+
+    def ship_in_future(self):
+        return self.future_shipping
 
 
 @python_2_unicode_compatible
@@ -392,3 +399,16 @@ class AttributeChoiceValue(models.Model):
 
     def __str__(self):
         return self.display
+
+
+@python_2_unicode_compatible
+class FeaturedProduct(models.Model):
+    product = models.OneToOneField(Product, related_name='featured')
+    display_order = models.SmallIntegerField(pgettext_lazy('FeaturedProduct field', 'display order'))
+
+    def __str__(self):
+	return self.product
+
+    class Meta:
+	ordering = ['display_order']
+

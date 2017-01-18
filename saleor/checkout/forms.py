@@ -84,3 +84,26 @@ class AnonymousUserBillingForm(forms.Form):
 
     email = forms.EmailField(
         required=True, widget=forms.EmailInput(attrs={'autocomplete': 'billing email'}))
+
+
+
+class CommentForm(forms.Form):
+    comment = forms.CharField(widget=forms.Textarea, required=False)
+
+    def __init__(self, *args, **kwargs):
+        self.checkout = kwargs.pop('checkout')
+        initial = kwargs.get('initial', {})
+        if 'comment' not in initial:
+            initial['comment'] = self.checkout.comment
+        kwargs['initial'] = initial
+        super(CommentForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super(CommentForm, self).clean()
+	print "in clean function with " + str(cleaned_data)
+        if 'comment' in cleaned_data:
+            comment = cleaned_data['comment']
+	    print "saving this to the comment : " + str(comment)
+            self.checkout.comment = comment
+	    print "Set comment to" + str(comment)
+        return cleaned_data

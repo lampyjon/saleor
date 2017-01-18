@@ -4,7 +4,7 @@ from django.template.response import TemplateResponse
 
 from ..forms import (
     AnonymousUserBillingForm, BillingAddressesForm,
-    BillingWithoutShippingAddressForm)
+    BillingWithoutShippingAddressForm, CommentForm)
 from ...userprofile.forms import get_address_form
 from ...userprofile.models import Address
 
@@ -67,6 +67,16 @@ def get_billing_forms_with_shipping(data, addresses, billing_address, shipping_a
 
 
 def summary_with_shipping_view(request, checkout):
+
+    prefix = 'comment'
+    data = {k: v for k, v in request.POST.items() if k.startswith(prefix)}
+  #  print "creating a comment form with data= " + str(data) + " and comment = " + str(checkout.comment)
+    comment_form = CommentForm(data or checkout.comment, checkout=checkout, prefix=prefix)
+    if 'comment-comment' in data:
+#	print "lets set the checkout valu"
+	checkout.comment = data['comment-comment']
+
+
     if request.user.is_authenticated():
         additional_addresses = request.user.addresses.all()
     else:
@@ -81,7 +91,7 @@ def summary_with_shipping_view(request, checkout):
     return TemplateResponse(
         request, 'checkout/summary.html', context={
             'addresses_form': addresses_form, 'address_form': address_form,
-            'checkout': checkout, 'additional_addresses': additional_addresses})
+            'checkout': checkout, 'additional_addresses': additional_addresses, 'comment_form':comment_form})
 
 
 def anonymous_summary_without_shipping(request, checkout):

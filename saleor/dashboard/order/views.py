@@ -315,3 +315,15 @@ def remove_order_voucher(request, order_pk):
     return TemplateResponse(request,
                             'dashboard/order/modal_order_remove_voucher.html',
                             ctx, status=status)
+
+
+from ...product.models.base import ProductVariant
+def OrdersForProductVariant(request, variant_pk):
+# quick table view of all of the orders (sorted by open / close) for a given product
+	variant = get_object_or_404(ProductVariant, pk=variant_pk)
+	sku = variant.sku
+
+	orderedItems = OrderedItem.objects.filter(product_sku=sku)
+	ctx = {'orderedItems': orderedItems, 'variant':variant}
+	return TemplateResponse(request, 'dashboard/order/productvariants.html', ctx)
+

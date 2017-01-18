@@ -10,7 +10,7 @@ from django.utils.translation import pgettext_lazy
 
 from ...product.models import (AttributeChoiceValue, Product, ProductAttribute,
                                ProductClass, ProductImage, ProductVariant,
-                               Stock, StockLocation, VariantImage)
+                               Stock, StockLocation, VariantImage, FeaturedProduct)
 from .widgets import ImagePreviewWidget
 from ...search import index as search_index
 
@@ -154,8 +154,8 @@ class ProductVariantForm(forms.ModelForm):
         if self.instance.product.pk:
             self.fields['price_override'].widget.attrs[
                 'placeholder'] = self.instance.product.price.gross
-            self.fields['weight_override'].widget.attrs[
-                'placeholder'] = self.instance.product.weight
+#            self.fields['weight_override'].widget.attrs[
+#                'placeholder'] = self.instance.product.weight
 
 
 class CachingModelChoiceIterator(ModelChoiceIterator):
@@ -291,3 +291,9 @@ class AttributeChoiceValueForm(forms.ModelForm):
 AttributeChoiceValueFormset = inlineformset_factory(
     ProductAttribute, AttributeChoiceValue, form=AttributeChoiceValueForm,
     extra=1)
+
+class FeaturedProductForm(forms.ModelForm):
+    class Meta:
+        model = FeaturedProduct
+        exclude = []
+

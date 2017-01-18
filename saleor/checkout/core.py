@@ -126,6 +126,15 @@ class Checkout(object):
         self.storage['email'] = email
         self.modified = True
 
+    @property			# Jon
+    def comment(self):
+        return self.storage.get('comment')
+
+    @comment.setter		# Jon
+    def comment(self, comment):
+        self.storage['comment'] = comment
+        self.modified = True
+
     @property
     def billing_address(self):
         address = self._get_address_from_storage('billing_address')
@@ -233,7 +242,8 @@ class Checkout(object):
             'billing_address': billing_address,
             'shipping_address': shipping_address,
             'tracking_client_id': self.tracking_code,
-            'total': self.get_total()}
+            'total': self.get_total(),
+	    'comment': self.comment}			# Jon
 
         if self.user.is_authenticated():
             order_data['user'] = self.user
