@@ -19,13 +19,14 @@ SITE_ID = 1
 
 PROJECT_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), '..'))
 
-ROOT_URLCONF = 'saleor.urls'
+ROOT_URLCONF = 'bullets.urls'
 
 WSGI_APPLICATION = 'saleor.wsgi.application'
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
+
 MANAGERS = ADMINS
 
 INTERNAL_IPS = get_list(os.environ.get('INTERNAL_IPS', '127.0.0.1'))
@@ -41,9 +42,9 @@ DATABASES = {
         default='postgres://saleor:saleor@localhost:5432/saleor',
         conn_max_age=600)}
 
+TIME_ZONE = 'Europe/London'
+LANGUAGE_CODE = 'en-GB'
 
-TIME_ZONE = 'America/Chicago'
-LANGUAGE_CODE = 'en'
 LANGUAGES = [
     ('bg', _('Bulgarian')),
     ('de', _('German')),
@@ -66,12 +67,14 @@ LANGUAGES = [
     ('uk', _('Ukrainian')),
     ('vi', _('Vietnamese')),
     ('zh-hans', _('Chinese'))]
+
 LOCALE_PATHS = [os.path.join(PROJECT_ROOT, 'locale')]
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
+
 
 EMAIL_URL = os.environ.get('EMAIL_URL')
 SENDGRID_USERNAME = os.environ.get('SENDGRID_USERNAME')
@@ -98,6 +101,12 @@ if ENABLE_SSL:
 
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 ORDER_FROM_EMAIL = os.getenv('ORDER_FROM_EMAIL', DEFAULT_FROM_EMAIL)
+
+# Our Email configuration
+AWS_SES_REGION_NAME = 'eu-west-1'
+AWS_SES_REGION_ENDPOINT = 'email.eu-west-1.amazonaws.com'
+EMAIL_BACKEND = 'django_ses.SESBackend'
+
 
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 MEDIA_URL = '/media/'
@@ -179,6 +188,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'django.contrib.sites',
     'django.contrib.staticfiles',
+    'django.contrib.admin',		# Added back in (dec 2017)
     'django.contrib.auth',
     'django.contrib.postgres',
     'django.forms',
@@ -217,7 +227,12 @@ INSTALLED_APPS = [
     'django_filters',
     'django_celery_results',
     'impersonate',
-    'phonenumber_field']
+    'phonenumber_field',
+
+    # Bullets
+    'bullets',
+    'django_summernote' 
+]
 
 if DEBUG:
     MIDDLEWARE.append(
@@ -270,11 +285,13 @@ LOGGING = {
 
 AUTH_USER_MODEL = 'account.User'
 
-LOGIN_URL = '/account/login/'
+LOGIN_URL = '/bullets-shop/account/login/'
 
-DEFAULT_COUNTRY = 'US'
-DEFAULT_CURRENCY = 'USD'
+DEFAULT_COUNTRY = 'GB'
+DEFAULT_CURRENCY = 'GBP'
+
 DEFAULT_DECIMAL_PLACES = get_currency_fraction(DEFAULT_CURRENCY)
+
 AVAILABLE_CURRENCIES = [DEFAULT_CURRENCY]
 
 OPENEXCHANGERATES_API_KEY = os.environ.get('OPENEXCHANGERATES_API_KEY')
@@ -446,7 +463,6 @@ IMPERSONATE = {
     'USE_HTTP_REFERER': True,
     'CUSTOM_ALLOW': 'saleor.account.impersonate.can_impersonate'}
 
-
 # Rich-text editor
 ALLOWED_TAGS = [
     'a',
@@ -474,3 +490,47 @@ ALLOWED_STYLES = ['text-align']
 DEFAULT_MENUS = {
     'top_menu_name': 'navbar',
     'bottom_menu_name': 'footer'}
+
+#### Bullets Settings below here ####
+
+
+STRAVA_ACCESS_TOKEN = os.environ.get('STRAVA_ACCESS_TOKEN')
+
+
+### CACHE VALUE FIELDS ###
+
+STRAVA_NUM_RUNNERS = 'strava_runners'
+STRAVA_NUM_RIDERS = 'strava_cyclists'
+STRAVA_WEEKLY_RUN_MILES = 'strava_week_run_miles'
+STRAVA_WEEKLY_RIDE_MILES = 'strava_week_ride_miles'
+STRAVA_YEAR_RUN_MILES = 'strava_year_run_miles'
+STRAVA_YEAR_RIDE_MILES = 'strava_year_ride_miles'
+STRAVA_WEEKLY_RUNS = 'strava_week_runs'
+STRAVA_WEEKY_RIDES = 'strava_week_rides'
+STRAVA_YEAR_RUNS = 'strava_year_runs'
+STRAVA_YEAR_RIDES = 'strava_year_rides'
+
+STRAVA_TIMEFRAME = os.environ.get('STRAVA_TIMEFRAME', 'today')
+
+
+## FOR MAILCHIMP
+
+MAILCHIMP_API_KEY = os.environ.get('MAILCHIMP_API_KEY')
+MAILCHIMP_LISTID = os.environ.get('MAILCHIMP_LISTID')
+
+SUMMERNOTE_CONFIG = {
+	'default_css': ("//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css",
+			"https://bullets-web-media.s3.amazonaws.com/static/django_summernote/summernote.css", ),
+	'default_js': (
+		 '//code.jquery.com/jquery-1.9.1.min.js',                                
+        	 '//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js',  
+       		 "https://bullets-web-media.s3.amazonaws.com/static/django_summernote/jquery.ui.widget.js",
+       		 "https://bullets-web-media.s3.amazonaws.com/static/django_summernote/jquery.iframe-transport.js",
+        	 "https://bullets-web-media.s3.amazonaws.com/static/django_summernote/jquery.fileupload.js",
+        	 "https://bullets-web-media.s3.amazonaws.com/static/django_summernote/summernote.min.js",
+    	),
+}
+
+
+SERVER_EMAIL = "webserver@boldmerebullets.com"
+

@@ -1,0 +1,71 @@
+{% extends "simple.html" %}
+{% load static %}
+
+{% block title %} - The Tour de Boldmere 2017{%endblock %}
+{% block topurl %}{% url 'index' %}{% endblock %}
+
+
+{% block header-links %}
+<li><a href="#route">Route</a></li>
+<li><a href="#segment">Segments</a></li>
+<li><a href="#completed">Completed</a></li>
+<li><a href="{% url 'tdb2017' %}">Le Tour de Boldmere</a></li>
+{% endblock %}
+
+
+{% block content %}
+<div class="row">
+     <div class="col-sm-2">
+	&nbsp;
+    </div>
+    <div class="col-sm-8">
+            <h1>The Tour de Boldmere 2017 : {{stage.name}}</h1>
+	    <br><small>{{ stage.stage_type }}</small>
+	    <br>
+            <p>{{stage.description|safe}}</p>
+	    <br>	
+
+		<h2>Key Stage Information</h2>
+		<strong>This stage is available for completion between {{stage.valid_from }} to {{ stage.valid_until}}.</strong>
+	    	<br>
+	   	 <h3 id="route">Route details:</h3>
+	    {% if stage.one_route_only %}
+	    <p><a href="https://www.strava.com/routes/{{stage.long_route}}">View on Strava</a> ({{ stage.long_distance}} miles)</p>
+	    {% else %}
+	    <ul>
+	    {% if stage.long_route %}<li><a href="https://www.strava.com/routes/{{stage.long_route}}">Long</a> ({{ stage.long_distance}} miles)</li>{%endif%}
+	    {% if stage.medium_route %}<li><a href="https://www.strava.com/routes/{{stage.medium_route}}">Medium</a> ({{stage.medium_distance}} miles)</li>{%endif%}
+	    {% if stage.short_route %}<li><a href="https://www.strava.com/routes/{{stage.short_route}}">Short</a> ({{ stage.short_distance}} miles)</li>{%endif%}
+	    {% if stage.social_route %}<li><a href="https://www.strava.com/routes/{{stage.social_route}}">Social</a> ({{ stage.social_distance}} miles)</li>{%endif%}
+	    </ul>
+	    {% endif %}
+	
+	    <h3 id="segment">Segment details:</h3>
+	    <ul>
+	    {% if stage.overall_segment %}<li><a href="https://www.strava.com/segments/{{stage.overall_segment}}">Overall Segment</a></li>{%endif%}
+	    {% if stage.hilly_segment %}<li><a href="https://www.strava.com/segments/{{stage.hilly_segment}}">Hilly</a></li>{%endif%}
+	    {% if stage.flat_segment %}<li><a href="https://www.strava.com/segments/{{stage.flat_segment}}">Flat</a></li>{%endif%}
+
+	    {% if stage.ss_hilly_segment %}<li><a href="https://www.strava.com/segments/{{stage.ss_hilly_segment}}">Super Social Hilly</a></li>{%endif%}
+	    {% if stage.ss_flat_segment %}<li><a href="https://www.strava.com/segments/{{stage.ss_flat_segment}}">Super Social Flat</a></li>{%endif%}
+
+	    </ul>
+
+	    <h3 id="completed">Bullets who have completed this stage:</h3>
+	    <br>
+	    <p>This is based on which Boldmere Bullets have completed the segment(s) listed above for this stage, based on Strava's information!</p>
+	    <ul>
+	    {% for entry in stage.completed_leaderboard %}
+		<li>{{entry.athlete_name}}</li>
+	    {% endfor %}
+	    </ul>
+
+
+	</div>
+</div>
+
+ 
+      {% endblock %}
+
+
+

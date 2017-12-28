@@ -1,0 +1,33 @@
+{% extends "simple.html" %}
+{% load bootstrap_form from bootstrap3 %}
+{% load static %}
+
+{% block title %} - The Bullets Run!{%endblock %}
+{% block topurl %}{% url 'index' %}{% endblock %}
+
+{% block header-links %}
+
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-8 col-sm-push-2">
+            <h1>Delete a Bullets Run 2017 Runner!</h1>
+            <br>	     
+	    <p>Note that this does NOT automatically refund their entry fee!</p>
+	    <p>Are you sure you wish to delete {{ runner }}?</p>	    
+            <form method="post" class="form-horizontal" >
+            {% csrf_token %}
+	                       <p class="text-right">
+                		<button type="submit" class="btn btn-primary">Delete</button>
+            			</p>
+        	</form>
+ 	   
+    </div>
+</div>
+
+ 
+      {% endblock %}
+
+
+

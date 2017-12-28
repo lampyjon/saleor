@@ -1,0 +1,117 @@
+{% extends "simple.html" %}
+{% load bootstrap_form from bootstrap3 %}
+{% load static %}
+
+{% block title %} - The Bullets Run!{%endblock %}
+{% block topurl %}{% url 'index' %}{% endblock %}
+
+{% block header-links %}
+<li><a href="#dt">When?</a></li>
+<li><a href="#price">Cost?</a></li>
+<li><a href="#course">Course?</a></li>
+<li><a href="#fac">Facilities?</a><li>
+<li><a href="#reg">Register!</a></li>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-2">
+	<img src="{% static 'images/bullets-run-logo.png' %}" class="img-responsive" alt="The Bullets Run">
+    </div>
+
+    <div class="col-sm-6">
+            <h1>Welcome to the Bullets Run 2017!</h1>
+            <br>
+	    <p>The 2017 Boldmere Bullets run is raising money for the Lisieux Trust, the Boldmere Bullets Charity of the Year. The Lisieux Trust are an extremely valuable local charity who support disabled people within the community.</p>
+
+	    <h2>All the information!</h2>
+	    <p id="dt"><b>Date:</b> Sunday 17th September 2017</p>
+
+	    <p><b>Time:</b> Registration opens at 8am. Runs start at 10am (both distances start together)</p>
+
+	    <p><b>ALL BIB NUMBERS (WITH TIMING CHIPS ATTACHED) NEED TO BE COLLECTED ON THE DAY FROM THE REGISTRATION TENT AT THE JAMBOREE STONE IN SUTTON PARK. NOTHING WILL BE POSTED TO YOU!</b></p>
+
+	    <p id="price"><b>Price:</b> £12 (inc transaction fees) for the 5k; £16 (inc transaction fees) for 10k. We are limited to 400 entries in total. If entries have not been filled, they will be available on the day for £15 (5k) and £20 (10k). <i>You must be over 18 to take part!</i></p>
+
+	    <p><b>Location:</b> Runs start and finish at the Jamboree Stone, Sutton Park, which is accessible via Streetly Gate, Thornhill Road, Sutton Coldfield, B74 3EW.</p>
+
+	    <p id="course"><b>The course:</b> The course is a mixture of tarmac paths, grass paths and trails. If there has been a lot of rain before the event there may be some muddy areas. A course map is <a href="#map">shown below</a>. The route will be well marked and marshalled. The course is not "closed" so please be mindful of other park users during the run.</p>
+
+	    <p><b>Results:</b> Chip-timed results will be available ASAP after the event via email.</p>
+
+	    <p id="fac"><b>Facilities:</b> There will be toilets at the start/finish. There will be a bag drop facility to leave bags (note: we cannot ensure security and therefore any items left are at the owner's own risk). We will have the Bullets Shop open for you to purchase Boldmere Bullets kit, and there will be an ice-cream van selling ice-creams and drinks.</p>
+	    <p>We are pleased to confirm that Amy from <a href="https://twitter.com/massage360_amy?lang=en" target="_blank">Sports Massage 360</a> will be at the start / finish line to provide sports massages should you need them!</p>
+	    <p>There will be a water station at approximately 1k / 6k distance.</p>
+
+	    <p><b>Parking:</b> We recommend you make your way to the start line on foot if possible. If you need to drive, please enter the park via Streetly Gate and park in one of the car parks in the park. There may be a charge to bring your car into the park on a Sunday.</p>
+
+	    <p><b>Supporters:</b> We'd love you to bring as many supporters as you can to cheer around the course. There is plenty of access to all areas of the route to support the runners.</p>
+
+	    <p><b>Time limit:</b> We need to vacate the park by 2pm, so all runners must be finished by 1:30pm. This is sufficient time should you wish to walk the 10k route.</p>
+	    <p><b>The prize?</b> Not only do you get the warm glow of running in a fantastic event, and helping to raise money for a brilliant local charity - there will also be a great medal for all finishers!</p>
+	    	   
+<h2>Any questions?</h2>
+<p>If you have any questions please <a href="{% url 'contact' %}">make contact</a> with Lisa.</p>
+
+	   
+	<h2 id="reg">Ready to register?</h2>
+<p class="text-center">
+ <a href="{% url 'bullets-run-register' %}" class="btn btn-primary btn-lg">Sign Up Now</a>
+</p>	
+
+	<h2 id="map">Route map</h2>
+ 	<a href="{% static 'images/bullets-run-route.png' %}"><img src="{% static 'images/bullets-run-route.png' %}" class="img-responsive" alt="The Bullets Run Route"></a>
+
+  </div>
+  <div class="col-sm-4 introbox">
+	<h2>Key Details:</h2>
+ 	<div class="row">
+      		<div class="col-sm-4"><strong>Date:</strong></div>
+		<div class="col-sm-8">Sunday 17th Sep 2017</div>
+	</div>
+ 	<div class="row">
+      		<div class="col-sm-4"><strong>Location:</strong></div>
+		<div class="col-sm-8">Jamboree Stone, Sutton Park</div>
+	</div>
+
+ 	<div class="row">
+      		<div class="col-sm-4"><strong>Register:</strong></div>
+		<div class="col-sm-8">from 8am</div>
+	</div>
+ 	<div class="row">
+      		<div class="col-sm-4"><strong>Start:</strong></div>
+		<div class="col-sm-8">10am</div>
+	</div>
+ 	<div class="row">
+      		<div class="col-sm-4"><strong>Routes:</strong></div>
+		<div class="col-sm-8"><ul class="list-unstyled">
+			<li>5k</li>
+			<li>10k</li>
+			</ul>
+		</div>
+	</div>
+ 	<div class="row">
+      		<div class="col-sm-4"><strong>Cost:</strong></div>
+		<div class="col-sm-8"><ul class="list-unstyled">
+			<li>&pound;12.00 (5k)</li>
+			<li>&pound;16.00 (10k)</li>
+			</ul>
+		</div>
+	</div>
+
+<p class="text-center">
+ <a href="{% url 'bullets-run-register' %}" class="btn btn-primary btn-lg">Sign Up Now</a>
+</p>
+	
+    </div>
+    </div>
+   </div>
+
+
+ 
+      {% endblock %}
+
+
+

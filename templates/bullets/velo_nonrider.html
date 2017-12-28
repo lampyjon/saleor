@@ -1,0 +1,39 @@
+{% extends "simple.html" %}
+{% load bootstrap_form from bootstrap3 %}
+{% load static %}
+
+{% block title %} - The Velo!{%endblock %}
+{% block topurl %}{% url 'index' %}{% endblock %}
+
+{% block header-links %}
+
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-8 col-sm-push-2">
+	    <h1>Velo Volunteers</h1>
+            <br>
+	    <p>Hi! You are registering your interest to help as a <strong>non-riding Bullets volunteer</strong> for the Birmingham Velo on 24th of September 2017! Please complete the following details:</p>
+	     
+        <form method="post" class="form-horizontal" action="{% url 'velo-nonrider' %}">
+            		{% csrf_token %}
+	    		<input type="hidden" name="email" value="{{email}}">
+			{% bootstrap_form velo_nonrider_form layout="horizontal" %} 
+		 	<p class="small">By registering your interest as a volunteer, you agree that you are happy to help at the Velo.</p>
+                       <p class="text-right">
+                		<button type="submit" class="btn btn-primary">Register your interest!</button>
+            		</p>
+        </form>
+
+ 	   
+
+
+    </div>
+</div>
+
+ 
+      {% endblock %}
+
+
+

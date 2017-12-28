@@ -1,0 +1,53 @@
+{% extends "simple.html" %}
+{% load static %}
+{% load bootstrap_form from bootstrap3 %}
+
+{% block title %} - ARE YOU ENGAGED?{%endblock %}
+{% block topurl %}{% url 'index' %}{% endblock %}
+
+{% block header-links %}
+    {% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-8 col-sm-push-2">
+        <form method="post" class="form-horizontal" action="{% url 'upload-member-csv-2' %}">
+            {% csrf_token %}
+            <h1>Let's double check</h1>
+	    <p>Does this look right?</p>
+            <br>
+	    <table class="table">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Postcode</th>
+				<th>Email</th>
+				<th>Contact</th>
+				<th>Get emails?</th>
+				<th>Joined</th>
+			</tr>
+		</thead>
+		<tbody>
+	     {% for bullet in bullets_list %}
+			<tr>
+				<td>{{ bullet.name }}</td>
+				<td>{{ bullet.postcode }}</td>
+				<td>{{ bullet.email }}</td>
+				<td>{{ bullet.contact_no }}</td>
+				<td>{{ bullet.get_emails }}</td>
+				<td>{{ bullet.joined }} </td>
+			</tr>
+	     {% endfor %}
+		</tbody>
+	    </table>
+            <p class="text-right">
+                <button type="submit" class="btn btn-primary">Engage me!</button>
+            </p>
+        </form>
+    </div>
+</div>
+
+ 
+      {% endblock %}
+
+
+

@@ -1,0 +1,33 @@
+{% extends "simple.html" %}
+{% load bootstrap_form from bootstrap3 %}
+{% load static %}
+
+{% block title %} - The Bullets Run!{%endblock %}
+{% block topurl %}{% url 'index' %}{% endblock %}
+
+{% block header-links %}
+
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-8 col-sm-push-2">
+            <h1>Register for the Bullets Run 2017!</h1>
+            <br>	     
+	    <p>Please complete the form below to start your registration for the <a href="{% url 'bullets-run' %}">Bullets Run 2017</a>.</p>
+        <form method="post" class="form-horizontal" >
+            {% csrf_token %}
+	 {% bootstrap_form run_form layout="horizontal" %} 
+                       <p class="text-right">
+                		<button type="submit" class="btn btn-primary">Next...</button>
+            			</p>
+        	</form>
+ 	   
+    </div>
+</div>
+
+ 
+      {% endblock %}
+
+
+

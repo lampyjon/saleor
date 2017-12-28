@@ -1,0 +1,58 @@
+{% extends "simple.html" %}
+{% load bootstrap_form from bootstrap3 %}
+{% load static %}
+
+{% block title %} - The Bullets Run!{%endblock %}
+{% block topurl %}{% url 'index' %}{% endblock %}
+
+{% block header-links %}
+{% endblock %}
+
+
+{% block extraheader %}
+<link href="{% static 'css/bootstrap-sortable.css' %}" rel="stylesheet"> 
+
+{% endblock %}
+
+{% block content %}
+
+         <h1>Bullets Run Administration</h1>
+	<table class="table sortable">
+	<thead>
+		<tr>
+			<th data-defaultsort="asc">Name</th>
+			<th>Email</th>
+			<th>Distance</th>
+			<th>Paid</th>
+			<th>Edit</th>
+			<th>Delete</th>
+			<th>Reminder Link</td>
+		</tr>
+	</thead>
+	<tbody>
+		{% for runner in runners %}
+		<tr>
+			<td>{{runner.name}}</td>
+			<td>{{runner.email}}</td>
+			<td>{{runner.get_race_display}}</td>
+			<td data-value="{{runner.paid}}">{% if runner.paid %}<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>{% endif %}</td>
+			<td><a href="{% url 'bullets-run-admin-edit' runner.pk %}">edit</a></td>
+			<td><a href="{% url 'bullets-run-admin-delete' runner.pk %}">delete</a></td>
+			<td>{% if runner.paid != True %}<a href="{% url 'bullets-run-reminder' runner.unique_url %}">link for email</a>{% endif %}</td>
+
+			</tr>
+		{% endfor %}
+	</tbody>
+	</table>
+
+	<a href="{% url 'bullets-run-offline' %}" class="btn btn-primary btn-xl">Add a runner</a>
+
+ 
+      {% endblock %}
+
+
+{% block extrafooter %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
+<script src="{% static 'js/bootstrap-sortable.js' %}"></script>
+{% endblock %}
+

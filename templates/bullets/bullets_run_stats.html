@@ -1,0 +1,52 @@
+{% extends "simple.html" %}
+{% load bootstrap_form from bootstrap3 %}
+{% load static %}
+
+{% block title %} - Bullets Run Statistics!{%endblock %}
+{% block topurl %}{% url 'index' %}{% endblock %}
+
+{% block header-links %}
+
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-8 col-sm-push-1">
+            <h1>Bullets Run Statistics</h1>
+    </div>
+</div>
+
+
+<div class="row">
+	<div class="col-md-6 col-md-offset-3 text-center introbox introboxlink">
+					<h3>5k runners (paid)</h3>
+					<p>{{ fiveK }}</p>						
+	</div>
+</div>
+<br>
+<div class="row">
+	<div class="col-md-6 col-md-offset-3 text-center introbox introboxlink">
+					<h3>10k runners (paid)</h3>
+					<p>{{ tenK }}</p>
+	</div>  
+</div>
+<br>
+<div class="row"> 
+	<div class="col-md-6 col-md-offset-3 text-center introbox introboxlink">
+					<h3>Incomplete signups</h3>
+					<p>{{ not_paid }}</p>
+	</div>               
+</div>
+<div class="clearfix">&nbsp;</div>
+
+<div class="row">
+    <div class="col-sm-8 col-sm-push-2">   
+	    <a href="{% url 'index' %}" class="btn btn-primary btn-xl">Back to the main site</a>
+    </div>
+</div>
+
+ 
+      {% endblock %}
+
+
+

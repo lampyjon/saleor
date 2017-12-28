@@ -1,0 +1,105 @@
+{% extends "simple.html" %}
+{% load static %}
+
+{% block title %} - Events{%endblock %}
+{% block topurl %}{% url 'index' %}{% endblock %}
+
+{% block header-links %}
+<li><a href="{% url 'ride-info' %}">Ride with us</a></li>
+<li><a href="{% url 'run-info' %}">Run with us</a></li>
+<li><a href="{% url 'register' %}">Become a member</a></li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-8 col-sm-push-2">
+            <h1>Forthcoming Bullets Events</h1>
+            <br>
+            <p>In addition to our regular weekly running and cycling events, we have a wide range of other activities planned for 2017:</p>
+	   
+	    <table class="table">
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th>Event</th>
+			</tr>
+		</thead>
+		<tbody> 
+			<tr>
+				<td>23rd April 2017</td>
+				<td>Bullets Social, 7pm, The Harvester</td>
+			</tr>
+            		<tr>
+				<td>6th May-23rd Jul 2017</td>
+				<td>Le Tour de Boldmere</td>
+	   		</tr>
+            		<tr>
+				<td>27th May-3rd Jun 2017</td>
+				<td>Bullets do Brittany</td>
+	    		</tr>
+
+           		<tr>
+				<td>5th Jun 2017</td>
+				<td>Great Midlands Fun Run</td>
+	    		</tr>
+			<tr>
+				<td>5th June 2017</td>
+				<td>Bullets Social, 7pm, The Harvester</td>
+			</tr>
+
+            		<tr>
+				<td>17th Jun 2017</td>
+				<td>Chase the Sun</td>
+	    		</tr>
+			<tr>
+				<td>24th Jun 2017</td>
+				<td>Boldmere Festival</td>
+			</tr>
+
+			<tr>
+				<td>8th/9th Jul</td>
+				<td>Sutton Coldfield Community Games</td>
+			</tr>
+
+			<tr>
+				<td>23rd July 2017</td>
+				<td>Bullets Social, 7pm, The Harvester</td>
+			</tr>
+
+            		<tr>
+				<td>17th September 2017</td>
+				<td><a href="{% url 'bullets-run' %}">Bullets Run</a></td>
+	    		</tr>
+			<tr>
+				<td>17th Sep 2017</td>
+				<td>Bullets Social, 7pm, The Harvester</td>
+			</tr>
+
+           		<tr>
+				<td>23rd Sep 2017</td>
+				<td>Velo Birmingham</td>
+	    		</tr>
+			<tr>
+				<td>15th Oct 2017</td>
+				<td>Bullets Social, 7pm, The Harvester</td>
+			</tr>
+
+            		<tr>
+				<td>25th Nov 2017 (prov)</td>
+				<td>Bullets Christmas Doo</td>
+	    		</tr>
+			<tr>
+				<td>17th Dec 2017</td>
+				<td>Bullets Social, 7pm, The Harvester</td>
+			</tr>
+
+		</tbody>
+	</table>
+    </div>
+</div>
+
+ 
+      {% endblock %}
+
+
+

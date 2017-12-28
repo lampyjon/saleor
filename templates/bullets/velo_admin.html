@@ -1,0 +1,89 @@
+{% extends "simple.html" %}
+{% load bootstrap_form from bootstrap3 %}
+{% load static %}
+
+{% block title %} - The Velo!{%endblock %}
+{% block topurl %}{% url 'index' %}{% endblock %}
+
+{% block header-links %}
+<li><a href="#riders">Riders</a></li>
+<li><a href="#nonriders">Non-Riders</a></li>
+{% endblock %}
+
+
+{% block extraheader %}
+<link href="{% static 'css/bootstrap-sortable.css' %}" rel="stylesheet"> 
+
+{% endblock %}
+
+{% block content %}
+
+         <h1>Velo Administration</h1>
+	<h2 id="riders">Ride Volunteers</h2>
+	<table class="table sortable">
+	<thead>
+		<tr>
+			<th data-defaultsort="asc">Name</th>
+			<th>Email</th>
+			<th>Entered Velo?</th>
+			<th>Speed</th>
+			<th>Delete</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for rider in riders %}
+		<tr>
+			<td>{{rider.get_name}}</td>
+			<td>{{rider.get_email}}</td>
+			<td>{{rider.entered_velo}}</td>
+			<td>{{rider.average_speed}}</td>
+			<td><a href="{% url 'velo-admin-delete' rider.pk %}">delete</a></td>
+		</tr>
+		{% endfor %}
+	</tbody>
+	</table>
+
+	<h2 id="nonriders">Non-Ride Volunteers</h2>
+	<table class="table sortable">
+	<thead>
+		<tr>
+			<th data-defaultsort="asc">Name</th>
+			<th>Email</th>
+			<th>Contact No</th>
+			<th>Drive van?</th>
+			<th>Drive bus?</th>
+			<th>Delete</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for non_rider in non_riders %}
+		<tr>
+			<td>{{non_rider.get_name}}</td>
+			<td>{{non_rider.get_email}}</td>
+			<td>{{non_rider.contact_no}}</td>
+			<td>{{non_rider.drive_van}}</td>
+			<td>{{non_rider.drive_bus}}</td>
+			<td><a href="{% url 'velo-admin-delete' non_rider.pk %}">delete</a></td>
+		</tr>
+		{% endfor %}
+	</tbody>
+	</table>
+
+
+
+
+<div class="row">
+    <div class="col-sm-8 col-sm-push-2">   
+	    <a href="{% url 'index' %}" class="btn btn-primary btn-xl">Back to the main site</a>
+    </div>
+</div>
+
+ 
+      {% endblock %}
+
+
+{% block extrafooter %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
+<script src="{% static 'js/bootstrap-sortable.js' %}"></script>
+{% endblock %}
+
