@@ -155,9 +155,9 @@ urlpatterns = [
 
 handler404 = 'bullets.views.error404'
 
-if settings.DEBUG:
-	print("Doc root = " + settings.STATIC_ROOT)
-	urlpatterns = urlpatterns + (static(settings.STATIC_URL, document_root=settings.STATIC_ROOT))
+#if settings.DEBUG:
+#	print("Doc root = " + settings.STATIC_ROOT)
+#	urlpatterns = urlpatterns + (static(settings.STATIC_URL, document_root=settings.STATIC_ROOT))
 
 
 

@@ -21,7 +21,6 @@ from .product.urls import urlpatterns as product_urls
 from .search.urls import urlpatterns as search_urls
 
 handler404 = 'saleor.core.views.handle_404'
-
 non_translatable_urlpatterns = [
     url(r'^dashboard/',
         include((dashboard_urls, 'dashboard'), namespace='dashboard')),
@@ -33,7 +32,7 @@ non_translatable_urlpatterns = [
 
 translatable_urlpatterns = [
     url(r'^', include(core_urls)),
-    url(r'^cart/', include((cart_urls, 'cart'), namespace='cart')),
+    url(r'^basket/', include((cart_urls, 'cart'), namespace='cart')),
     url(r'^checkout/',
         include((checkout_urls, 'checkout'), namespace='checkout')),
     url(r'^jsi18n/$', JavaScriptCatalog.as_view(), name='javascript-catalog'),
