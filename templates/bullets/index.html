@@ -1,4 +1,5 @@
 {% load static %}
+{% load render_bundle from webpack_loader %}
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://ogp.me/ns/fb#">
 <head>
@@ -365,8 +366,7 @@ The spirit of the collective is friendship and a love of cycling, walking, runni
     <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.js"></script>
 
     <!-- Theme JavaScript -->
-    <script src="{% static 'js/creative.js'%}"></script>
-
+   {% render_bundle 'bullets' 'js' %}
 
     <script>
 $(".introboxlink").click(function() {

@@ -4,7 +4,7 @@ $global-margin: 1rem;
 $button-border-radius: 4px;
 
 // COLORS
-$body-color: #333333;
+$body-color: #ffffff;
 $white: #fff;
 $light-gray: #f2f2f2;
 $gray: #D3D1D0;
@@ -16,6 +16,7 @@ $red: #EB5757;
 $dark-red: #c53636;
 $green: #27AE60;
 $beige: #FFFAEC;
+$black: #000000;
 
 // TYPOGRAPHY
 $font-family-sans-serif: 'Lato', sans-serif;
@@ -25,7 +26,7 @@ $h3-font-size: 1rem;
 
 $theme-colors: (
   primary: $blue,
-  secondary: $white,
+  secondary: $black,
   success: $green,
   info: #17a2b8,
   warning: #ffc107,
