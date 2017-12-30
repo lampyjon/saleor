@@ -4,7 +4,8 @@ $global-margin: 1rem;
 $button-border-radius: 4px;
 
 // COLORS
-$body-color: #ffffff;
+$body-bg: #ffffff;
+$body-color: #000000;
 $white: #fff;
 $light-gray: #f2f2f2;
 $gray: #D3D1D0;
@@ -25,7 +26,7 @@ $h2-font-size: 1.3rem;
 $h3-font-size: 1rem;
 
 $theme-colors: (
-  primary: $blue,
+  primary: #FC4C02,
   secondary: $black,
   success: $green,
   info: #17a2b8,
@@ -34,3 +35,6 @@ $theme-colors: (
   light: #f8f9fa,
   dark: #343a40
 );
+
+$panel-default-heading-bg: #feb799;
+
