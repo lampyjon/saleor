@@ -1,55 +1,87 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% load i18n %}
 
 {% block content %}
-  <div class="home">
-    <div class="row">
-      <div class="col-sm-12 home__block1">
-        <div class="home--square">
-          <div class="home--content">
-            <div class="home--content-wrapper">
-              <div class="home--content-inner">
-                <h1>{% trans "Promo &amp; Sale" context "Homepage title" %}</h1>
-                <h2>{% trans "from the Northpole" context "Homepage title" %}</h2>
-                  <a class="btn btn-secondary home__button" href="#">
-                    {% trans "Shop now" context "Homepage action" %}
-                  </a>
-              </div>
-            </div>
-          </div>
+    <div class="home">
+  <div class="row top-message">
+        <div class="col-sm-12">
+            <div class="card text-center">
+            	<div class="card-body">
+			<p><b>Important information about order dates!</b> The Bullets Shop is currently only listing items we have in stock for immediate delivery.</p>
+<p>We do four kit orders from our suppliers a year - we will open our shop for all items at the <b>start of October</b>, and all orders must be recieved by the <b>5th November</b> for delivery in <b>mid-December</b>. If you have any questions please <a href="{% url 'contact' %}">get in touch.</a></p>
+		</div>
+	    </div>
         </div>
-      </div>
     </div>
-    <div class="row">
-      <div class="col-sm-12 col-md-6 home__block2">
-        <div class="home--square">
-          <div class="home--content">
-            <div class="home--content-wrapper">
-              <div class="home--content-inner">
-                <h1>{% trans "Size &amp; Colours" context "Homepage title" %}</h1>
-                <a class="btn btn-secondary home__button" href="#">{% trans "Shop now" context "Homepage action" %}</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6 home__block3">
-        <div class="home--square">
-          <div class="home--content">
-            <div class="home--content-wrapper">
-              <div class="home--content-inner">
-                <h1>{% trans "Digital Downloads" context "Homepage title" %}</h1>
-                <a class="btn btn-secondary home__button" href="#">{% trans "Shop now" context "Homepage action" %}</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+	
+   <div class="row">
+	<div class="col-6 col-lg-3 product-list">
+  		<a href="/bullets-shop/products/category/cycling-1/" class="link--clean">
+    		<div class="text-center">
+      			<div>
+        			<img class="img-responsive"
+             			src="{% static 'images/shop-cycling.png' %}"
+             		        alt="Cycling Shop">
+        			<span class="product-list-item-name" title="Cycling">Cycling</span>
+      			</div>
+			<div class="panel-footer">
+      			</div>
+    		</div>
+  		</a>
+	</div>
+	<div class="col-6 col-lg-3 product-list">
+  		<a href="/bullets-shop/products/category/running-2/" class="link--clean">
+    		<div class="text-center">
+      			<div>
+        			<img class="img-responsive"
+             			src="{% static 'images/shop-running.png' %}"
+             		        alt="Running Shop">
+        			<span class="product-list-item-name" title="Running">Running</span>
+      			</div>
+			<div class="panel-footer">
+      			</div>
+    		</div>
+  		</a>
+	</div>
+
+	<div class="col-6 col-lg-3 product-list">
+  		<a href="/bullets-shop/products/category/casual-5/" class="link--clean">
+    		<div class="text-center">
+      			<div>
+        			<img class="img-responsive"
+             			src="{% static 'images/shop-casual.png' %}"
+             		        alt="Casual Shop">
+        			<span class="product-list-item-name" title="Casual">Casual</span>
+      			</div>
+			<div class="panel-footer">
+      			</div>
+    		</div>
+  		</a>
+	</div>
+
+	<div class="col-6 col-lg-3 product-list">
+  		<a href="/bullets-shop/products/category/events-6/" class="link--clean">
+    		<div class="text-center">
+      			<div>
+        			<img class="img-responsive"
+             			src="{% static 'images/shop-events.png' %}"
+             		        alt="Events Shop">
+        			<span class="product-list-item-name" title="Events">Events</span>
+      			</div>
+			<div class="panel-footer">
+      			</div>
+    		</div>
+  		</a>
+	</div>
+
     </div>
-    <div class="home__featured">
-      <h2 class="text-center">{% trans "Featured products" context "Homepage title" %}</h2>
-      <div class="row">
-        {% include "product/_items.html" %}
+     <ul class="breadcrumb"><li><strong>Featured Products</strong></li></ul>
+      <div class="home__featured">
+        <div class="row">
+          {% include "product/_items.html" %}
+        </div>
+
       </div>
     </div>
     <script type="application/ld+json">{{ webpage_schema|safe }}</script>

@@ -11,7 +11,8 @@ $light-gray: #f2f2f2;
 $gray: #D3D1D0;
 $darken-gray: darken($gray, 10%);
 $skull-gray: #828282;
-$blue: #26A5D4;
+// $blue: #26A5D4;
+$blue: #FC4C02;	//	or orange as it might actually be
 $darken-blue: darken($blue, 10%);
 $red: #EB5757;
 $dark-red: #c53636;
@@ -36,5 +37,22 @@ $theme-colors: (
   dark: #343a40
 );
 
-$panel-default-heading-bg: #feb799;
+ 
+@font-face {
+	font-family: SpyAgency;
+	src: url("https://bullets-web-media.s3.amazonaws.com/static/fonts/s_font.ttf");
+}
 
+.spyfont {
+	font-family: SpyAgency, 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+	font-size: 115%;
+}
+
+@font-face {
+	font-family: Coalition;
+	src: url("https://bullets-web-media.s3.amazonaws.com/static/fonts/c_font.ttf");
+}
+
+.coalitionfont {
+	font-family: Coalition, 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+}

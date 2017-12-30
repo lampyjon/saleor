@@ -1,6 +1,6 @@
 .home {
   text-align: center;
-  color: $white;
+  color: $black;
   h1 {
     font-weight: 300;
     text-transform: uppercase;
@@ -70,3 +70,9 @@
     }
   }
 }
+
+.top-message {
+	margin-top: $global-padding;
+	margin-bottom: $global-padding;
+}
+

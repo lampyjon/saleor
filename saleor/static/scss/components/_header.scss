@@ -17,14 +17,14 @@
         margin-left: 0;
       }
       a {
-        color: $body-color;
+        color: $gray;
         transition: 0.3s;
         text-transform: uppercase;
         display: inline-block;
         padding: $global-padding * 1.5;
         font-size: 1.5rem;
         &:hover {
-          color: rgba($body-color, 0.6);
+          color: $white;
 
         }
       }
@@ -130,6 +130,7 @@
 }
 
 .navbar {
+  background-color: $black;
   padding: 0;
   @include media-breakpoint-down(sm) {
     > .container-fluid {
@@ -150,7 +151,7 @@
     p {
       font-size: 0.7rem;
       margin-bottom: 0;
-      color: $skull-gray;
+      color: $light-gray;
       line-height: 1.9rem;
       text-transform: uppercase;
       width: 100%;
@@ -163,7 +164,7 @@
         padding: 0 $global-padding / 2;
         line-height: 1.9rem;
         a {
-          color: $body-color;
+          color: $light-gray;
           font-size: 0.7rem;
           text-transform: uppercase;
         }
@@ -171,6 +172,12 @@
     }
   }
   &__logo {
+    a {
+	color: $black;		// to make the bullets logo look good
+        &:hover {
+          color: $darken-gray;
+        }	
+    }
     padding: $global-padding * 2 0;
     display: flex;
     align-items: center;
@@ -331,3 +338,6 @@
     }
   }
 }
+
+
+
