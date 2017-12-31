@@ -346,6 +346,9 @@ class Checkout:
         if self.note is not None and self.note:
             order.notes.create(user=order.user, content=self.note)
 
+        if self.note is not None:
+            order.create_order_note(note=self.note, user=self.user)	# add a note from the user to the order
+
         return order
 
     def _get_voucher(self, vouchers=None):

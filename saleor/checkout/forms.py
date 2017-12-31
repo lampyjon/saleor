@@ -129,7 +129,6 @@ class AnonymousUserBillingForm(forms.Form):
             attrs={'autocomplete': 'billing email'}),
         label=pgettext_lazy('Billing form field label', 'Email'))
 
-
 class NoteForm(forms.Form):
     """Form to add a note to an order."""
 
@@ -143,3 +142,4 @@ class NoteForm(forms.Form):
 
     def set_checkout_note(self):
         self.checkout.note = self.cleaned_data.get('note', '')
+
