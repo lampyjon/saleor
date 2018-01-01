@@ -733,3 +733,57 @@ def ajax_order_shipping_methods_list(request, order_pk):
         {'id': method.pk, 'text': method.get_ajax_label()}
         for method in queryset]
     return JsonResponse({'results': shipping_methods})
+
+
+
+# BULLETS
+@staff_member_required
+@permission_required('order.view_order')
+def orders_for_product_variant(request, variant_pk):
+# view of all orders for a given product
+    variant = get_object_or_404(ProductVariant, pk=variant_pk)
+    sku = variant.sku
+    print("Sku = " + str(sku))
+
+    orders = Order.objects.filter(groups__lines__product_sku=sku)
+    print("Orders = ")
+    print(orders)
+
+    order_filter = OrderFilter(request.GET, queryset=orders)
+    print("Order filter QS = ")
+    print(order_filter.qs)
+
+    orders = get_paginator_items(
+        order_filter.qs, settings.DASHBOARD_PAGINATE_BY,
+        request.GET.get('page'))
+    print("pOrders = ")
+    print(orders)
+
+    ctx = {'orders': orders, 'filter': order_filter, 'variant':variant}
+
+    return TemplateResponse(request, 'dashboard/order/productvariants.html', ctx)
+ 
+# BULLETS
+@staff_member_required
+@permission_required('order.edit_order')
+def bulkship_orders(request, variant_pk):
+# This view tries to ship every order that we have open for a particular variant
+    variant = get_object_or_404(ProductVariant, pk=variant_pk)
+    sku = variant.sku
+
+    orderedItems = OrderLine.objects.filter(product_sku=sku)
+    unshippedOrderedItems = orderedItems.filter(delivery_group__order__status='fully-paid')
+
+    for unshippedOrderedItem in unshippedOrderedItems:
+	# copy logic from forms.py (surely this should be on the model?) to ship a delivery group
+        delivery_group = unshippedOrderedItem.delivery_group
+        if delivery_group.items.count() == 1:	# only one item in this delivery group - safe to ship!
+            stock = unshippedOrderedItem.stock	
+            if stock is not None:
+                Stock.objects.decrease_stock(stock, unshippedOrderedItem.quantity)
+            delivery_group.change_status('shipped')
+            statuses = [g.status for g in delivery_group.order.groups.all()]
+            if 'shipped' in statuses and 'new' not in statuses:
+                delivery_group.order.change_status('shipped')
+
+    return redirect('dashboard:orders-for-variant', variant_pk=variant_pk)

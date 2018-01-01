@@ -74,6 +74,8 @@ urlpatterns = [
         views.attribute_choice_value_delete,
         name='product-attribute-value-delete'),
 
+    url(r'^view-allocations/$', views.view_allocations, name='view-allocations'),  # Bullets
+
     url(r'^ajax/variants/$',
         views.ajax_available_variants_list, name='ajax-available-variants'),
     url(r'^ajax/products/$',

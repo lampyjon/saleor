@@ -658,3 +658,10 @@ def ajax_products_list(request):
         {'id': product.id, 'text': str(product)} for product in queryset
     ]
     return JsonResponse({'results': products})
+
+@staff_member_required
+def view_allocations(request):
+    # table view of all stock allocations in open orders
+    stock_items = Stock.objects.filter(quantity_allocated__gt=0).order_by('location')
+    ctx = {'items':stock_items}
+    return TemplateResponse(request, 'dashboard/product/view_allocations.html', ctx)

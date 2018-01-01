@@ -1,0 +1,71 @@
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+{% load prices_i18n %}
+{% load materializecss %}
+{% load get_sort_by_toggle from shop %}
+{% load staticfiles %}
+{% load utils %}
+
+{% block title %}
+  {% trans "Stock allocations" context "Dashboard products list" %} - {{ block.super }}
+{% endblock %}
+
+{% block body_class %}body-locations{% endblock %}
+{% block header_extra %}
+{% endblock %}
+
+{% block breadcrumbs %}
+  <ul class="breadcrumbs">
+    <li class="visible-s">
+      {% trans "Products" context "Dashboard products list" %}
+    </li>
+  </ul>
+{% endblock %}
+
+{% block menu_allocation_class %} active{% endblock %}
+
+{% block content %}
+ <div class="row">
+    <div class="col s12 l9">
+      {% if items %}
+        <div class="card">
+          <div class="data-table-container">
+            <table class="highlight bordered data-table">
+              <thead>
+                <tr>
+                  {% get_sort_by_toggle 'name' as toggle %}
+                  <th class="wide {% if toggle.is_active %}active{% endif %}">
+                    <a href="{{ toggle.url }}">
+                      <svg data-src="{{ toggle.sorting_icon }}" />
+                      {% trans "Name" context "Dashboard stock location table header name" %}
+                    </a>
+                  </th>
+		  <th>Number allocated</th>
+		  <th>Location</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in items %}
+                  <tr data-action-go="
+                      {% if perms.product.edit_stock_location %}{% url 'dashboard:product-update' item.variant.product.pk %}#variants{% endif %}">
+                    <td>{{item.variant.display_product }}</td>
+		    <td><a href="{% url 'dashboard:orders-for-variant' item.variant.pk %}">{{item.quantity_allocated }}</a></td>
+		    <td>{{item.location}}</td>
+
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {% paginate items %}
+      {% else %}
+        <div class="not-found">
+          <p class="grey-text">
+            {% trans "No items found." context "Empty stock allocations list message" %}
+          </p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
