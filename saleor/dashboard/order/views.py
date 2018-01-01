@@ -40,6 +40,10 @@ from .utils import (
     create_invoice_pdf, create_packing_slip_pdf, get_statics_absolute_url,
     save_address_in_order)
 
+from ...order import OrderStatus
+from ...product.models import ProductVariant, Stock
+
+
 
 @staff_member_required
 @permission_required('order.view_order')
@@ -743,21 +747,13 @@ def orders_for_product_variant(request, variant_pk):
 # view of all orders for a given product
     variant = get_object_or_404(ProductVariant, pk=variant_pk)
     sku = variant.sku
-    print("Sku = " + str(sku))
 
     orders = Order.objects.filter(groups__lines__product_sku=sku)
-    print("Orders = ")
-    print(orders)
-
     order_filter = OrderFilter(request.GET, queryset=orders)
-    print("Order filter QS = ")
-    print(order_filter.qs)
 
     orders = get_paginator_items(
         order_filter.qs, settings.DASHBOARD_PAGINATE_BY,
         request.GET.get('page'))
-    print("pOrders = ")
-    print(orders)
 
     ctx = {'orders': orders, 'filter': order_filter, 'variant':variant}
 
@@ -771,19 +767,24 @@ def bulkship_orders(request, variant_pk):
     variant = get_object_or_404(ProductVariant, pk=variant_pk)
     sku = variant.sku
 
-    orderedItems = OrderLine.objects.filter(product_sku=sku)
-    unshippedOrderedItems = orderedItems.filter(delivery_group__order__status='fully-paid')
+    deliveries_for_sku = DeliveryGroup.objects.filter(lines__product_sku=sku)
 
-    for unshippedOrderedItem in unshippedOrderedItems:
+    for delivery_group in deliveries_for_sku:
 	# copy logic from forms.py (surely this should be on the model?) to ship a delivery group
-        delivery_group = unshippedOrderedItem.delivery_group
-        if delivery_group.items.count() == 1:	# only one item in this delivery group - safe to ship!
-            stock = unshippedOrderedItem.stock	
-            if stock is not None:
-                Stock.objects.decrease_stock(stock, unshippedOrderedItem.quantity)
-            delivery_group.change_status('shipped')
-            statuses = [g.status for g in delivery_group.order.groups.all()]
-            if 'shipped' in statuses and 'new' not in statuses:
-                delivery_group.order.change_status('shipped')
+        if delivery_group.order.status == OrderStatus.OPEN and delivery_group.order.is_fully_paid():
+            # this delivery group is ok to ship
+            if delivery_group.lines.count() == 1:	# only one item in this delivery group - safe to ship!
 
+                delivery_group.status = GroupStatus.SHIPPED
+                delivery_group.save()
+
+                for line in delivery_group.lines.all():		
+                     Stock.objects.decrease_stock(line.stock, line.quantity)
+		
+                msg = pgettext_lazy(
+                    'Dashboard message related to a shipment group',
+                    'Shipped %s') % delivery_group
+                messages.success(request, msg)
+                delivery_group.order.create_history_entry(comment=msg, user=request.user)
+		
     return redirect('dashboard:orders-for-variant', variant_pk=variant_pk)
