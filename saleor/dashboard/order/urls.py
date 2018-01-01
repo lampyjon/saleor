@@ -66,4 +66,8 @@ urlpatterns = [
         views.orders_for_product_variant, name='orders-for-variant'),
     url(r'^(?P<variant_pk>\d+)/by-variant/bulk-ship/$', 		# BULLETS
         views.bulkship_orders, name='bulk-ship-variant'),
+
+    url(r'^pay-offline/(?P<order_pk>\d+)/$', 
+        views.pay_offline, name='pay-offline'),
+
 ]

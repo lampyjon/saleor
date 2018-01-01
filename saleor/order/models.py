@@ -175,6 +175,25 @@ class Order(models.Model):
     def can_cancel(self):
         return self.status not in {OrderStatus.CANCELED, OrderStatus.DRAFT}
 
+    def get_balance(self):
+        # Jon: adding this based on code in dashboard/orders/views.py - no idea why not on model
+        #    payment = order.payments.last()
+        #    captured = preauthorized = Price(0, currency=order.get_total().currency)
+        #    balance = captured - order.get_total()
+        #    if payment:
+        #  	 if payment.status == 'confirmed':
+        #             captured = payment.get_captured_price()
+        #             balance = captured - order.get_total()
+        payment = self.payments.last()
+        captured = Price(0, currency=self.get_total().currency)
+        balance = captured - self.get_total()
+        if payment:
+            if payment.status == PaymentStatus.CONFIRMED:
+                captured = payment.get_captured_price()
+                balance = captured - self.get_total()
+
+        return balance
+
 
 class OrderLine(models.Model):
     order = models.ForeignKey(

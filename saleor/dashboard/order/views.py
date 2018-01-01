@@ -41,6 +41,7 @@ from .utils import (
     save_address_in_order)
 
 from ...order import OrderStatus
+from ...order.models import Payment
 from ...product.models import ProductVariant, Stock
 
 
@@ -788,3 +789,26 @@ def bulkship_orders(request, variant_pk):
                 delivery_group.order.create_history_entry(comment=msg, user=request.user)
 		
     return redirect('dashboard:orders-for-variant', variant_pk=variant_pk)
+
+
+
+
+
+
+@staff_member_required
+@permission_required('order.edit_order')
+def pay_offline(request, order_pk):
+    order = get_object_or_404(Order, pk=order_pk)
+
+    amount_to_pay = Price(0, currency=order.get_balance().currency) - order.get_balance()
+    amount_to_pay = amount_to_pay.quantize('0.01').gross
+
+    payment = Payment(order=order, variant="offline", status='confirmed', currency=order.get_balance().currency, total=amount_to_pay, captured_amount=amount_to_pay)
+    payment.save()
+
+#    order.change_status(Status.FULLY_PAID)
+
+    messages.success(request, "Offline payment was added to the order")
+    order.create_history_entry(comment="Offline payment added to order", user=request.user)
+
+    return redirect('dashboard:order-details', order_pk=order.pk)
