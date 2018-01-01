@@ -7,17 +7,15 @@
 {% block title %}{% trans "Checkout" context "Checkout page title" %} — {{ block.super }}{% endblock %}
 
 {% block header %}
-  <div class="container navbar__login">
-    <p>{% trans "Easy and secure!" context "Checkout top message" %}</p>
-  </div>
-  <header class="checkout__header">
-    <div class="container">
-      <a href="{% url 'home'%}">
-        <svg data-src="{% static "images/logo.svg" %}" height="38px" width="176px" />
-      </a>
-      <h1>{% trans "Checkout" context "Checkout title" %}</h1>
+    <div class="container navbar__login">
+      <p>{% trans "Boldmere Bullets Online Shop" context "Checkout top message" %}</p>
     </div>
-  </header>
+    <header class="checkout__header">
+      <div class="container">
+<a href="{% url 'home' %}"><span class="d-none d-sm-block"><span class="coalitionfont">Boldmere</span> <span class="spyfont">Bullets</span></span><span class="d-block d-sm-none">Boldmere Bullets</span></a>
+        <h1>{% trans "Checkout" context "Checkout title" %}</h1>
+      </div>
+    </header>
 {% endblock %}
 
 {% block footer %}
@@ -85,7 +83,7 @@
           {% endif %}
           <div class="row checkout__review__section">
             <div class="col-12">
-              <h3>{% trans "Promo code" context "Order review section title" %}</h3>
+              <h3>{% trans "Promotion code" context "Order review section title" %}</h3>
               {% include "checkout/snippets/voucher_form.html" with checkout=checkout form=voucher_form %}
             </div>
           </div>
