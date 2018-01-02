@@ -22,7 +22,7 @@ from .search.urls import urlpatterns as search_urls
 
 handler404 = 'saleor.core.views.handle_404'
 non_translatable_urlpatterns = [
-    url(r'^dashboard/',
+    url(r'^bullets-shop-management/',
         include((dashboard_urls, 'dashboard'), namespace='dashboard')),
     url(r'^graphql', GraphQLView.as_view(
         schema=schema, graphiql=settings.DEBUG), name='api'),
