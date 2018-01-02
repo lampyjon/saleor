@@ -143,3 +143,4 @@ class NoteForm(forms.Form):
     def set_checkout_note(self):
         self.checkout.note = self.cleaned_data.get('note', '')
 
+
