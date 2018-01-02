@@ -120,9 +120,11 @@ def anonymous_summary_without_shipping(request, checkout):
 
     Will create an order if all data is valid.
     """
+
     note_form = NoteForm(request.POST or None, checkout=checkout)
     if note_form.is_valid():
         note_form.set_checkout_note()
+
     user_form = AnonymousUserBillingForm(
         request.POST or None, initial={'email': checkout.email})
     billing_address = checkout.billing_address
@@ -150,6 +152,7 @@ def summary_without_shipping(request, checkout):
 
     Will create an order if all data is valid.
     """
+
     note_form = NoteForm(request.POST or None, checkout=checkout)
     if note_form.is_valid():
         note_form.set_checkout_note()
