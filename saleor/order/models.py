@@ -278,6 +278,8 @@ class FulfillmentLine(models.Model):
     quantity = models.IntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(999)])
 
+    future_shipping = models.BooleanField(pgettext_lazy('Ordered line field', 'future shipping'), default=False)   # BULLETS: Will this item ship in the future?
+
 
 class Payment(BasePayment):
     order = models.ForeignKey(

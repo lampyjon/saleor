@@ -247,3 +247,4 @@ def restock_fulfillment_lines(fulfillment, allocate=True):
         if order_line.variant:
             increase_stock(
                 line.order_line.variant, line.quantity, allocate=allocate)
+

@@ -113,6 +113,7 @@ class Product(SeoModel):
         max_length=128, default=DEFAULT_TAX_RATE_NAME, blank=True)
 
     objects = ProductQuerySet.as_manager()
+    future_shipping = models.BooleanField(pgettext_lazy('Product field', 'future shipping'), default=False)
 
     class Meta:
         app_label = 'product'
@@ -173,6 +174,10 @@ class Product(SeoModel):
         price = apply_tax_to_price(taxes, tax_rate, price)
         return TaxedMoneyRange(start=price, stop=price)
 
+    def any_future_shipping(self):
+        x = any(variant.ship_in_future() for variant in self)
+        return (self.future_shipping or x)
+
 
 class ProductVariant(models.Model):
     sku = models.CharField(max_length=32, unique=True)
@@ -191,6 +196,8 @@ class ProductVariant(models.Model):
     cost_price = MoneyField(
         currency=settings.DEFAULT_CURRENCY, max_digits=12,
         decimal_places=settings.DEFAULT_DECIMAL_PLACES, blank=True, null=True)
+
+    future_shipping = models.BooleanField(pgettext_lazy('Variant field', 'future shipping'), default=False)
 
     class Meta:
         app_label = 'product'
@@ -245,6 +252,69 @@ class ProductVariant(models.Model):
         price = self.get_price(discounts).gross
         return '%s, %s, %s' % (
             self.sku, self.display_product(), prices_i18n.amount(price))
+
+    def select_stockrecord(self, quantity=1):
+        # By default selects stock with lowest cost price. If stock cost price
+        # is None we assume price equal to zero to allow sorting.
+        stock = [
+            stock_item for stock_item in self.stock.all()
+            if stock_item.quantity_available >= quantity]
+        zero_price = Price(0, currency=settings.DEFAULT_CURRENCY)
+        stock = sorted(
+            stock, key=(lambda s: s.cost_price or zero_price), reverse=False)
+        if stock:
+            return stock[0]
+        return None
+
+    def get_cost_price(self):
+        stock = self.select_stockrecord()
+        if stock:
+            return stock.cost_price
+        return None
+
+    def ship_in_future(self):
+        return self.future_shipping
+
+class StockLocation(models.Model):
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        permissions = (
+            ('view_stock_location',
+             pgettext_lazy('Permission description',
+                           'Can view stock location')),
+            ('edit_stock_location',
+             pgettext_lazy('Permission description',
+                           'Can edit stock location')))
+
+    def __str__(self):
+        return self.name
+
+
+class Stock(models.Model):
+    variant = models.ForeignKey(
+        ProductVariant, related_name='stock', on_delete=models.CASCADE)
+    location = models.ForeignKey(
+        StockLocation, null=True, on_delete=models.CASCADE)
+    quantity = models.IntegerField(
+        validators=[MinValueValidator(0)], default=Decimal(1))
+    quantity_allocated = models.IntegerField(
+        validators=[MinValueValidator(0)], default=Decimal(0))
+    cost_price = PriceField(
+        currency=settings.DEFAULT_CURRENCY, max_digits=12, decimal_places=2,
+        blank=True, null=True)
+
+    class Meta:
+        app_label = 'product'
+        unique_together = ('variant', 'location')
+
+    def __str__(self):
+        return '%s - %s' % (self.variant.name, self.location)
+
+    @property
+    def quantity_available(self):
+        return max(self.quantity - self.quantity_allocated, 0)
+>>>>>>> Added future shipping to variants and products
 
 
 class ProductAttribute(models.Model):
