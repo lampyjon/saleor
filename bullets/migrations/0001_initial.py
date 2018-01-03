@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('order', '0018_auto_20170720_1948'),
+        ('order', '0017_auto_20170906_0556'),
     ]
 
     operations = [
