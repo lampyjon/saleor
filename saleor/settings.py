@@ -458,8 +458,8 @@ CELERY_RESULT_BACKEND = 'django-db'
 
 # Impersonate module settings
 IMPERSONATE = {
-    'URI_EXCLUSIONS': [r'^dashboard/'],
-    'CUSTOM_USER_QUERYSET': 'saleor.account.impersonate.get_impersonatable_users',  # noqa
+    'URI_EXCLUSIONS': [r'^bullets-shop-management/'],
+    'CUSTOM_USER_QUERYSET': 'saleor.acccount.impersonate.get_impersonatable_users',  # noqa
     'USE_HTTP_REFERER': True,
     'CUSTOM_ALLOW': 'saleor.account.impersonate.can_impersonate'}
 
@@ -490,6 +490,8 @@ ALLOWED_STYLES = ['text-align']
 DEFAULT_MENUS = {
     'top_menu_name': 'navbar',
     'bottom_menu_name': 'footer'}
+
+
 
 #### Bullets Settings below here ####
 
