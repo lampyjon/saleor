@@ -22,8 +22,6 @@ from django.utils import timezone
 from django.db.models import Q
 
 
-
-
 who_to_email = ['tara@boldmerebullets.com', 'bullets@jonathan-lawrence.co.uk']
 
 
@@ -59,7 +57,7 @@ def index(request):
     qs = qs.filter(Q(display_until__gte=now) | Q(display_until=None))
     qs = qs.filter(front_page=True)
   
-    return render(request, "bullets/index.html", {'strava_runners':strava_runners, 'strava_cyclists':strava_cyclists, 'week_run_miles':week_run_miles, 'week_ride_miles':week_ride_miles,'year_run_miles':year_run_miles, 'year_ride_miles':year_ride_miles, 'week_runs':week_runs, 'week_rides':week_rides, 'year_runs':year_runs, 'year_rides':year_rides, 'news':qs})
+    return render(request, "bullets/index.html", {'strava_runners':strava_runners, 'strava_cyclists':strava_cyclists, 'week_run_miles':week_run_miles, 'week_ride_miles':week_ride_miles,'year_run_miles':year_run_miles, 'year_ride_miles':year_ride_miles, 'week_runs':week_runs, 'week_rides':week_rides, 'year_runs':year_runs, 'year_rides':year_rides, 'news':qs, 'year':now.year})
 
 
 	
