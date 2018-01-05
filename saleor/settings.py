@@ -24,6 +24,7 @@ ROOT_URLCONF = 'bullets.urls'
 WSGI_APPLICATION = 'saleor.wsgi.application'
 
 ADMINS = (
+    ( os.environ.get('ADMIN_NAME'),  os.environ.get('ADMIN_EMAIL')),
     # ('Your Name', 'your_email@example.com'),
 )
 
