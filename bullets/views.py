@@ -20,15 +20,20 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic.list import ListView
 from django.utils import timezone
 from django.db.models import Q
+from saleor.userprofile.models import User
 
 
-who_to_email = ['tara@boldmerebullets.com', 'bullets@jonathan-lawrence.co.uk']
+#who_to_email = ['tara@boldmerebullets.com', 'bullets@jonathan-lawrence.co.uk']
 
 
 # Decorator style for checking login status
 def is_core_team(user):
     return user.groups.filter(name='CoreTeam').exists()
 
+
+# get list of people to email
+def who_to_email():
+    return User.objects.filter(groups__name='EmailRecipients').values_list('email', flat=True)
 
 
 
@@ -114,7 +119,7 @@ def register(request):
 	
 
 			send_templated_mail(
-        			template_name='email/register',
+        			template_name='bullets/register',
         			from_email='website@boldmerebullets.com',		# TODO: make a setting
         			recipient_list=[register_form.cleaned_data['email']],
         			context=context)
@@ -146,9 +151,9 @@ def confirm_email(request, uuid):
 				messages.info(request, "There was a problem adding your email to the Boldmere Bullets email list - we'll look into it.")
 				#emailit.api.send_mail(context={'bullet':bullet}, recipients=who_to_email, template_base='/email/register_problem', from_email=settings.ORDER_FROM_EMAIL)
 				send_templated_mail(
-        				template_name='email/register_problem',
+        				template_name='bullets/register_problem',
         				from_email='website@boldmerebullets.com',		# TODO: make a setting
-        				recipient_list=who_to_email,
+        				recipient_list=who_to_email(),
         				context={'bullet':bullet})
 
 
@@ -227,12 +232,12 @@ def contact(request):
 	#		emailit.api.send_mail(context=context, recipients=who_to_email, template_base='/email/contact', from_email=settings.ORDER_FROM_EMAIL)
 	#		emailit.api.send_mail(recipients=contact_form.cleaned_data['email'], template_base='email/contact_thanks', from_email=settings.ORDER_FROM_EMAIL)
 			send_templated_mail(
-        			template_name='email/contact',
+        			template_name='bullets/contact',
         			from_email='website@boldmerebullets.com',		# TODO: make a setting
-        			recipient_list=who_to_email,
+        			recipient_list=who_to_email(),
         			context=context)
 			send_templated_mail(
-        			template_name='email/contact_thanks',
+        			template_name='bullets/contact_thanks',
         			from_email='website@boldmerebullets.com',		# TODO: make a setting
         			recipient_list=[contact_form.cleaned_data['email']],
         			context={})
