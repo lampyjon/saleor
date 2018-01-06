@@ -1,14 +1,19 @@
 from django.contrib import admin
-from .models import SiteValue, ActivityCache, Bullet, News, TdBStage, TdBLeaderBoard_Entry, CTSVehicle, CTSRider
+from .models import Bullet, SiteValue, ActivityCache, OldBullet, VeloVolunteer, BulletsRunner, News, TdBStage, TdBLeaderBoard_Entry, CTSVehicle, CTSRider, BulletRunnerPhoto, VeloFeedback, CharityOfYear, NewTDBLeaderBoard
 from django_summernote.admin import SummernoteModelAdmin
 
 admin.site.register(SiteValue)
 admin.site.register(ActivityCache)
+admin.site.register(OldBullet)
 admin.site.register(Bullet)
-#admin.site.register(VeloVolunteer)
-#admin.site.register(BulletsRunner)
+admin.site.register(VeloVolunteer)
+admin.site.register(BulletsRunner)
 admin.site.register(CTSVehicle)
 admin.site.register(CTSRider)
+admin.site.register(BulletRunnerPhoto)
+admin.site.register(VeloFeedback)
+admin.site.register(CharityOfYear)
+admin.site.register(NewTDBLeaderBoard)
 
 
 class NewsAdmin(SummernoteModelAdmin):
@@ -23,4 +28,5 @@ class TDBStageAdmin(SummernoteModelAdmin):
 
 admin.site.register(TdBStage, TDBStageAdmin)
 admin.site.register(TdBLeaderBoard_Entry)
+
 

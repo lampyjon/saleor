@@ -1,0 +1,17 @@
+{% extends 'bullets/base-email.html' %}
+{% block subject %}Boldmere Bullets Registration{% endblock subject %}
+
+{% block body %}
+
+<p>Hello {{name}},</p>
+<p>Thank you for registering as a member of the Boldmere Bullets collective!</p>
+
+<p>Please confirm your email address by <a href="{{ confirm_url }}">clicking here.</a> We can only email you in the future if we have confirmed that this actually is your email address.</p>
+
+<p>We look forward to seeing you on a ride or a run soon!</p>
+
+<p>Best wishes,</p>
+
+<p>The Boldmere Bullets!</p>
+
+{% endblock body %}

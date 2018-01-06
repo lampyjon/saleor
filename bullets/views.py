@@ -6,12 +6,9 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 
-#import emailit.api
-from templated_email import send_templated_mail
-
 from .forms import RegisterForm, UnRegisterForm, ContactForm, tdbForm
 # UploadCSVForm, VeloForm, VeloRiderForm, VeloRunnerForm, BulletsRunnerForm, tdbForm
-from .models import SiteValue, Bullet, News, TdBStage, TdBLeaderBoard_Entry, CTSVehicle, CTSVehiclePosition, CTSRider, CTSRiderPosition
+from .models import SiteValue, Bullet, OldBullet, News, TdBStage, TdBLeaderBoard_Entry, CTSVehicle, CTSVehiclePosition, CTSRider, CTSRiderPosition
 #VeloVolunteer, BulletsRunner,
 from saleor.core.utils import build_absolute_uri
  
@@ -22,18 +19,16 @@ from django.utils import timezone
 from django.db.models import Q
 from saleor.userprofile.models import User
 
-# wrapper around the mail email function, primarily to give consistency on sender email address
-def send_bullet_mail(template_name, recipient_list, context, extra_headers={}, from_email=None):
-    if from_email == None:
-        from_email = settings.DEFAULT_FROM_EMAIL
+from .utils import send_bullet_mail 
 
-    send_templated_mail(
-         template_name=template_name,
-         from_email=from_email,
-         recipient_list=from_email,
-         context=context,
-         headers=extra_headers)
-         
+import uuid
+
+# import the logging library
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
+
 
 
 # Decorator style for checking login status
@@ -77,158 +72,130 @@ def index(request):
 
 	
 
-
+# Add a user to our mailing list
 def add_to_mailchimp(email):
-	try:
-		print("going to add this person to mailchimp: " + str(email))
-		print("getting API instance")
-		m = mailchimp.Mailchimp(settings.MAILCHIMP_API_KEY)
-		m.lists.subscribe(settings.MAILCHIMP_LISTID, {'email': email}, double_optin=False, send_welcome=True)
-		print("seemed to work")
-		return True
-	except mailchimp.Error as e:
-		print('An error occurred: %s - %s' % (e.__class__, e))
-		return False
+    try:
+        m = mailchimp.Mailchimp(settings.MAILCHIMP_API_KEY)
+        m.lists.subscribe(settings.MAILCHIMP_LISTID, {'email': email}, double_optin=False, send_welcome=True)
+        return True
+    except mailchimp.ListAlreadySubscribedError:
+        return True
+    except mailchimp.Error as e:
+        s = 'add_to_mailchimp for (%s) - error : %s - %s' % (email, e.__class__, e)
+        logger.error(s)
+        return False
 
-	return False
-        
-	
-
+# Remove a user from our mailing list (on unregistration as a bullet)
 def remove_from_mailchimp(email):
-	try:
-		print("going to remove this person to mailchimp: " + str(email))
-		print("getting API instance")
-		m = mailchimp.Mailchimp(settings.MAILCHIMP_API_KEY)
-		m.lists.unsubscribe(settings.MAILCHIMP_LISTID, {'email': email})
-		print("seemed to work")
-		return True
-	except mailchimp.Error as e:
-		print('An error occurred: %s - %s' % (e.__class__, e))
-		return False
-
-	return False
-        
+    try:
+        m = mailchimp.Mailchimp(settings.MAILCHIMP_API_KEY)
+        m.lists.unsubscribe(settings.MAILCHIMP_LISTID, {'email': email})
+    except mailchimp.Error as e:
+        s = 'add_to_mailchimp for (%s) - error : %s - %s' % (email, e.__class__, e)
+        logger.error(s)
+        return False
 
 
 
 def register(request): 
-	if request.method == 'POST':
-        	# create a form instance and populate it with data from the request:
-		register_form = RegisterForm(request.POST)
-        	# check whether it's valid:
-		if register_form.is_valid():
-			bullet = register_form.save()
-			url = reverse('confirm-bullet-email', args=[bullet.email_check_ref])
-			url = build_absolute_uri(url)
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        register_form = RegisterForm(request.POST)
+        # check whether it's valid:
+        if register_form.is_valid():
+            bullet = register_form.save()
+            url = reverse('confirm-bullet-email', args=[bullet.email_check_ref])
+            url = build_absolute_uri(url)
 
-			context = register_form.cleaned_data
-			context['confirm_url'] = url
+            context = register_form.cleaned_data
+            context['confirm_url'] = url
+
+            bullet.send_email(
+                template="bullets/register", 
+                context=context, 
+                override_email_safety=True)  # Override the safety check as we want them to confirm their email address
  
-#			emailit.api.send_mail(context=context, recipients=who_to_email, template_base='/email/register_core', from_email=settings.ORDER_FROM_EMAIL)
-#			emailit.api.send_mail(context=context, recipients=register_form.cleaned_data['email'], template_base='email/register', from_email=settings.ORDER_FROM_EMAIL)
-	
+            messages.success(request, 'You have successfully registered with the Boldmere Bullets!');
+            return redirect(reverse('registered'))
+   
+        # if a GET (or any other method) we'll create a blank form
+    else:
+        register_form = RegisterForm()
 
-			send_bullet_mail(
-        			template_name='bullets/register',
-        			recipient_list=[register_form.cleaned_data['email']],
-        			context=context)
-
-	
-			messages.success(request, 'You have successfully registered with the Boldmere Bullets!');
-
-			
-			return redirect(reverse('registered'))
-   		 # if a GET (or any other method) we'll create a blank form
-
-	else:
-        	register_form = RegisterForm()
-  
-	return render(request, "bullets/register.html", {'register_form':register_form})
+    return render(request, "bullets/register.html", {'register_form':register_form})
 
 
 def confirm_email(request, uuid):
-	bullet = get_object_or_404(Bullet, email_check_ref=uuid)
-	if (bullet.email_checked == False):
-		bullet.email_checked = True
-		bullet.save()
+    bullet = get_object_or_404(Bullet, email_check_ref=uuid)
+    if (bullet.email_checked == None):
+        bullet.confirm_email()
+        if bullet.get_emails:
+            x = add_to_mailchimp(bullet.email)
+            if x:
+                messages.success(request, "Thank you " + str(bullet.name) + "! You have been added to the Boldmere Bullets email list.")
+            else:
+                messages.info(request, "There was a problem adding your email to the Boldmere Bullets email list - we'll look into it.")
 
-		if bullet.get_emails:
-			x = add_to_mailchimp(bullet.email)
-			if x:
-				messages.success(request, "Thank you " + str(bullet.name) + "! You have been added to the Boldmere Bullets email list.")
-			else:
-				messages.info(request, "There was a problem adding your email to the Boldmere Bullets email list - we'll look into it.")
-				#emailit.api.send_mail(context={'bullet':bullet}, recipients=who_to_email, template_base='/email/register_problem', from_email=settings.ORDER_FROM_EMAIL)
-				send_bullet_mail(
-        				template_name='bullets/register_problem',
-        				recipient_list=who_to_email(),
-        				context={'bullet':bullet})
+        else:
+            messages.success(request, "Thank you for confirming your email address " + str(bullet.name))
 
-
-
-		else:
-			messages.success(request, "Thank you for confirming your email address " + str(bullet.name))
-
-	else:
-		messages.info(request, "That page has expired")
-	
-	return redirect(reverse('index'))
+    else:
+        messages.info(request, "That page has expired")
+        
+    return redirect(reverse('index'))
 
 
+# when a bullet asks to unregister we send them an email to check it is really them
 def confirm_remove(request, uuid):
-	bullet = get_object_or_404(Bullet, email_check_ref=uuid)
-	messages.success(request, "Thank you for unregistering from the Boldmere Bullets " + str(bullet.name))
+    bullet = get_object_or_404(Bullet, email_check_ref=uuid)
+    messages.success(request, "Thank you for unregistering from the Boldmere Bullets " + str(bullet.name))
 
-#	emailit.api.send_mail(context={'name':bullet.name, 'email':bullet.email}, recipients=who_to_email, template_base='/email/unregister_core', from_email=settings.ORDER_FROM_EMAIL)
+    if bullet.get_emails:
+        remove_from_mailchimp(bullet.email)
 
-	if bullet.get_emails:
-		remove_from_mailchimp(bullet.email)
+    bullet.delete()
 
-	bullet.delete()
-
-	return redirect(reverse('unregistered'))
+    return redirect(reverse('unregistered'))
 
 	
-
-import uuid
-
 def unregister(request): 
-	if request.method == 'POST':
-        	# create a form instance and populate it with data from the request:
-		unregister_form = UnRegisterForm(request.POST)
-        	# check whether it's valid:
-		if unregister_form.is_valid():
-			try:	
-				email = unregister_form.cleaned_data["email"]
-				bullet = Bullet.objects.get(email__iexact=email)
-				bullet.email_check_ref = uuid.uuid4()
-				bullet.save()
-			
-				unregister_url = reverse('unregister-bullet-email', args=[bullet.email_check_ref])
-				unregister_url = build_absolute_uri(unregister_url)
-				context = {'name': bullet.name, 'unregister_url':unregister_url}
-				
-				# emailit.api.send_mail(context=context, recipients=bullet.email, template_base='/email/unregister', from_email=settings.ORDER_FROM_EMAIL)
-				send_bullet_mail(
-        				template_name='email/unregister',
-               				recipient_list=[bullet.email],
-        				context=context)
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        unregister_form = UnRegisterForm(request.POST)
+        # check whether it's valid:
+        if unregister_form.is_valid():
+            try:	
+                email = unregister_form.cleaned_data["email"]
+                bullets = Bullet.objects.filter(email__iexact=email)
+                
+                for bullet in bullets:					
+                    # Because there can be multiple bullets on a single email - email them all
+                    bullet.email_check_ref = uuid.uuid4()   # update the unique ref 
+                    bullet.save()
 
+                    unregister_url = reverse('unregister-bullet-email', args=[bullet.email_check_ref])
+                    unregister_url = build_absolute_uri(unregister_url)
+                    context = {'name': bullet.name, 'unregister_url':unregister_url}
 
-				messages.success(request, 'Please check your email to confirm unregistration')
-			except:
-				messages.warning(request, 'There was a problem removing your registration - sorry!')	
+                    bullet.send_email(
+                        template="bullets/unregister", 
+                        context=context, 
+                        override_email_safety=True)
+
+                messages.success(request, 'Please check your email to confirm unregistration')
+            except:
+                messages.warning(request, 'There was a problem removing your registration - sorry!')	
 									
-			return redirect(reverse('index'))
-   		 # if a GET (or any other method) we'll create a blank form
-	else:
-        	unregister_form = UnRegisterForm()
+        return redirect(reverse('index'))
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        unregister_form = UnRegisterForm()
    
-	return render(request, "bullets/unregister.html", {'unregister_form':unregister_form})
+    return render(request, "bullets/unregister.html", {'unregister_form':unregister_form})
        
 
 
-
+# Handle contact form 
 def contact(request): 
 	if request.method == 'POST':
         	# create a form instance and populate it with data from the request:
@@ -236,8 +203,7 @@ def contact(request):
         	# check whether it's valid:
 		if contact_form.is_valid():
 			context = contact_form.cleaned_data 
-	#		emailit.api.send_mail(context=context, recipients=who_to_email, template_base='/email/contact', from_email=settings.ORDER_FROM_EMAIL)
-	#		emailit.api.send_mail(recipients=contact_form.cleaned_data['email'], template_base='email/contact_thanks', from_email=settings.ORDER_FROM_EMAIL)
+
 			send_bullet_mail(
         			template_name='bullets/contact',
         			recipient_list=who_to_email(),

@@ -4,7 +4,9 @@ from django.db import models
 from django.utils.encoding import smart_text, python_2_unicode_compatible
 from autoslug import AutoSlugField
 from django.urls import reverse
-
+import uuid
+from .utils import send_bullet_mail
+from django.utils import timezone
 
 # this model holds values we calcuate sporadically for the site, such as the number of strava runners and cyclists
 
@@ -37,10 +39,71 @@ class ActivityCache(models.Model):
 
 
 
+class Person(models.Model):
+    name = models.CharField("name", max_length=200)
+    email = models.EmailField('email address', max_length=200)
+    date_added = models.DateField("date created", auto_now_add=True)
+    email_checked = models.DateField("date email confirmed", blank=True, null=True)
+    email_check_ref = models.UUIDField("random uuid for email confirmation", default=uuid.uuid4, editable=False)
+    
+    class Meta:
+        abstract = True
+        ordering = ['name']
+
+    def __str__(self):
+        return smart_text(self.name)
+
+    # when the email address associated with this person is confirmed
+    def confirm_email(self):   
+        self.email_checked = timezone.now()
+        self.email_check_ref = uuid.uuid4() 
+        self.save()
+  
+    
+    # Send an email to this person 
+    def send_email(self, template, context, dryrun=False, from_email=None, override_email_safety=False, extra_headers={}):
+        if self.email_checked == None and override_email_safety == False:
+            print("!!! Not emailing " + smart_text(self.name) + "(" + smart_text(self.email) + ") !!!")
+            return False
+
+        if dryrun:
+            print("*** Would email " + smart_text(self.name) + "("+smart_text(self.email) + ") ***")
+            return False
+        else:
+            send_bullet_mail(template_name=template, recipient_list=[self.email], context=context, extra_headers=extra_headers, from_email=from_email)
+            print("Sent an email to " + smart_text(self.email) + " using template " + str(template))
+            return True
+
+
+
+
+
 # this is the registration database
-import uuid
+class Bullet(Person):
+    postcode = models.CharField('first part of postcode', max_length=5)	
+    contact_no = models.CharField('contact number', max_length=100)
+    over_18 = models.BooleanField('over 18', help_text='Please confirm that you are over 18?')
+    get_emails = models.BooleanField("happy to receive emails", help_text='Can we contact you regarding Collective events?')
+
+    voting_ref = models.UUIDField("random uuid for voting", default=uuid.uuid4, editable=False, blank=True, null=True)		# URL for charity of the year 2017
+
+    def send_charity_email(self, dryrun=False):
+        if (self.voting_ref != None):
+            url = 'https://www.boldmerebullets.com/charity-vote/vote/' + str(self.voting_ref)
+            ctx = {'bullet':self, 'email_url':url}
+
+            return self.send_email(template="bullets/charity_vote", context=ctx, dryrun=dryrun)
+        else:
+            return False
+
+     # TODO: admin view of how many bullets have joined in the last <n> days
+
+
+
+
+# this is the registration database
 @python_2_unicode_compatible
-class Bullet(models.Model):
+class OldBullet(models.Model):
 	name = models.CharField("name", max_length=200)
 	postcode = models.CharField('first part of postcode', max_length=5)
 	email = models.EmailField('email address', max_length=200)
@@ -253,7 +316,7 @@ class VeloVolunteer(models.Model):
 		(NON_RIDER, "non-rider")
 	)
 
-	bullet = models.ForeignKey(Bullet, blank=True, null=True)		# RIDERS
+	bullet = models.ForeignKey(OldBullet, blank=True, null=True)		# RIDERS
 	email =  models.EmailField('email address', max_length=200, blank=True)	# NON RIDER
 	name = models.CharField('name', help_text="Your name", max_length=200, blank=True) # NON RIDER		
 	address = models.TextField("address", help_text="Your address")
