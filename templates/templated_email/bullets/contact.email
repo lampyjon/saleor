@@ -11,6 +11,8 @@
 {{ comment }}
 </pre>
 
+<i>Press 'reply' to respond to {{ name }}.</i>
+
 <p>Lots of love,</p>
 <p>The website.</p>
 
