@@ -22,8 +22,18 @@ from django.utils import timezone
 from django.db.models import Q
 from saleor.userprofile.models import User
 
+# wrapper around the mail email function, primarily to give consistency on sender email address
+def send_bullet_mail(template_name, recipient_list, context, extra_headers={}, from_email=None):
+    if from_email == None:
+        from_email = settings.DEFAULT_FROM_EMAIL
 
-#who_to_email = ['tara@boldmerebullets.com', 'bullets@jonathan-lawrence.co.uk']
+    send_templated_mail(
+         template_name=template_name,
+         from_email=from_email,
+         recipient_list=from_email,
+         context=context,
+         headers=extra_headers)
+         
 
 
 # Decorator style for checking login status
@@ -118,9 +128,8 @@ def register(request):
 #			emailit.api.send_mail(context=context, recipients=register_form.cleaned_data['email'], template_base='email/register', from_email=settings.ORDER_FROM_EMAIL)
 	
 
-			send_templated_mail(
+			send_bullet_mail(
         			template_name='bullets/register',
-        			from_email='website@boldmerebullets.com',		# TODO: make a setting
         			recipient_list=[register_form.cleaned_data['email']],
         			context=context)
 
@@ -150,9 +159,8 @@ def confirm_email(request, uuid):
 			else:
 				messages.info(request, "There was a problem adding your email to the Boldmere Bullets email list - we'll look into it.")
 				#emailit.api.send_mail(context={'bullet':bullet}, recipients=who_to_email, template_base='/email/register_problem', from_email=settings.ORDER_FROM_EMAIL)
-				send_templated_mail(
+				send_bullet_mail(
         				template_name='bullets/register_problem',
-        				from_email='website@boldmerebullets.com',		# TODO: make a setting
         				recipient_list=who_to_email(),
         				context={'bullet':bullet})
 
@@ -201,10 +209,9 @@ def unregister(request):
 				context = {'name': bullet.name, 'unregister_url':unregister_url}
 				
 				# emailit.api.send_mail(context=context, recipients=bullet.email, template_base='/email/unregister', from_email=settings.ORDER_FROM_EMAIL)
-				send_templated_mail(
+				send_bullet_mail(
         				template_name='email/unregister',
-        				from_email='website@boldmerebullets.com',		# TODO: make a setting
-        				recipient_list=[bullet.email],
+               				recipient_list=[bullet.email],
         				context=context)
 
 
@@ -231,15 +238,14 @@ def contact(request):
 			context = contact_form.cleaned_data 
 	#		emailit.api.send_mail(context=context, recipients=who_to_email, template_base='/email/contact', from_email=settings.ORDER_FROM_EMAIL)
 	#		emailit.api.send_mail(recipients=contact_form.cleaned_data['email'], template_base='email/contact_thanks', from_email=settings.ORDER_FROM_EMAIL)
-			send_templated_mail(
+			send_bullet_mail(
         			template_name='bullets/contact',
-        			from_email='website@boldmerebullets.com',		# TODO: make a setting
         			recipient_list=who_to_email(),
+                                extra_headers={'Reply-To':contact_form.cleaned_data['email']},
         			context=context)
-			send_templated_mail(
+			send_bullet_mail(
         			template_name='bullets/contact_thanks',
-        			from_email='website@boldmerebullets.com',		# TODO: make a setting
-        			recipient_list=[contact_form.cleaned_data['email']],
+               			recipient_list=[contact_form.cleaned_data['email']],
         			context={})
 
 			messages.success(request, 'Your message has been sent to the Boldmere Bullets!');
