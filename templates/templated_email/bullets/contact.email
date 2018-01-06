@@ -5,7 +5,7 @@
 
 <p>There has been a new message sent to us via the Boldmere Bullets Website!</p>
 
-<p>{{ name }} ( {{ email }} ) has left the following message via the Boldmere Bullets contact form:</p>
+<p>{{ name }} ({{ email }}) has left the following message:</p>
 
 <pre>
 {{ comment }}
