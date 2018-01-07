@@ -6,9 +6,9 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 
-from .forms import RegisterForm, UnRegisterForm, ContactForm, tdbForm
+from .forms import RegisterForm, UnRegisterForm, ContactForm, tdbForm, RunningEventForm
 # UploadCSVForm, VeloForm, VeloRiderForm, VeloRunnerForm, BulletsRunnerForm, tdbForm
-from .models import SiteValue, Bullet, OldBullet, News, TdBStage, TdBLeaderBoard_Entry, CTSVehicle, CTSVehiclePosition, CTSRider, CTSRiderPosition
+from .models import SiteValue, Bullet, OldBullet, News, TdBStage, TdBLeaderBoard_Entry, CTSVehicle, CTSVehiclePosition, CTSRider, CTSRiderPosition, RunningEvent
 #VeloVolunteer, BulletsRunner,
 from saleor.core.utils import build_absolute_uri
  
@@ -263,7 +263,7 @@ def bullets_core_team(request):
 def run_tuesday(request):		# get the list of runs
 	now = timezone.now()
 	q = RunningEvent.objects.filter(date__gte=now)
-	return render(request, "mainsite/run_tuesday.html", {'runs':q})
+	return render(request, "bullets/run_tuesday.html", {'runs':q})
 
 
 @login_required
@@ -282,7 +282,7 @@ def run_tuesday_admin(request):
 	else:
 		run_form = RunningEventForm()
 	
-	return render(request, "mainsite/run_tuesday_admin.html", {'runs':q, 'run_form':run_form})
+	return render(request, "bullets/run_tuesday_admin.html", {'runs':q, 'run_form':run_form})
 
 	
 @login_required
@@ -294,7 +294,7 @@ def run_tuesday_admin_delete(request, pk):
 		messages.success(request, "Runn was deleted!")
 		return redirect(reverse('run-tuesday-admin'))
 
-	return render(request, "mainsite/run_tuesday_delete.html", {'run':run})
+	return render(request, "bullets/run_tuesday_delete.html", {'run':run})
 
 
 
