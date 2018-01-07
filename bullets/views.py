@@ -102,6 +102,14 @@ def register(request):
         register_form = RegisterForm(request.POST)
         # check whether it's valid:
         if register_form.is_valid():
+            # check to see if someone with same name & email address has already registered
+            x = Bullet.objects.filter(email__iexact=register_form.cleaned_data["email"], name__iexact=register_form.cleaned_data["name"]).exists()
+            if x:
+                messages.info(request, "You are already registered as a Boldmere Bullet!")
+                print("This way")
+                return redirect(reverse('already-registered'))
+
+
             bullet = register_form.save()
             url = reverse('confirm-bullet-email', args=[bullet.email_check_ref])
             url = build_absolute_uri(url)

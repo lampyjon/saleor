@@ -13,6 +13,7 @@ urlpatterns = [
 
     url(r'^register/$', views.register, name='register'),
     url(r'^register/success/$', TemplateView.as_view(template_name="bullets/registered.html"), name='registered'),
+    url(r'^register/already-registered/$', TemplateView.as_view(template_name="bullets/already-registered.html"), name='already-registered'),
     url(r'^register/about/$', TemplateView.as_view(template_name="bullets/about-registration.html"), name='about-registration'),
     url(r'^register/remove/$', views.unregister, name='unregister'),
     url(r'^register/removed/$', TemplateView.as_view(template_name="bullets/unregistered.html"), name='unregistered'),
