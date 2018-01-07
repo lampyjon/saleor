@@ -20,7 +20,7 @@ from django.db.models import Q
 from saleor.userprofile.models import User
 
 from .utils import send_bullet_mail 
-
+from datetime import timedelta
 import uuid
 
 # import the logging library
@@ -43,7 +43,7 @@ def who_to_email():
 
 
 def index(request):
-        # Get the cached number of Strava Runners and Cylists
+    # Get the cached number of Strava Runners and Cylists
     strava_runners = SiteValue.objects.get(name=settings.STRAVA_NUM_RUNNERS).value
     strava_cyclists =  SiteValue.objects.get(name=settings.STRAVA_NUM_RIDERS).value
 
@@ -58,7 +58,6 @@ def index(request):
 
     year_runs = SiteValue.objects.get(name=settings.STRAVA_YEAR_RUNS).value
     year_rides = SiteValue.objects.get(name=settings.STRAVA_YEAR_RIDES).value
-
 
     now = timezone.now()
 
@@ -96,7 +95,7 @@ def remove_from_mailchimp(email):
         return False
 
 
-
+# Register a new bullet onto the system
 def register(request): 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -125,6 +124,7 @@ def register(request):
     return render(request, "bullets/register.html", {'register_form':register_form})
 
 
+# Handle confirmation of a new email address for a bullet
 def confirm_email(request, uuid):
     bullet = get_object_or_404(Bullet, email_check_ref=uuid)
     if (bullet.email_checked == None):
@@ -157,7 +157,8 @@ def confirm_remove(request, uuid):
 
     return redirect(reverse('unregistered'))
 
-	
+
+# A bullet wishes to unregister from us
 def unregister(request): 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -223,6 +224,31 @@ def contact(request):
 		contact_form = ContactForm()
    
 	return render(request, "bullets/contact-us.html", {'contact_form':contact_form})
+
+
+
+#### CORE TEAM VIEWS ####
+
+
+### Main page for the core team
+@login_required
+@user_passes_test(is_core_team, login_url="/") # are they in the core team group?     # TODO: this didn't work?
+def bullets_core_team(request):
+    messages.info(request, 'Only members of the core team can view this page!')
+
+    bullets = Bullet.objects.count()
+
+    last_week = timezone.now() - timedelta(days=7)
+    last_month = timezone.now() - timedelta(days=30)
+
+    bullets_week = Bullet.objects.filter(date_added__gte=last_week).count()
+    bullets_month = Bullet.objects.filter(date_added__gte=last_month).count()
+
+    news_items = News.objects.order_by("-date_added")
+
+    return render(request, "bullets/admin/core_team.html", {'bullets':bullets, 'bullets_week':bullets_week, 'bullets_month':bullets_month, 'news_items':news_items})
+
+
 
 
 #### BULLETS RUN STUFF ####

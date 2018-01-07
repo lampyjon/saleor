@@ -41,6 +41,8 @@ urlpatterns = [
     url(r'^info/delivery-times/$', TemplateView.as_view(template_name="bullets/delivery-times.html"), name='delivery-times'),
 
 
+    url(r'^core-team-admin/$', views.bullets_core_team, name='core-team-admin'), 
+
 # Spring Classic Riders
 #    url(r'^special-events/spring-classics/$', TemplateView.as_view(template_name="bullets/spring-classics/spring-classics.html"), name='spring-classics'),
 #    url(r'^special-events/spring-classics/milan-san-remo/$', TemplateView.as_view(template_name="bullets/spring-classics/spring-classics-milan.html"), name='spring-milan'),
@@ -136,10 +138,6 @@ urlpatterns = [
     url(r'^who-are-the-bullets-2/', RedirectView.as_view(pattern_name='history', permanent=True)),
 
 
-    ### One off URLs
-#    url(r'^are-you-engaged/$', views.upload_member_csv, name='upload-member-csv'),
-#    url(r'^are-you-engaged/ZONE-IN-NOW-EVERYONE/$', views.upload_member_csv_part2, name='upload-member-csv-2'),
-
 
     # Summernote
     url(r'^magic_editor/', include('django_summernote.urls')), 
@@ -148,17 +146,9 @@ urlpatterns = [
     # Other apps
     url(r'^bullets-shop/', include('saleor.urls')),
     url(r'^vlb-admin/', admin.site.urls),
-#    url(r'^graphql/(?P<path>.*)$', RedirectView.as_view(url='/bullets-shop/graphql/%(path)s')),
-#    url(r'^cart/(?P<path>.*)$', RedirectView.as_view(url='/bullets-shop/cart/%(path)s')),
 ]
 
 
 handler404 = 'bullets.views.error404'
-
-#if settings.DEBUG:
-#	print("Doc root = " + settings.STATIC_ROOT)
-#	urlpatterns = urlpatterns + (static(settings.STATIC_URL, document_root=settings.STATIC_ROOT))
-
-
 
 

@@ -1,0 +1,63 @@
+{% extends "simple.html" %}
+{% load bootstrap_form from bootstrap3 %}
+{% load static %}
+
+{% block title %} - The Bullets Core Team!{%endblock %}
+{% block topurl %}{% url 'index' %}{% endblock %}
+
+{% block header-links %}
+{% endblock %}
+
+
+{% block extraheader %}
+<link href="{% static 'css/bootstrap-sortable.css' %}" rel="stylesheet"> 
+
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-8 col-sm-push-1">
+            <h1>Bullets Administration</h1>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-md-3 text-center introbox introboxlink">
+					<h2>Total Bullets</h2>
+					<p>{{ bullets }}</p>						
+	</div>
+	<div class="col-md-3 col-md-offset-1 text-center introbox introboxlink">
+					<h2>Added this week</h2>
+					<p>{{ bullets_week }}</p>
+	</div>            
+	<div class="col-md-3 col-md-offset-1 text-center introbox introboxlink">
+					<h2>Added this month</h2>
+					<p>{{ bullets_month }}</p>
+	</div>    
+</div>
+   
+
+	<table class="table sortable">
+	<thead>
+		<tr>
+			<th data-defaultsort="asc">Name</th>
+			<th>Email</th>
+			<th>Distance</th>
+			<th>Paid</th>
+			<th>Edit</th>
+			<th>Delete</th>
+			<th>Reminder Link</td>
+		</tr>
+	</thead>
+	<tbody>
+		</tbody>
+	</table>
+ 
+      {% endblock %}
+
+
+{% block extrafooter %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
+<script src="{% static 'js/bootstrap-sortable.js' %}"></script>
+{% endblock %}
+
