@@ -2,29 +2,36 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 import django.core.exceptions
 from django.conf import settings
-
-from django.core.urlresolvers import reverse
 from django.contrib import messages
-
-from .forms import RegisterForm, UnRegisterForm, ContactForm, tdbForm, RunningEventForm
-# UploadCSVForm, VeloForm, VeloRiderForm, VeloRunnerForm, BulletsRunnerForm, tdbForm
-from .models import SiteValue, Bullet, OldBullet, News, TdBStage, TdBLeaderBoard_Entry, CTSVehicle, CTSVehiclePosition, CTSRider, CTSRiderPosition, RunningEvent
-#VeloVolunteer, BulletsRunner,
-from saleor.core.utils import build_absolute_uri
- 
-import mailchimp
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
 from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+
 from django.utils import timezone
 from django.db.models import Q
-from saleor.userprofile.models import User
+from django.core.urlresolvers import reverse
+from django.urls import reverse_lazy
 
-from .utils import send_bullet_mail 
+# Python imports 
 from datetime import timedelta
 import uuid
 
-# import the logging library
-import logging
+# Bullets imports
+from .forms import RegisterForm, UnRegisterForm, ContactForm, tdbForm, RunningEventForm, NewsForm
+# UploadCSVForm, VeloForm, VeloRiderForm, VeloRunnerForm, BulletsRunnerForm, tdbForm
+from .models import SiteValue, Bullet, OldBullet, News, TdBStage, TdBLeaderBoard_Entry, CTSVehicle, CTSVehiclePosition, CTSRider, CTSRiderPosition, RunningEvent
+#VeloVolunteer, BulletsRunner,
+
+from .utils import send_bullet_mail 
+
+# SALEOR imports
+from saleor.core.utils import build_absolute_uri
+from saleor.userprofile.models import User
+
+import mailchimp  # for adding users to our mailing list
+import logging    # For the logging library
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -255,6 +262,36 @@ def bullets_core_team(request):
     news_items = News.objects.order_by("-date_added")
 
     return render(request, "bullets/admin/core_team.html", {'bullets':bullets, 'bullets_week':bullets_week, 'bullets_month':bullets_month, 'news_items':news_items})
+
+
+#### News editing code
+class NewsListAdmin(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = News
+    template_name = "bullets/news_list_admin.html"
+    def test_func(self):
+        return is_core_team(self.request.user)
+        
+
+class NewsCreate(LoginRequiredMixin, UserPassesTestMixin,CreateView):
+    model = News
+    form_class = NewsForm
+    success_url = reverse_lazy('news-list-admin')
+    def test_func(self):
+        return is_core_team(self.request.user)
+
+ 
+class NewsUpdate(LoginRequiredMixin, UserPassesTestMixin,UpdateView):
+    model = News
+    form_class = NewsForm
+    success_url = reverse_lazy('news-list-admin')
+    def test_func(self):
+        return is_core_team(self.request.user)
+
+class NewsDelete(LoginRequiredMixin, UserPassesTestMixin,DeleteView):
+    model = News
+    success_url = reverse_lazy('news-list-admin')  
+    def test_func(self):
+        return is_core_team(self.request.user)
 
 
 

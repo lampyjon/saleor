@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Bullet, VeloVolunteer, BulletsRunner, InterclubRider, RunningEvent, VeloFeedback, BulletsRunFeedback
-#from django.conf import settings
+from .models import Bullet, News, VeloVolunteer, BulletsRunner, InterclubRider, RunningEvent, VeloFeedback, BulletsRunFeedback
+from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 
 class RegisterForm(ModelForm):
 	over_18 = forms.BooleanField(label='Please confirm you are over 18?')
@@ -30,8 +30,6 @@ class ContactForm(forms.Form):
     comment = forms.CharField(widget=forms.Textarea)
 
 
-
-
 class RunningEventForm(ModelForm):
 	class Meta:
 		model = RunningEvent
@@ -43,9 +41,25 @@ class RunningEventForm(ModelForm):
 	def __init__(self, *args, **kwargs):
 		super(RunningEventForm, self).__init__(*args, **kwargs)
 		p = ('%d-%m-%Y','%Y-%m-%d')
-		#print p
 		self.fields['date'].input_formats=(p)
 
+
+class NewsForm(ModelForm):
+    class Meta:
+        model = News
+        fields = ['title', 'extra_title', 'redirect_to', 'story', 'display_after', 'display_until', 'front_page']
+
+        widgets = {
+            'display_after': forms.TextInput(attrs={'class': 'datepicker'}),
+            'display_until': forms.TextInput(attrs={'class': 'datepicker'}),
+            'story': SummernoteInplaceWidget(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(NewsForm, self).__init__(*args, **kwargs)
+        p = ('%d-%m-%Y','%Y-%m-%d')
+        self.fields['display_after'].input_formats=(p)
+        self.fields['display_until'].input_formats=(p)
 
 
 class BulletsRunnerForm(ModelForm):

@@ -42,6 +42,12 @@ urlpatterns = [
 
     url(r'^news/latest/$', views.NewsListView.as_view(), name='news'),
     url(r'^news/item/(?P<slug>[-\w]+)/$', views.news_item, name='news-item'),
+
+    url(r'^news/list/admin/$', views.NewsListAdmin.as_view(), name='news-list-admin'), 
+    url(r'^news/create/$', views.NewsCreate.as_view(), name='news-create'),
+    url(r'^news/update/(?P<pk>[0-9]+)/$', views.NewsUpdate.as_view(), name='news-update'),
+    url(r'^news/delete/(?P<pk>[0-9]+)/$', views.NewsDelete.as_view(), name='news-delete'),
+
 #    url(r'^news/latest/$', TemplateView.as_view(template_name="bullets/news.html"), name='news'),
 
     url(r'^info/delivery-times/$', TemplateView.as_view(template_name="bullets/delivery-times.html"), name='delivery-times'),

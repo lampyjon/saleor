@@ -7,16 +7,17 @@ from django.urls import reverse
 import uuid
 from .utils import send_bullet_mail
 from django.utils import timezone
+import datetime
+
+
 
 # this model holds values we calcuate sporadically for the site, such as the number of strava runners and cyclists
-
 class SiteValue(models.Model):
 	name = models.CharField(max_length=30)
 	value = models.TextField()
 
 	def __str__(self):
         	return self.name + " = " + self.value
-
 
 RUN = 'run'
 RIDE = 'ride'
@@ -96,9 +97,6 @@ class Bullet(Person):
         else:
             return False
 
-     # TODO: admin view of how many bullets have joined in the last <n> days
-
-
 
 
 # this is the registration database
@@ -147,6 +145,8 @@ class CharityOfYear(models.Model):
 
 	def __str__(self):
 		return smart_text(self.name)
+
+
 
 ## for the Runs on Tuesdays 
 @python_2_unicode_compatible
@@ -548,15 +548,16 @@ class BulletRunnerPhoto(models.Model):
 			return False
 
 
+# News articles on the Bullets site
 class News(models.Model):
 	title = models.CharField("title", max_length=100)
 	extra_title = models.CharField("extra title text (not in link)", max_length=100, blank=True, null=True)
 	slug = AutoSlugField(populate_from='title', editable=False)
-	redirect_to = models.URLField("redirection story - where to go?", blank=True, null=True)
+	redirect_to = models.URLField("redirection story - where to go?", help_text="If you put a website address in here, then don't include a story below; the news story will just redirect to this link", blank=True, null=True)
 	story = models.TextField("story", blank=True, null=True)
 
 	date_added = models.DateField("date added", auto_now_add=True)
-	display_after = models.DateField("publish on")
+	display_after = models.DateField("publish on", default=datetime.date.today)
 	display_until = models.DateField("remove from site on", blank=True, null=True)
 	front_page = models.BooleanField('feature on front page', default=False)
 
@@ -566,16 +567,12 @@ class News(models.Model):
 		else:
         		return str(self.title)
 
-
 	class Meta:
 		verbose_name = "news story"
 		verbose_name_plural = "news stories"
 
 	def get_absolute_url(self):
         	return reverse('news-item', kwargs={'slug': self.slug})
-
-
-from django.utils import timezone
 
 
 class TdBStage(models.Model):
