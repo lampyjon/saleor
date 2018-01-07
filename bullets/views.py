@@ -258,6 +258,46 @@ def bullets_core_team(request):
 
 
 
+#### TUESDAY RUNS EDIT AND DISPLAY LOGIC
+
+def run_tuesday(request):		# get the list of runs
+	now = timezone.now()
+	q = RunningEvent.objects.filter(date__gte=now)
+	return render(request, "mainsite/run_tuesday.html", {'runs':q})
+
+
+@login_required
+@user_passes_test(is_core_team, login_url="/") # are they in the core team group?
+def run_tuesday_admin(request):
+	now = timezone.now()
+	q = RunningEvent.objects.filter(date__gte=now)
+
+	if request.method == 'POST':
+		run_form = RunningEventForm(request.POST)
+		if run_form.is_valid():
+			run = run_form.save()
+			messages.success(request, "Added run to the system!")
+			run_form = RunningEventForm()
+			
+	else:
+		run_form = RunningEventForm()
+	
+	return render(request, "mainsite/run_tuesday_admin.html", {'runs':q, 'run_form':run_form})
+
+	
+@login_required
+@user_passes_test(is_core_team, login_url="/") # are they in the core team group?
+def run_tuesday_admin_delete(request, pk):
+	run = get_object_or_404(RunningEvent, pk=pk)
+	if request.POST:
+		run.delete()
+		messages.success(request, "Runn was deleted!")
+		return redirect(reverse('run-tuesday-admin'))
+
+	return render(request, "mainsite/run_tuesday_delete.html", {'run':run})
+
+
+
 
 #### BULLETS RUN STUFF ####
 

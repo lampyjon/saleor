@@ -26,7 +26,12 @@ urlpatterns = [
     url(r'^runs/info/$', TemplateView.as_view(template_name="bullets/run_info.html"), name='run-info'),
     url(r'^runs/routes/$', TemplateView.as_view(template_name="bullets/run_routes.html"), name='run-routes'),
     url(r'^runs/sunday/$', TemplateView.as_view(template_name="bullets/run_sunday.html"), name='run-sunday'),
-    url(r'^runs/tuesday/$', TemplateView.as_view(template_name="bullets/run_tuesday.html"), name='run-tuesday'),
+#    url(r'^runs/tuesday/$', TemplateView.as_view(template_name="bullets/run_tuesday.html"), name='run-tuesday'),
+    url(r'^runs/tuesday/$', views.run_tuesday, name='run-tuesday'),
+    url(r'^runs/tuesday/admin$', views.run_tuesday_admin, name='run-tuesday-admin'),	# to add runs
+    url(r'^runs/tuesday/delete/(?P<pk>\d+)$', views.run_tuesday_admin_delete, name='run-tuesday-admin-delete'),	# To remove runs   
+
+
 
     url(r'^collective-code/$', TemplateView.as_view(template_name="bullets/collective-code.html"), name='collective-code'),
     url(r'^history/$', TemplateView.as_view(template_name="bullets/history.html"), name='history'),
@@ -43,6 +48,13 @@ urlpatterns = [
 
 
     url(r'^core-team-admin/$', views.bullets_core_team, name='core-team-admin'), 
+
+
+
+
+
+
+
 
 # Spring Classic Riders
 #    url(r'^special-events/spring-classics/$', TemplateView.as_view(template_name="bullets/spring-classics/spring-classics.html"), name='spring-classics'),

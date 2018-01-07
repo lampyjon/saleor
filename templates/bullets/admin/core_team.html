@@ -15,43 +15,34 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-sm-8 col-sm-push-1">
-            <h1>Bullets Administration</h1>
-    </div>
-</div>
+<h1>Bullets Administration</h1>
+
+<div class="clearfix">&nbsp;</div>
 
 <div class="row">
-	<div class="col-md-3 text-center introbox introboxlink">
-					<h2>Total Bullets</h2>
-					<p>{{ bullets }}</p>						
+	<div class="col-md-4 col-md-offset-1  text-center introbox introboxlink">
+					<h2>Total Bullets: {{ bullets }}</h2>
+					<p>
+					<div>This week: {{ bullets_week }}</div>
+					<div>This month: {{ bullets_month }}</div></p>				
 	</div>
-	<div class="col-md-3 col-md-offset-1 text-center introbox introboxlink">
-					<h2>Added this week</h2>
-					<p>{{ bullets_week }}</p>
-	</div>            
-	<div class="col-md-3 col-md-offset-1 text-center introbox introboxlink">
-					<h2>Added this month</h2>
-					<p>{{ bullets_month }}</p>
-	</div>    
+  
 </div>
    
 
-	<table class="table sortable">
-	<thead>
-		<tr>
-			<th data-defaultsort="asc">Name</th>
-			<th>Email</th>
-			<th>Distance</th>
-			<th>Paid</th>
-			<th>Edit</th>
-			<th>Delete</th>
-			<th>Reminder Link</td>
-		</tr>
-	</thead>
-	<tbody>
-		</tbody>
-	</table>
+<h2>Edit things on the site</h2>
+
+<div class="row">
+    <div class="col-sm-3">   
+	    <a href="{% url 'run-tuesday-admin' %}" class="btn btn-block btn-primary btn-xl">Tuesday Run Schedule</a>
+    </div>
+    <div class="col-sm-3 col-sm-offset-1">
+	    <a href="{% url 'news' %}" class="btn btn-block btn-primary btn-xl">News Items</a>
+    </div>
+  
+</div>
+
+
  
       {% endblock %}
 
