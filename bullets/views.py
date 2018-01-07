@@ -129,7 +129,7 @@ def register(request):
     else:
         register_form = RegisterForm()
 
-    return render(request, "bullets/register.html", {'register_form':register_form})
+    return render(request, "bullets/registration/register.html", {'register_form':register_form})
 
 
 # Handle confirmation of a new email address for a bullet
@@ -200,7 +200,7 @@ def unregister(request):
     else:
         unregister_form = UnRegisterForm()
    
-    return render(request, "bullets/unregister.html", {'unregister_form':unregister_form})
+    return render(request, "bullets/registration/unregister.html", {'unregister_form':unregister_form})
        
 
 
