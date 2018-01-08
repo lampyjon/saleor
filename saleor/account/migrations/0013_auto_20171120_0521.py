@@ -30,6 +30,7 @@ class Migration(migrations.Migration):
 
     replaces = [
         ('userprofile', '0013_auto_20171120_0521'),
+
     ]
 
     operations = [

@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('userprofile', '0016_remove_address_company_name'),
+        ('userprofile', '000a_remove_company_name'),
     ]
 
     operations = [
