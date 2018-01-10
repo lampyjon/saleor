@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load staticfiles %}
+{% load markdown %}
 
 {% block title %}
   {{ site }} - {{ block.super }}
@@ -57,6 +58,21 @@
               </p>
             </div>
           </div>
+          <div class="row">
+            <div class="col s12 m4 l12">
+              <h4>
+                {% trans "Front Page Text" context "Site settings field" %}
+              </h4>
+              <p>
+                {% if site.frontpage_text %}
+                  {{ site.frontpage_text|markdown }}
+                {% else %}
+                  -
+                {% endif %}
+              </p>
+            </div>
+          </div>
+
         </div>
         <div class="card-action">
           <a class="btn-flat waves-effect" href="{% url 'dashboard:site-update' pk=site.pk %}">
