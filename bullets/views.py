@@ -10,7 +10,7 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.core.urlresolvers import reverse
 from django.urls import reverse_lazy
 
@@ -21,7 +21,7 @@ import uuid
 # Bullets imports
 from .forms import RegisterForm, UnRegisterForm, ContactForm, tdbForm, RunningEventForm, NewsForm
 # UploadCSVForm, VeloForm, VeloRiderForm, VeloRunnerForm, BulletsRunnerForm, tdbForm
-from .models import SiteValue, Bullet, OldBullet, News, TdBStage, TdBLeaderBoard_Entry, CTSVehicle, CTSVehiclePosition, CTSRider, CTSRiderPosition, RunningEvent
+from .models import Bullet, OldBullet, News, TdBStage, TdBLeaderBoard_Entry, CTSVehicle, CTSVehiclePosition, CTSRider, CTSRiderPosition, RunningEvent, ActivityCache
 #VeloVolunteer, BulletsRunner,
 
 from .utils import send_bullet_mail 
@@ -51,22 +51,27 @@ def who_to_email():
 
 def index(request):
     # Get the cached number of Strava Runners and Cylists
-    strava_runners = SiteValue.objects.get(name=settings.STRAVA_NUM_RUNNERS).value
-    strava_cyclists =  SiteValue.objects.get(name=settings.STRAVA_NUM_RIDERS).value
-
-    week_run_miles = SiteValue.objects.get(name=settings.STRAVA_WEEKLY_RUN_MILES).value
-    week_ride_miles = SiteValue.objects.get(name=settings.STRAVA_WEEKLY_RIDE_MILES).value
-
-    year_run_miles = SiteValue.objects.get(name=settings.STRAVA_YEAR_RUN_MILES).value
-    year_ride_miles = SiteValue.objects.get(name=settings.STRAVA_YEAR_RIDE_MILES).value
-
-    week_runs = SiteValue.objects.get(name=settings.STRAVA_WEEKLY_RUNS).value
-    week_rides = SiteValue.objects.get(name=settings.STRAVA_WEEKY_RIDES).value
-
-    year_runs = SiteValue.objects.get(name=settings.STRAVA_YEAR_RUNS).value
-    year_rides = SiteValue.objects.get(name=settings.STRAVA_YEAR_RIDES).value
+    strava_runners = request.site.settings.runners 
+    strava_cyclists = request.site.settings.cyclists
 
     now = timezone.now()
+
+    week_run_miles =  ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(start_date__gte=(now-timedelta(days=7))).aggregate(Sum('distance'))['distance__sum']
+    week_ride_miles =  ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(start_date__gte=(now-timedelta(days=7))).aggregate(Sum('distance'))['distance__sum']
+
+    year_run_miles = ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(start_date__year=now.year).aggregate(Sum('distance'))['distance__sum']
+
+    year_ride_miles = ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(start_date__year=now.year).aggregate(Sum('distance'))['distance__sum']
+
+
+
+    week_runs = ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(start_date__gte=(now-timedelta(days=7))).count()
+    week_rides = ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(start_date__gte=(now-timedelta(days=7))).count()
+
+    year_runs = ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(start_date__year=now.year).count()
+    year_rides = ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(start_date__year=now.year).count()
+
+
 
     qs = News.objects.order_by("-date_added")
     qs = qs.filter(Q(display_after__lte=now) | Q(display_after=None))

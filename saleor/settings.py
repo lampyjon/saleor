@@ -497,23 +497,9 @@ DEFAULT_MENUS = {
 #### Bullets Settings below here ####
 
 
-STRAVA_ACCESS_TOKEN = os.environ.get('STRAVA_ACCESS_TOKEN')
-
-
-### CACHE VALUE FIELDS ###
-
-STRAVA_NUM_RUNNERS = 'strava_runners'
-STRAVA_NUM_RIDERS = 'strava_cyclists'
-STRAVA_WEEKLY_RUN_MILES = 'strava_week_run_miles'
-STRAVA_WEEKLY_RIDE_MILES = 'strava_week_ride_miles'
-STRAVA_YEAR_RUN_MILES = 'strava_year_run_miles'
-STRAVA_YEAR_RIDE_MILES = 'strava_year_ride_miles'
-STRAVA_WEEKLY_RUNS = 'strava_week_runs'
-STRAVA_WEEKY_RIDES = 'strava_week_rides'
-STRAVA_YEAR_RUNS = 'strava_year_runs'
-STRAVA_YEAR_RIDES = 'strava_year_rides'
-
-STRAVA_TIMEFRAME = os.environ.get('STRAVA_TIMEFRAME', 'today')
+STRAVA_ACCESS_TOKEN = os.environ.get('STRAVA_ACCESS_TOKEN', None)
+STRAVA_CYCLING_CLUB = os.environ.get('STRAVA_CYCLING_CLUB', '0')
+STRAVA_RUNNING_CLUB = os.environ.get('STRAVA_RUNNING_CLUB', '0')
 
 
 ## FOR MAILCHIMP

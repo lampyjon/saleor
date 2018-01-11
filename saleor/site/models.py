@@ -23,6 +23,8 @@ class SiteSettings(models.Model):
     display_gross_prices = models.BooleanField(default=True)
     charge_taxes_on_shipping = models.BooleanField(default=True)
     frontpage_text = models.TextField(blank=True)
+    cyclists = models.PositiveIntegerField(default=0)
+    runners = models.PositiveIntegerField(default=0)
 
     class Meta:
         permissions = (

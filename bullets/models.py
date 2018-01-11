@@ -10,33 +10,24 @@ from django.utils import timezone
 import datetime
 
 
-
-# this model holds values we calcuate sporadically for the site, such as the number of strava runners and cyclists
-class SiteValue(models.Model):
-	name = models.CharField(max_length=30)
-	value = models.TextField()
-
-	def __str__(self):
-        	return self.name + " = " + self.value
-
-RUN = 'run'
-RIDE = 'ride'
-
-ACTIVITY_TYPE_CHOICES = (
-	(RUN, 'Run'),
-	(RIDE, 'Ride'),
-	)
-
 # This model holds a minimised cache of every strava activity we've seen from the club members
 class ActivityCache(models.Model):
-	activity_id = models.CharField('Strava ID', max_length=30)
-	activity_type = models.CharField('Type',
-       		max_length=4,
-        	choices=ACTIVITY_TYPE_CHOICES,
-        	default=RIDE,
-   		)
-	distance = models.PositiveIntegerField('Distance')
-	start_date = models.DateTimeField('Activity Date')
+    RUN = 'run'
+    RIDE = 'ride'
+
+    ACTIVITY_TYPE_CHOICES = (
+        (RUN, 'Run'),
+        (RIDE, 'Ride'),
+        )
+
+    activity_id = models.CharField('Strava ID', max_length=30)
+    activity_type = models.CharField('Type',
+        max_length=4,
+        choices=ACTIVITY_TYPE_CHOICES,
+        default=RIDE,
+        )
+    distance = models.PositiveIntegerField('Distance')
+    start_date = models.DateTimeField('Activity Date')
 
 
 
