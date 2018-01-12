@@ -231,6 +231,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
 
     # Bullets
+    'bootstrap3',
     'bullets',
     'django_summernote' 
 ]
