@@ -57,3 +57,5 @@ django-autoslug>=1.9.3   # Bullets better slugs
 mailchimp 		 # for mailing list management
 django_summernote        # for news article editing
 django-ses 	         # for sending emails
+stravalib		 # for strava integration
+django-bootstrap3	 # for bullets site

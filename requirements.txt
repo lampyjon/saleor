@@ -6,6 +6,7 @@
 #
 amqp==2.2.2               # via kombu
 aniso8601==3.0.0          # via graphene
+arrow==0.12.1             # via stravalib
 asn1crypto==0.24.0        # via cryptography
 attrs==18.1.0             # via pytest
 babel==2.5.3
@@ -28,6 +29,7 @@ dj-database-url==0.5.0
 dj-email-url==0.1.0
 django-autoslug==1.9.3
 django-babel==0.6.2
+django-bootstrap3==10.0.1
 django-bootstrap4==0.0.6
 django-cache-url==3.0.0
 django-celery-results==1.0.1
@@ -97,9 +99,9 @@ pytest-django==3.2.1
 pytest-mock==1.10.0
 pytest-vcr==0.3.0
 pytest==3.5.1
-python-dateutil==2.7.3    # via botocore, elasticsearch-dsl, faker, freezegun
+python-dateutil==2.7.3    # via arrow, botocore, elasticsearch-dsl, faker, freezegun
 python3-openid==3.1.0     # via social-auth-core
-pytz==2018.4              # via babel, celery, django, django-ses
+pytz==2018.4              # via babel, celery, django, django-ses, stravalib
 pyyaml==3.12              # via vcrpy
 redis==2.10.6             # via celery, django-redis
 requests-oauthlib==0.8.0  # via social-auth-core
@@ -107,15 +109,17 @@ requests==2.18.4
 rx==1.6.1                 # via graphql-core
 s3transfer==0.1.13        # via boto3
 singledispatch==3.4.0.3   # via graphene-django
-six==1.11.0               # via bleach, cryptography, django-environ, django-templated-email, elasticsearch-dsl, faker, freezegun, graphene, graphene-django, graphql-core, graphql-relay, html5lib, more-itertools, promise, purl, pytest, python-dateutil, singledispatch, social-auth-app-django, social-auth-core, vcrpy
+six==1.11.0               # via bleach, cryptography, django-environ, django-templated-email, elasticsearch-dsl, faker, freezegun, graphene, graphene-django, graphql-core, graphql-relay, html5lib, more-itertools, promise, purl, pytest, python-dateutil, singledispatch, social-auth-app-django, social-auth-core, stravalib, vcrpy
 social-auth-app-django==2.1.0
 social-auth-core==1.7.0   # via social-auth-app-django
 sqlparse==0.2.4           # via django-debug-toolbar
+stravalib==0.9.2
 stripe==1.82.1            # via django-payments
 suds-jurko==0.6           # via django-payments
 text-unidecode==1.2
 tinycss2==0.6.1           # via cairosvg, cssselect2, weasyprint
 typing==3.6.4             # via google-measurement-protocol, prices, promise
+units==0.7                # via stravalib
 urllib3==1.22             # via elasticsearch, requests
 uwsgi==2.0.17 ; platform_system != "Windows"
 vcrpy==1.11.1
