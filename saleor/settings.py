@@ -233,6 +233,7 @@ INSTALLED_APPS = [
     # Bullets
     'bootstrap3',
     'bullets',
+    'captcha',
     'django_summernote' 
 ]
 
@@ -523,4 +524,8 @@ SUMMERNOTE_CONFIG = {
 
 
 SERVER_EMAIL = "webserver@boldmerebullets.com"
+
+# For Captcha
+RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY')
 

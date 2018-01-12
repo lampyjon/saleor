@@ -2,6 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from .models import Bullet, News, VeloVolunteer, BulletsRunner, InterclubRider, RunningEvent, VeloFeedback, BulletsRunFeedback
 from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
+from captcha.fields import ReCaptchaField
 
 class RegisterForm(ModelForm):
 	over_18 = forms.BooleanField(label='Please confirm you are over 18?')
@@ -28,6 +29,7 @@ class ContactForm(forms.Form):
     name = forms.CharField(label="Your name", max_length=100)
     email = forms.EmailField(label='Your email', max_length=200)
     comment = forms.CharField(widget=forms.Textarea)
+    captcha = ReCaptchaField()
 
 
 class RunningEventForm(ModelForm):
