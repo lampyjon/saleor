@@ -528,4 +528,5 @@ SERVER_EMAIL = "webserver@boldmerebullets.com"
 # For Captcha
 RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY')
 RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY')
+NOCAPTCHA = os.environ.get('NOCATCHPA', True)
 
