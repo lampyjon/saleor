@@ -4,6 +4,9 @@
 
 {% block title %} - Contact Us{%endblock %}
 {% block topurl %}{% url 'index' %}{% endblock %}
+{% block extraheader %}
+<script src='https://www.google.com/recaptcha/api.js'></script>
+{% endblock %}
 
 {% block header-links %}               
 {% endblock %}
@@ -16,6 +19,7 @@
 	    <p>If you have any questions or comments about the Boldmere Bullets, our events and activities, or just generally want to get in-touch, please fill in the form below, and we'll get back to you as quickly as we can. </p>
             <br>
             {% bootstrap_form contact_form layout="horizontal" %}
+		<div class="g-recaptcha" data-sitekey="6LfuV0AUAAAAAKMUCMTSqPY9-2kSFQKkZRjVfTN9"></div>
             <p class="text-right">
                 <button type="submit" class="btn btn-primary">Send your message</button>
             </p>
