@@ -1,4 +1,5 @@
 {% load static %}
+{% load render_bundle from webpack_loader %}
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://ogp.me/ns/fb#">
 <head>
@@ -20,7 +21,7 @@
 
     <meta name="verification" content="508fbe8e86238646d4e5f14b1be8402a" />
 
-    <link rel="icon" type="shortcut icon" href="{% static 'images/favicon.ico' %}" />
+    {% include 'bulleticons.html' %}
 
     <title>Boldmere Bullets - Home Page</title>
 

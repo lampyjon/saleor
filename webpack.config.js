@@ -48,6 +48,13 @@ var providePlugin = new webpack.ProvidePlugin({
   'query-string': 'query-string'
 });
 
+
+var faviconsWebpackPlugin = new FaviconsWebpackPlugin({
+  logo: './bullet/static/images/bulletfavicon.svg',
+  prefix: 'bulletfavicons/',
+  title: "Bullets"
+});
+
 var config = {
   entry: {
     dashboard: './saleor/static/dashboard/js/dashboard.js',
