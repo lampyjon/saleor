@@ -18,6 +18,7 @@ from django.urls import reverse_lazy
 from datetime import timedelta
 import uuid
 import random
+import os
 
 # Bullets imports
 from .forms import RegisterForm, UnRegisterForm, ContactForm, NewsForm, RunningEventForm, BulletEventForm
