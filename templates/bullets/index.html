@@ -105,24 +105,40 @@
                 <h1 id="homeHeading">Welcome to the Boldmere Bullets</h1>
                 <hr>
 		<div class="container">
-			<div class="row">
-				<div class="col-md-4 text-center introbox introboxlink" id="ridebox">
-					<h2>Come cycling<span class="hidden-xs"> with us!</span></h2>
-					<ul class="fa-ul text-left">
-  						<li><i class="fa-li fa fa-bicycle"></i><strong>Main ride</strong> - Sat 7am - meet behind Dubella</li>
-						<li><i class="fa-li fa fa-bicycle"></i>Wednesday drop in and ride - 7pm</li>
-						<li><i class="fa-li fa fa-bicycle"></i><a href="{% url 'ride-info' %}">More info...</a></li>
-					</ul>
-				</div>
-				<div class="col-md-4 col-md-offset-2 text-center introbox introboxlink" id="runbox">
-					<h2>Come running<span class="hidden-xs"> with us!</span></h2>
-					<ul class="fa-ul text-left">
-  						<li><i class="fa-li fa fa-child"></i><strong>Main run</strong> - Sun 8am - meet at the park</li>
-						<li><i class="fa-li fa fa-child"></i>Tuesday training sessions - 7pm</li>
-						<li><i class="fa-li fa fa-child"></i><a href="{% url 'run-info' %}">More info...</a></li>
+	 		{% if messages %}
+				{% for message in messages %}
+					{% if forloop.first %}
+					<div class="row">
+				 		<div class="col-lg-10 text-center">
+ <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
+                	   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                           {{ message }}
+                     </div>
+						</div>	
+					</div>
+					{% endif %}
+				{% endfor %}
+			<div class="clearfix">&nbsp;</div>
 
-					</ul>
-				</div>
+			{% endif %}
+
+			<div class="row">
+{% if cycling_first %}
+<div class="col-md-4 text-center introbox introboxlink" id="ridebox">
+   {% include 'bullets/snippets/cycling-box.html' %}
+</div>
+<div class="col-md-4 col-md-offset-2 text-center introbox introboxlink" id="runbox">
+   {% include 'bullets/snippets/running-box.html' %}
+</div>
+{% else %}
+<div class="col-md-4 text-center introbox introboxlink" id="runbox">
+   {% include 'bullets/snippets/running-box.html' %}
+</div>
+<div class="col-md-4 col-md-offset-2 text-center introbox introboxlink" id="ridebox">
+   {% include 'bullets/snippets/cycling-box.html' %}
+</div>
+{% endif %}
+
 			</div>
 
 			<div class="clearfix">&nbsp;</div>
@@ -153,22 +169,6 @@
 			 	</div>	
 			</div>
 
-
-	 		{% if messages %}
-			<div class="clearfix">&nbsp;</div>
-				{% for message in messages %}
-					{% if forloop.first %}
-					<div class="row">
-				 		<div class="col-lg-10 text-center">
- <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
-                	   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                           {{ message }}
-                     </div>
-						</div>	
-					</div>
-					{% endif %}
-				{% endfor %}
-			{% endif %}
 		</div>
             </div>
         </div>
@@ -259,7 +259,7 @@ The spirit of the collective is friendship and a love of cycling, walking, runni
                 <div class="col-lg-8 col-lg-offset-2 text-center">
                     <h2 class="section-heading">Events</h2>
                     <hr class="light">
-                    <p class="text-faded">As well as our regular cycling and running, the Boldmere Bullets also have many speical events and social evenings throughout the year.</p>
+                    <p class="text-faded">As well as our regular cycling and running, the Boldmere Bullets also have many special events and social evenings throughout the year.</p>
                     <a href="{% url 'events' %}" class="page-scroll btn btn-default btn-xl sr-button">Find out more...</a>
                 </div>
             </div>
@@ -283,8 +283,10 @@ The spirit of the collective is friendship and a love of cycling, walking, runni
         <div class="container text-center">
             <div class="call-to-action">
                 <h2>Boldmere Bullets and Charity</h2>
-		<p>The Boldmere Bullets are committed to supporting our local community in Sutton Coldfield and helping out wherever we can. We have an annual charity of the year, which in 2017 is <a href="http://www.lisieuxtrust.org.uk/">The Lisieux Trust</a> - a fantastic group supporting disabled people in the community. All our our major events this year will be raising money to support this worthy cause.</p>
-		<p>In 2016 we raised <strong>&pound;33,400</strong> for <a href="http://www.breastfriends.org.uk/">Breast Friends</a>, and in 2015 we raised over <strong>&pound;10,000</strong> for the <a href="http://www.suttoncancersupport.org/">Sutton Coldfield Cancer Support Centre</a>!</p>    
+		<p>The Boldmere Bullets are committed to supporting our local community in Sutton Coldfield and helping out wherever we can. We have an annual charity of the year, which in 208 is <a href="http://www.acacia.org.uk/">Acacia Family Support</a> - an amazing group providing Pre and Postnatal depression support services to families across Birmingham. All of our major events this year will be raising money to support this very worthy cause.</p>
+<p>We have raised nearly <strong>&pound;75,000</strong> for charities since we were founded!</p>
+<p>In 2017 we raised <strong>&pound;31,200</strong> for <a href="http://www.lisieuxtrust.org.uk/">The Lisieux Trust</a>. In 2016 we raised <strong>&pound;33,400</strong> for <a href="http://www.breastfriends.org.uk/">Breast Friends</a>, and in 2015 we raised over <strong>&pound;10,000</strong> for the <a href="http://www.suttoncancersupport.org/">Sutton Coldfield Cancer Support Centre</a>!</p>
+   
             
             </div>
         </div>

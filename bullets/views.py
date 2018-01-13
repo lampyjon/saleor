@@ -17,6 +17,7 @@ from django.urls import reverse_lazy
 # Python imports 
 from datetime import timedelta
 import uuid
+import random
 
 # Bullets imports
 from .forms import RegisterForm, UnRegisterForm, ContactForm, NewsForm, RunningEventForm, BulletEventForm
@@ -61,22 +62,23 @@ def index(request):
 
     year_ride_miles = ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(start_date__year=now.year).aggregate(Sum('distance'))['distance__sum']
 
-
-
     week_runs = ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(start_date__gte=(now-timedelta(days=7))).count()
     week_rides = ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(start_date__gte=(now-timedelta(days=7))).count()
 
     year_runs = ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(start_date__year=now.year).count()
     year_rides = ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(start_date__year=now.year).count()
-
-
-
+ 
     qs = News.objects.order_by("-date_added")
     qs = qs.filter(Q(display_after__lte=now) | Q(display_after=None))
     qs = qs.filter(Q(display_until__gte=now) | Q(display_until=None))
-    qs = qs.filter(front_page=True)
-  
-    return render(request, "bullets/index.html", {'strava_runners':strava_runners, 'strava_cyclists':strava_cyclists, 'week_run_miles':week_run_miles, 'week_ride_miles':week_ride_miles,'year_run_miles':year_run_miles, 'year_ride_miles':year_ride_miles, 'week_runs':week_runs, 'week_rides':week_rides, 'year_runs':year_runs, 'year_rides':year_rides, 'news':qs, 'year':now.year})
+    qs = qs.filter(front_page=True)  
+
+    cycling_first = True
+    if (random.random() > 0.5):
+        cycling_first = False
+
+
+    return render(request, "bullets/index.html", {'strava_runners':strava_runners, 'strava_cyclists':strava_cyclists, 'week_run_miles':week_run_miles, 'week_ride_miles':week_ride_miles,'year_run_miles':year_run_miles, 'year_ride_miles':year_ride_miles, 'week_runs':week_runs, 'week_rides':week_rides, 'year_runs':year_runs, 'year_rides':year_rides, 'news':qs, 'year':now.year, 'cycling_first':cycling_first})
 
 
 	
@@ -116,7 +118,6 @@ def register(request):
             x = Bullet.objects.filter(email__iexact=register_form.cleaned_data["email"], name__iexact=register_form.cleaned_data["name"]).exists()
             if x:
                 messages.info(request, "You are already registered as a Boldmere Bullet!")
-                print("This way")
                 return redirect(reverse('already-registered'))
 
 
