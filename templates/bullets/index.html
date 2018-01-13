@@ -1,5 +1,4 @@
 {% load static %}
-{% load render_bundle from webpack_loader %}
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://ogp.me/ns/fb#">
 <head>
@@ -77,15 +76,9 @@
                     <li>
                         <a class="page-scroll" href="#events">Events</a>
                     </li>
-		    <li class="dropdown visible-lg-inline">
-          		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Shop <span class="caret"></span></a>
-          		<ul class="dropdown-menu">
-            			<li><a href="#shop" class="page-scroll">Bullets Shop</a></li>
-            			<li><a href="{% url 'affliates' %}">Affliates</a></li>
-          		</ul>
-       		   </li>  
-		   <li class="hidden-lg"><a href="#shop" class="page-scroll">Bullets Shop</a></li>
-                                  
+		    <li>
+			<a href="#shop" class="page-scroll">Bullets Shop</a>
+		    </li>             
 		   <li>
                         <a class="page-scroll" href="#charity">Charity</a>
                     </li>
@@ -338,18 +331,6 @@ The spirit of the collective is friendship and a love of cycling, walking, runni
 			<img src="{% static 'images/gomm.png' %}" class="img-responsive" width="200">
                  </div>
             </div>
-
-	<div class="clearfix">&nbsp;</div>
- 
-     	 <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <h2 class="section-heading">Support the Bullets</h2>
- 		  <p>Looking for the latest deals? Shop online with our chosen partners below, and support the Bullets at the same time!</p>
-                </div>
-	    </div>
-
-
-	    {% include 'bullets/snippets/adverts.html' %}
         </div>
     </section>
 
@@ -366,7 +347,7 @@ The spirit of the collective is friendship and a love of cycling, walking, runni
     <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.js"></script>
 
     <!-- Theme JavaScript -->
-   {% render_bundle 'bullets' 'js' %}
+    <script src="{% static 'js/creative.js'%}"></script>
 
     <script>
 $(".introboxlink").click(function() {
