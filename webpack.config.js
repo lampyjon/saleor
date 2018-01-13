@@ -50,7 +50,7 @@ var providePlugin = new webpack.ProvidePlugin({
 
 
 var faviconsWebpackPlugin = new FaviconsWebpackPlugin({
-  logo: './bullet/static/images/bulletfavicon.svg',
+  logo: './bullets/static/images/bulletfavicon.svg',
   prefix: 'bulletfavicons/',
   title: "Bullets"
 });
