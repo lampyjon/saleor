@@ -169,6 +169,17 @@ class RunningEvent(models.Model):
 		return smart_text("Run on " + str(self.date))
 
 
+@python_2_unicode_compatible
+class BulletEvent(models.Model):
+    date = models.DateField("Event Date")
+    name = models.CharField('Event Name', max_length=200, blank=True)
+    link = models.URLField("Link to more info", help_text="If you put a web address in here then we add a link to the events page", blank=True, null=True)
+
+
+    def __str__(self):
+        return smart_text(self.name)
+
+
 ################
 ## OLD MODELS ##
 ################
