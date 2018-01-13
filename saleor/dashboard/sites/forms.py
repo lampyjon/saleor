@@ -19,7 +19,7 @@ class SiteForm(forms.ModelForm):
 class SiteSettingsForm(forms.ModelForm):
     class Meta:
         model = SiteSettings
-        fields = ['header_text', 'description']
+        exclude = ['site', 'cyclists', 'runners']	# BULLETS: switch include to exclude
         labels = {
             'header_text': pgettext_lazy(
                 'Header text', 'Header text'),
