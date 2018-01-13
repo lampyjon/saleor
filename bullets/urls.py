@@ -36,7 +36,6 @@ urlpatterns = [
     url(r'^history/$', TemplateView.as_view(template_name="bullets/history.html"), name='history'),
     url(r'^core-team/$', TemplateView.as_view(template_name="bullets/about.html"), name='core'),
     url(r'^contact-us/$', views.contact, name='contact'),
-    url(r'^events/$', TemplateView.as_view(template_name="bullets/events.html"), name='events'),
     url(r'^support/affliates$', TemplateView.as_view(template_name="bullets/affliates.html"), name='affliates'),
 
     url(r'^news/latest/$', views.NewsListView.as_view(), name='news'),
@@ -50,9 +49,13 @@ urlpatterns = [
 
     url(r'^info/delivery-times/$', TemplateView.as_view(template_name="bullets/delivery-times.html"), name='delivery-times'),
 
-    url(r'^core-team-admin/$', views.bullets_core_team, name='core-team-admin'), 
-
+    url(r'^events/$', views.events, name='events'),
+    url(r'^events/list/admin/$', views.EventListAdmin.as_view(), name='event-list-admin'), 
+    url(r'^events/admin/create/$', views.EventCreate.as_view(), name='event-create'),
+    url(r'^events/admin/update/(?P<pk>[0-9]+)/$', views.EventUpdate.as_view(), name='event-update'),
+    url(r'^events/admin/delete/(?P<pk>[0-9]+)/$', views.EventDelete.as_view(), name='event-delete'),
   
+    url(r'^core-team-admin/$', views.bullets_core_team, name='core-team-admin'), 
 
 
 

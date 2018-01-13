@@ -19,8 +19,8 @@ from datetime import timedelta
 import uuid
 
 # Bullets imports
-from .forms import RegisterForm, UnRegisterForm, ContactForm, NewsForm, RunningEventForm
-from .models import Bullet, OldBullet, News, RunningEvent, ActivityCache
+from .forms import RegisterForm, UnRegisterForm, ContactForm, NewsForm, RunningEventForm, BulletEventForm
+from .models import Bullet, OldBullet, News, RunningEvent, ActivityCache, BulletEvent
 
 from .utils import send_bullet_mail 
 
@@ -245,12 +245,51 @@ def contact(request):
 
 
 
+#### TUESDAY RUN VIEW 
+def run_tuesday(request):		# get the list of runs
+	now = timezone.now()
+	q = RunningEvent.objects.filter(date__gte=now)
+	return render(request, "bullets/run_tuesday.html", {'runs':q})
+
+
+### Events view
+def events(request):
+    now = timezone.now()
+    q = BulletEvent.objects.filter(date__gte=now).order_by('date')
+    return render(request, "bullets/events.html", {'events':q})
+
+
+
+### NEWS VIEWS
+class NewsListView(ListView):
+	model = News
+	template_name = 'core/news_list.html' 
+	context_object_name = 'stories'  
+	paginate_by = 3
+
+	def get_queryset(self):
+		now = timezone.now()
+
+		qs = News.objects.order_by("-date_added")
+		qs = qs.filter(Q(display_after__lte=now) | Q(display_after=None))
+		qs = qs.filter(Q(display_until__gte=now) | Q(display_until=None))
+		return qs
+  
+
+def news_item(request, slug):
+	story = get_object_or_404(News, slug=slug)
+	if story.redirect_to:
+		return redirect(story.redirect_to)
+
+	return render(request, "bullets/news_item.html", {'story':story})
+
+
 #### CORE TEAM VIEWS ####
 
 
 ### Main page for the core team
 @login_required
-@user_passes_test(is_core_team, login_url="/") # are they in the core team group?     # TODO: this didn't work?
+@user_passes_test(is_core_team, login_url="/") # are they in the core team group?    
 def bullets_core_team(request):
     messages.info(request, 'Only members of the core team can view this page!')
 
@@ -297,6 +336,37 @@ class NewsDelete(LoginRequiredMixin, UserPassesTestMixin,DeleteView):
         return is_core_team(self.request.user)
 
 
+### Event editing code
+class EventListAdmin(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = BulletEvent
+    template_name = "bullets/event_list_admin.html"
+    def test_func(self):
+        return is_core_team(self.request.user)
+        
+
+class EventCreate(LoginRequiredMixin, UserPassesTestMixin,CreateView):
+    model = BulletEvent
+    form_class = BulletEventForm
+    success_url = reverse_lazy('event-list-admin')
+    def test_func(self):
+        return is_core_team(self.request.user)
+
+ 
+class EventUpdate(LoginRequiredMixin, UserPassesTestMixin,UpdateView):
+    model = BulletEvent
+    form_class = BulletEventForm
+    success_url = reverse_lazy('event-list-admin')
+    def test_func(self):
+        return is_core_team(self.request.user)
+
+class EventDelete(LoginRequiredMixin, UserPassesTestMixin,DeleteView):
+    model = BulletEvent
+    success_url = reverse_lazy('event-list-admin')  
+    def test_func(self):
+        return is_core_team(self.request.user)
+
+
+
 ## Edit Tuesday Runs
 
 @login_required
@@ -332,38 +402,6 @@ def run_tuesday_admin_delete(request, pk):
 
 
 
-
-#### TUESDAY RUN VIEW 
-def run_tuesday(request):		# get the list of runs
-	now = timezone.now()
-	q = RunningEvent.objects.filter(date__gte=now)
-	return render(request, "bullets/run_tuesday.html", {'runs':q})
-
-
-
-
-### NEWS VIEWS
-class NewsListView(ListView):
-	model = News
-	template_name = 'core/news_list.html' 
-	context_object_name = 'stories'  
-	paginate_by = 3
-
-	def get_queryset(self):
-		now = timezone.now()
-
-		qs = News.objects.order_by("-date_added")
-		qs = qs.filter(Q(display_after__lte=now) | Q(display_after=None))
-		qs = qs.filter(Q(display_until__gte=now) | Q(display_until=None))
-		return qs
-  
-
-def news_item(request, slug):
-	story = get_object_or_404(News, slug=slug)
-	if story.redirect_to:
-		return redirect(story.redirect_to)
-
-	return render(request, "bullets/news_item.html", {'story':story})
 	
 
 

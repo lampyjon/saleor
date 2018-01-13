@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Bullet, News, RunningEvent 
+from .models import Bullet, News, RunningEvent, BulletEvent 
 from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 from captcha.fields import ReCaptchaField
 
@@ -62,6 +62,21 @@ class NewsForm(ModelForm):
         p = ('%d-%m-%Y','%Y-%m-%d')
         self.fields['display_after'].input_formats=(p)
         self.fields['display_until'].input_formats=(p)
+
+
+class BulletEventForm(ModelForm):
+	class Meta:
+		model = BulletEvent
+		fields = ['date', 'name', 'link']
+		widgets = {
+			'date': forms.TextInput(attrs={'class': 'datepicker'}),
+		}
+
+	def __init__(self, *args, **kwargs):
+		super(BulletEventForm, self).__init__(*args, **kwargs)
+		p = ('%d-%m-%Y','%Y-%m-%d')
+		self.fields['date'].input_formats=(p)
+
 
 
 #class BulletsRunnerForm(ModelForm):
