@@ -19,10 +19,8 @@ from datetime import timedelta
 import uuid
 
 # Bullets imports
-from .forms import RegisterForm, UnRegisterForm, ContactForm, tdbForm, RunningEventForm, NewsForm
-# UploadCSVForm, VeloForm, VeloRiderForm, VeloRunnerForm, BulletsRunnerForm, tdbForm
-from .models import Bullet, OldBullet, News, TdBStage, TdBLeaderBoard_Entry, CTSVehicle, CTSVehiclePosition, CTSRider, CTSRiderPosition, RunningEvent, ActivityCache
-#VeloVolunteer, BulletsRunner,
+from .forms import RegisterForm, UnRegisterForm, ContactForm, NewsForm, RunningEventForm
+from .models import Bullet, OldBullet, News, RunningEvent, ActivityCache
 
 from .utils import send_bullet_mail 
 

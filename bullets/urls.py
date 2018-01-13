@@ -26,11 +26,10 @@ urlpatterns = [
     url(r'^runs/info/$', TemplateView.as_view(template_name="bullets/run_info.html"), name='run-info'),
     url(r'^runs/routes/$', TemplateView.as_view(template_name="bullets/run_routes.html"), name='run-routes'),
     url(r'^runs/sunday/$', TemplateView.as_view(template_name="bullets/run_sunday.html"), name='run-sunday'),
-#    url(r'^runs/tuesday/$', TemplateView.as_view(template_name="bullets/run_tuesday.html"), name='run-tuesday'),
     url(r'^runs/tuesday/$', views.run_tuesday, name='run-tuesday'),
-    url(r'^runs/tuesday/admin$', views.run_tuesday_admin, name='run-tuesday-admin'),	# to add runs
-    url(r'^runs/tuesday/delete/(?P<pk>\d+)$', views.run_tuesday_admin_delete, name='run-tuesday-admin-delete'),	# To remove runs   
 
+    url(r'^runs/tuesday/admin$', views.run_tuesday_admin, name='run-tuesday-admin'),	# to add runs
+    url(r'^runs/tuesday/admin/delete/(?P<pk>\d+)$', views.run_tuesday_admin_delete, name='run-tuesday-admin-delete'),	# To remove runs   
 
 
     url(r'^collective-code/$', TemplateView.as_view(template_name="bullets/collective-code.html"), name='collective-code'),
@@ -44,23 +43,81 @@ urlpatterns = [
     url(r'^news/item/(?P<slug>[-\w]+)/$', views.news_item, name='news-item'),
 
     url(r'^news/list/admin/$', views.NewsListAdmin.as_view(), name='news-list-admin'), 
-    url(r'^news/create/$', views.NewsCreate.as_view(), name='news-create'),
-    url(r'^news/update/(?P<pk>[0-9]+)/$', views.NewsUpdate.as_view(), name='news-update'),
-    url(r'^news/delete/(?P<pk>[0-9]+)/$', views.NewsDelete.as_view(), name='news-delete'),
+    url(r'^news/admin/create/$', views.NewsCreate.as_view(), name='news-create'),
+    url(r'^news/admin/update/(?P<pk>[0-9]+)/$', views.NewsUpdate.as_view(), name='news-update'),
+    url(r'^news/admin/delete/(?P<pk>[0-9]+)/$', views.NewsDelete.as_view(), name='news-delete'),
 
-#    url(r'^news/latest/$', TemplateView.as_view(template_name="bullets/news.html"), name='news'),
 
     url(r'^info/delivery-times/$', TemplateView.as_view(template_name="bullets/delivery-times.html"), name='delivery-times'),
 
-
     url(r'^core-team-admin/$', views.bullets_core_team, name='core-team-admin'), 
 
+  
 
 
 
 
 
 
+    ## REDIRECT for leaders app
+    url(r'^leaders/$', views.leaders, name='leaders'),
+
+
+   #### SPECIAL URLS
+#    url(r'^.well-known/acme-challenge/(?P<part1>[a-zA-Z0-9_.-]+)$', views.CertBot, name='certbot'),	# For CertBot
+    url(r'^google03f79ced8f1af3fd.html$', TemplateView.as_view(template_name="google.html"), name='google'),   # For google
+    url(r'^robots.txt$',  TemplateView.as_view(template_name="robots.txt"), name="robots-txt"),		# for robots
+    url(r'BingSiteAuth.xml$', TemplateView.as_view(template_name="BingSiteAuth.xml"), name="bing"),
+
+
+    ### LEGACY URLS
+    url(r'^velo/$', RedirectView.as_view(pattern_name='index', permanent=False)),
+    url(r'^special-events/spring-classics/$', RedirectView.as_view(pattern_name='index', permanent=False)),
+    url(r'^bullets-run-2017/$', RedirectView.as_view(pattern_name='index', permanent=True)),
+    url(r'^Tour-de-Boldmere-2017/$', RedirectView.as_view(pattern_name='index', permanent=False)),
+
+
+    url(r'^who-are-the-bullets-2/$', RedirectView.as_view(pattern_name='index', permanent=True)),
+    url(r'^who-are-the-bullets-2/cycling-collective/cycling-routes/$', RedirectView.as_view(pattern_name='ride-routes', permanent=True)),
+    url(r'^running/$', RedirectView.as_view(pattern_name='run-info', permanent=True)),
+    url(r'^events_all/', RedirectView.as_view(pattern_name='events', permanent=True)),
+    url(r'^event/', RedirectView.as_view(pattern_name='events', permanent=True)),
+    url(r'^who-are-the-bullets-2/running-collective/', RedirectView.as_view(pattern_name='run-info', permanent=True)),
+    url(r'^who-are-the-bullets-2/cycling-collective/', RedirectView.as_view(pattern_name='ride-info', permanent=True)),
+    url(r'^who-are-the-bullets-2/', RedirectView.as_view(pattern_name='history', permanent=True)),
+
+
+    # Summernote
+    url(r'^magic_editor/', include('django_summernote.urls')), 
+
+    # Other apps
+    url(r'^bullets-shop/', include('saleor.urls')),
+    url(r'^vlb-admin/', admin.site.urls),
+]
+
+
+handler404 = 'bullets.views.error404'
+
+
+
+
+
+
+#    url(r'^cts-mobile/$', views.cts_mobile, name='cts-mobile'),
+#    url(r'^cts-mobile/menu/$', views.cts_mobile_menu, name='cts-mobile-menu'),
+#    url(r'^cts-mobile/map/$', views.cts_mobile_map, name='cts-mobile-map'),
+#    url(r'^cts-mobile/map/(?P<pk>\d+)/$', views.cts_mobile_map, name='cts-mobile-map-car'),
+
+#    url(r'^cts-mobile/vehicle_list/$', views.cts_mobile_vehicle_list, name='cts-mobile-vehicle-list'),
+#    url(r'^cts-mobile/support-stop/$', views.cts_mobile_support_stop, name='cts-mobile-support-stop'),
+#    url(r'^cts-mobile/rider-positions/$', views.cts_mobile_rider_positions, name='cts-mobile-rider-positions'),
+#    url(r'^cts-mobile/logout/$', views.cts_mobile_logout, name='cts-mobile-logout'),
+
+
+#    url(r'^cts-mobile/ajax/vehicle_position/$', views.cts_vehicle_position_ajax, name='cts-vehicle-position-ajax'),
+#    url(r'^cts-mobile/ajax/route/$', TemplateView.as_view(template_name="bullets/cts/CTS.gpx"), name='cts-route-ajax'),
+#    url(r'^cts-mobile/ajax/rider_position/$', views.cts_rider_position_ajax, name='cts-rider-position-ajax'),
+#    url(r'^cts-mobile/ajax/rider_position/checkin/$', views.cts_rider_checkin_ajax, name='cts-rider-checkin-ajax'),
 
 # Spring Classic Riders
 #    url(r'^special-events/spring-classics/$', TemplateView.as_view(template_name="bullets/spring-classics/spring-classics.html"), name='spring-classics'),
@@ -69,7 +126,6 @@ urlpatterns = [
   
 
 # Bullets Run URLs
-   url(r'^bullets-run-2017/$', TemplateView.as_view(template_name="bullets/bullets_run.html"), name='bullets-run'),
 #   url(r'^bullets-run-2017/register$', views.bullets_run_register, name='bullets-run-register'),
 #
 #   url(r'^bullets-run-2017/reminder/(?P<uuid>[0-9a-z-]+)/$', views.bullets_run_reminder, name='bullets-run-reminder'),	# used in reminder emails!
@@ -99,75 +155,16 @@ urlpatterns = [
 
 
 # Tour De Boldmere 2017 URLs
-    url(r'^Tour-de-Boldmere-2017/$', views.tdb, name='tdb2017'),
-    url(r'^Tour-de-Boldmere-2017/stage/(?P<pk>\d+)/$', views.tdbStage, name='tdb2017-stage'),
-    url(r'^Tour-de-Boldmere-2017/leaderboards/$', views.tdbLeaderBoard, name='tdb2017-leaderboard'),
-
-
-
-
+#    url(r'^Tour-de-Boldmere-2017/$', views.tdb, name='tdb2017'),
+#    url(r'^Tour-de-Boldmere-2017/stage/(?P<pk>\d+)/$', views.tdbStage, name='tdb2017-stage'),
+#    url(r'^Tour-de-Boldmere-2017/leaderboards/$', views.tdbLeaderBoard, name='tdb2017-leaderboard')
 
 # Chase The Sun
-    url(r'^special-events/chase-the-sun/$', TemplateView.as_view(template_name="bullets/cts.html"), name='cts'),
-
-
-
-#    url(r'^cts-mobile/$', views.cts_mobile, name='cts-mobile'),
-#    url(r'^cts-mobile/menu/$', views.cts_mobile_menu, name='cts-mobile-menu'),
-#    url(r'^cts-mobile/map/$', views.cts_mobile_map, name='cts-mobile-map'),
-#    url(r'^cts-mobile/map/(?P<pk>\d+)/$', views.cts_mobile_map, name='cts-mobile-map-car'),
-
-#    url(r'^cts-mobile/vehicle_list/$', views.cts_mobile_vehicle_list, name='cts-mobile-vehicle-list'),
-#    url(r'^cts-mobile/support-stop/$', views.cts_mobile_support_stop, name='cts-mobile-support-stop'),
-#    url(r'^cts-mobile/rider-positions/$', views.cts_mobile_rider_positions, name='cts-mobile-rider-positions'),
-#    url(r'^cts-mobile/logout/$', views.cts_mobile_logout, name='cts-mobile-logout'),
-
-
-#    url(r'^cts-mobile/ajax/vehicle_position/$', views.cts_vehicle_position_ajax, name='cts-vehicle-position-ajax'),
-#    url(r'^cts-mobile/ajax/route/$', TemplateView.as_view(template_name="bullets/cts/CTS.gpx"), name='cts-route-ajax'),
-#    url(r'^cts-mobile/ajax/rider_position/$', views.cts_rider_position_ajax, name='cts-rider-position-ajax'),
-#    url(r'^cts-mobile/ajax/rider_position/checkin/$', views.cts_rider_checkin_ajax, name='cts-rider-checkin-ajax'),
-
+#    url(r'^special-events/chase-the-sun/$', TemplateView.as_view(template_name="bullets/cts.html"), name='cts'),
 
 #    url(r'^cts/$', views.cts_big_map, name='cts-big-map'),
 
 
 
-
-    ## REDIRECT for leaders app
-    url(r'^leaders/$', views.leaders, name='leaders'),
-
-
-   #### SPECIAL URLS
-#    url(r'^.well-known/acme-challenge/(?P<part1>[a-zA-Z0-9_.-]+)$', views.CertBot, name='certbot'),	# For CertBot
-    url(r'^google03f79ced8f1af3fd.html$', TemplateView.as_view(template_name="google.html"), name='google'),   # For google
-    url(r'^robots.txt$',  TemplateView.as_view(template_name="robots.txt"), name="robots-txt"),		# for robots
-    url(r'BingSiteAuth.xml$', TemplateView.as_view(template_name="BingSiteAuth.xml"), name="bing"),
-
-
-    ### LEGACY URLS
- 
-    url(r'^who-are-the-bullets-2/$', RedirectView.as_view(pattern_name='index', permanent=True)),
-    url(r'^who-are-the-bullets-2/cycling-collective/cycling-routes/$', RedirectView.as_view(pattern_name='ride-routes', permanent=True)),
-    url(r'^running/$', RedirectView.as_view(pattern_name='run-info', permanent=True)),
-    url(r'^events_all/', RedirectView.as_view(pattern_name='events', permanent=True)),
-    url(r'^event/', RedirectView.as_view(pattern_name='events', permanent=True)),
-    url(r'^who-are-the-bullets-2/running-collective/', RedirectView.as_view(pattern_name='run-info', permanent=True)),
-    url(r'^who-are-the-bullets-2/cycling-collective/', RedirectView.as_view(pattern_name='ride-info', permanent=True)),
-    url(r'^who-are-the-bullets-2/', RedirectView.as_view(pattern_name='history', permanent=True)),
-
-
-
-    # Summernote
-    url(r'^magic_editor/', include('django_summernote.urls')), 
-
-
-    # Other apps
-    url(r'^bullets-shop/', include('saleor.urls')),
-    url(r'^vlb-admin/', admin.site.urls),
-]
-
-
-handler404 = 'bullets.views.error404'
 
 
