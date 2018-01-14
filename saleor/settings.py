@@ -529,3 +529,6 @@ SERVER_EMAIL = "webserver@boldmerebullets.com"
 # For Captcha
 NORECAPTCHA_SITE_KEY = os.environ.get('NORECAPTCHA_SITE_KEY')
 NORECAPTCHA_SECRET_KEY = os.environ.get('NORECAPTCHA_SECRET_KEY')
+
+CSVFILE_BUCKET_NAME = os.environ.get('CSVFILE_BUCKET_NAME')
+CSVFILE_LOCATION = os.environ.get('CSVFILE_LOCATION')
