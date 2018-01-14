@@ -1,0 +1,32 @@
+{% extends "simple.html" %}
+{% load static %}
+{% load bootstrap_form from bootstrap3 %}
+
+{% block title %} - International Women's Day{%endblock %}
+{% block topurl %}{% url 'index' %}{% endblock %}
+
+
+{% block header-links %}
+{% endblock %}
+
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-8 col-sm-push-2">
+        <form method="post" class="form-horizontal" >
+            {% csrf_token %}
+            <h1>Unregister from the International Women's Day event</h1>
+            <br>
+	    <p>Please confirm that you no longer wish to participate in the International Women's Day event, {{ name }}.</p>
+            <p class="text-right">
+                <button type="submit" class="btn btn-primary">Unregister</button>
+            </p>
+        </form>
+    </div>
+</div>
+
+ 
+      {% endblock %}
+
+
+

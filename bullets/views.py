@@ -22,8 +22,8 @@ import random
 import os
 
 # Bullets imports
-from .forms import RegisterForm, UnRegisterForm, ContactForm, NewsForm, RunningEventForm, BulletEventForm
-from .models import Bullet, OldBullet, News, RunningEvent, ActivityCache, BulletEvent
+from .forms import RegisterForm, UnRegisterForm, ContactForm, NewsForm, RunningEventForm, BulletEventForm, IWDForm
+from .models import Bullet, OldBullet, News, RunningEvent, ActivityCache, BulletEvent, IWDRider
 
 from .utils import send_bullet_mail 
 
@@ -42,6 +42,10 @@ logger = logging.getLogger(__name__)
 # Decorator style for checking login status
 def is_core_team(user):
     return user.groups.filter(name='CoreTeam').exists()
+
+# Decorator style for checking login status
+def is_stats_team(user):
+    return user.groups.filter(name='StatsTeam').exists()
 
 
 # get list of people to email
@@ -334,12 +338,56 @@ def news_item(request, slug):
 	return render(request, "bullets/news_item.html", {'story':story})
 
 
+
+# View to handle IWD rider registrations
+def iwd_register(request):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        iwd_form = IWDForm(request.POST)
+        	# check whether it's valid:
+        if iwd_form.is_valid():
+            iwd = iwd_form.save()
+            
+            unregister_url = reverse('iwd-unregister', args=[iwd.email_check_ref])
+            unregister_url = build_absolute_uri(unregister_url)
+            context = {'iwd':iwd, 'unregister_url':unregister_url} 
+
+            send_bullet_mail(
+                template_name='bullets/iwd',
+                recipient_list=[iwd.email],
+                context=context)
+			
+            messages.success(request, "You have been registered for the International Women's Day ride!");
+			            
+            return redirect(reverse('index'))
+
+   	# if a GET (or any other method) we'll create a blank form
+    else:
+        iwd_form = IWDForm()
+   
+    return render(request, "bullets/iwd/register.html", {'form': iwd_form})
+
+# someone no longer wants to do the IWD ride
+def iwd_unregister(request, uuid):
+    iwd = get_object_or_404(IWDRider, email_check_ref=uuid)
+    if request.method == 'POST':
+        messages.success(request, "Thank you for unregistering from the International Women's Day ride " + str(iwd.name))
+        iwd.delete()
+        return redirect(reverse('index'))
+    else:
+        return render(request, "bullets/iwd/unregister.html", {'name':iwd.name})
+
+
+
+
+
+
 #### CORE TEAM VIEWS ####
 
 
 ### Main page for the core team
 @login_required
-@user_passes_test(is_core_team, login_url="/") # are they in the core team group?    
+@user_passes_test(is_stats_team, login_url="/") # are they in the stats team group?    
 def bullets_core_team(request):
     messages.info(request, 'Only members of the core team can view this page!')
 
@@ -353,7 +401,21 @@ def bullets_core_team(request):
 
     news_items = News.objects.order_by("-date_added")
 
-    return render(request, "bullets/admin/core_team.html", {'bullets':bullets, 'bullets_week':bullets_week, 'bullets_month':bullets_month, 'news_items':news_items})
+    iwd_riders = IWDRider.objects.all().count()
+
+    can_edit = is_core_team(request.user)
+
+    return render(request, "bullets/admin/core_team.html", {'bullets':bullets, 'bullets_week':bullets_week, 'bullets_month':bullets_month, 'news_items':news_items, 'iwd_riders':iwd_riders, 'can_edit':can_edit})
+
+
+
+# IWD view
+class IWDList(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = IWDRider
+    template_name = "bullets/iwd/iwd_list_admin.html"
+    def test_func(self):
+        return is_core_team(self.request.user)
+
 
 
 #### News editing code

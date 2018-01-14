@@ -180,6 +180,14 @@ class BulletEvent(models.Model):
         return smart_text(self.name)
 
 
+
+# For the Womens' Ride
+class IWDRider(Person):
+    club = models.CharField("Usual club", max_length=200, blank=True)
+# TODO: need a choice field for which of the events they wish to do?
+
+
+
 ################
 ## OLD MODELS ##
 ################

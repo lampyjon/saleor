@@ -1,0 +1,37 @@
+{% extends "simple.html" %}
+{% load static %}
+{% load bootstrap_form from bootstrap3 %}
+
+{% block title %} - International Women's Day{%endblock %}
+{% block topurl %}{% url 'index' %}{% endblock %}
+
+{% block header-links %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-8 col-sm-push-2">
+    <h1>International Women's Day Event</h1>
+    <p>This year the Boldmere Bullets are aiming to increase the participation of women in cycling, and so we are organising some specific events to target this.</p>
+<p>
+On the evening of Thursday 8th March (International Women's Day), we are organising a session hosted by Evans Cycles Sutton Coldfield. The team at Evans are planning to deliver a bike familiarisation and basic mechanical session. We also will be inviting a few women speakers who are prominent in the world of cycling for a variety of reason (eg. competitively, recreationally or working in the industry) to hopefully come and talk to us. </p>
+<p>On Saturday 10th March we will be hosting a female  Inter-club ride, catering for women of a wide variety of ride speed and experience.</p>
+<p>Although these events are for women only, our overall aim is to encourage women to get out on the roads and enjoy riding their bikes whatever their ability level or experience,  and  help them to gain enough confidence to join in with any of our mixed rides.</p>
+<h2>Register to take part</h2>
+    </p>
+        <form method="post" class="form-horizontal" >
+            {% csrf_token %}
+            {% bootstrap_form form layout="horizontal" %}
+ 	    <p>By clicking on 'register' you are agreeing to the <a href="{% url 'collective-code' %}">Collective Code</a>.</p>
+            <p class="text-right">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </p>
+        </form>
+    </div>
+</div>
+
+ 
+      {% endblock %}
+
+
+

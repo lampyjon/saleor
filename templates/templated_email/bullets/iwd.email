@@ -1,0 +1,15 @@
+{% extends 'bullets/base-email.html' %}
+{% block subject %}Boldmere Bullets - International Women's Day{% endblock subject %}
+
+{% block body %}
+
+<p>Hello {{iwd.name}},</p>
+<p>Thank you for registering as a member of the Boldmere Bullets collective International Women's Day events!</p>
+
+<p>If you decide you do not wish to take part in this event, please <a href="{{ unregister_url }}">click here</a>, and we will remove you from the list of participants.</p>
+
+<p>Best wishes,</p>
+
+<p>The Boldmere Bullets!</p>
+
+{% endblock body %}

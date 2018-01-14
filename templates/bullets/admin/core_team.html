@@ -26,10 +26,13 @@
 					<div>This week: {{ bullets_week }}</div>
 					<div>This month: {{ bullets_month }}</div></p>				
 	</div>
-  
+        <div class="col-md-4 col-md-offset-1 text-center introbox introboxlink">
+       		<h2>IWD Ride</h2>
+        	<p><div>Riders signed up: {% if can_edit %}<a href="{% url 'iwd-list-admin' %}">{{ iwd_riders }}</a>{% else %}{{iwd_riders}}{%endif%}</div></p>
+	</div>
 </div>
    
-
+{% if can_edit %}
 <h2>Edit things on the site</h2>
 
 <div class="row">
@@ -44,7 +47,7 @@
     </div>
 
 </div>
-
+{% endif %}
 
  
       {% endblock %}

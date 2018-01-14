@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Bullet, News, RunningEvent, BulletEvent 
+from .models import Bullet, News, RunningEvent, BulletEvent
+from .models import IWDRider 
 from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 from nocaptcha_recaptcha.fields import NoReCaptchaField
 
@@ -76,6 +77,12 @@ class BulletEventForm(ModelForm):
 		super(BulletEventForm, self).__init__(*args, **kwargs)
 		p = ('%d-%m-%Y','%Y-%m-%d')
 		self.fields['date'].input_formats=(p)
+
+
+class IWDForm(ModelForm):
+    class Meta:
+        model = IWDRider
+        fields = ['name', 'email', 'club']
 
 
 
