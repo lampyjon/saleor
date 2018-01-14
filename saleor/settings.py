@@ -508,6 +508,7 @@ STRAVA_RUNNING_CLUB = os.environ.get('STRAVA_RUNNING_CLUB', '0')
 
 MAILCHIMP_API_KEY = os.environ.get('MAILCHIMP_API_KEY')
 MAILCHIMP_LISTID = os.environ.get('MAILCHIMP_LISTID')
+MAILCHIMP_WEBHOOK_APIKEY = os.environ.get('MAILCHIMP_WEBHOOK_APIKEY')
 
 SUMMERNOTE_CONFIG = {
 	'default_css': ("//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css",

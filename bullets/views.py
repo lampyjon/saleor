@@ -216,6 +216,52 @@ def unregister(request):
        
 
 
+# Mailchimp Callback URL
+def mailchimp_webhook(request, apikey):
+    # called when a user manually unsubscribes from the mailing list - so we should mark them as no longer wanting emails and ask if 
+    # they no longer wish to be bullets
+
+    # step 1 - is this a valid request from mailchimp - does the secret apikey match?
+    if apikey != settings.MAILCHIMP_WEBHOOK_APIKEY:
+        logger.error("Received a mailchimp webhook but API KEY did not match (%s)" % apikey)
+        return redirect(reverse('index'))
+
+    # step 2 - check this is an unsubscribe event
+    action = request.POST.get("data[action]", None)
+    if (action != 'unsub') and (action != 'delete'):
+        logger.error("Action from mailchimp webhook is not supported (%s)" % action)
+        return redirect(reverse('index'))
+
+    # step 3 - get the email address from the web hook
+    email = request.POST.get("data[email]", None)
+    if email == None:
+        logger.error("No email from mailchimp webhook API")
+        return redirect(reverse('index'))
+
+    # step 4 - get all of the bullets associated with this email address
+    bullets = Bullet.objects.filter(email__iexact=email)
+                
+    for bullet in bullets:					
+        # Because there can be multiple bullets on a single email - email them all
+        bullet.email_check_ref = uuid.uuid4()   # update the unique ref 
+        bullet.get_emails = False		# They definitely want out of emails
+        bullet.save()
+
+        unregister_url = reverse('unregister-bullet-email', args=[bullet.email_check_ref])
+        unregister_url = build_absolute_uri(unregister_url)
+        context = {'name': bullet.name, 'unregister_url':unregister_url}
+
+        bullet.send_email(
+            template="bullets/unregister_list", 
+            context=context, 
+            override_email_safety=True)
+   
+    return redirect(reverse('index'))
+
+
+
+
+
 # Handle contact form 
 def contact(request): 
 	if request.method == 'POST':

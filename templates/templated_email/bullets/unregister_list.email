@@ -1,0 +1,15 @@
+{% extends 'bullets/base-email.html' %}
+{% block subject %}Boldmere Bullets Registration{% endblock subject %}
+
+{% block body %}
+
+<p>Hello {{name}},</p>
+<p>We noticed that you have unsubscribed from the Boldmere Bullets email list. This doesn't unregister you automatically as a Boldmere Bullet, but just tells us you don't want emails from us any more.</p>
+
+<p>If you do want to unregister as a Boldmere Bullet, please click <a href="{{ unregister_url }}">this link</a> to confirm your unregistration.</p>
+
+<p>Best wishes,</p>
+
+<p>The Boldmere Bullets!</p>
+
+{% endblock body %}

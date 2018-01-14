@@ -58,7 +58,7 @@ urlpatterns = [
     url(r'^core-team-admin/$', views.bullets_core_team, name='core-team-admin'), 
 
 
-
+    url(r'^mailchimp-webhook/(?P<apikey>[0-9a-z-]+)/$', views.mailchimp_webhook, name='mailchimp-webhook'),
 
 
 
