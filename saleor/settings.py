@@ -104,7 +104,7 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 ORDER_FROM_EMAIL = os.getenv('ORDER_FROM_EMAIL', DEFAULT_FROM_EMAIL)
 
 # Our Email configuration
-AWS_SES_REGION_NAME = 'eu-west-1'
+AWS_SES_REGION_NAME = 'eu-west-1'   # TODO: make parameters
 AWS_SES_REGION_ENDPOINT = 'email.eu-west-1.amazonaws.com'
 EMAIL_BACKEND = 'django_ses.SESBackend'
 
@@ -362,11 +362,15 @@ AWS_QUERYSTRING_AUTH = ast.literal_eval(
     os.environ.get('AWS_QUERYSTRING_AUTH', 'False'))
 
 if AWS_STORAGE_BUCKET_NAME:
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    #STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+    STATICFILES_LOCATION = 'static'
+    STATICFILES_STORAGE = 'bullets.custom_storages.StaticStorage'
 
 if AWS_MEDIA_BUCKET_NAME:
-    DEFAULT_FILE_STORAGE = 'saleor.core.storages.S3MediaStorage'
-    THUMBNAIL_DEFAULT_STORAGE = DEFAULT_FILE_STORAGE
+#    DEFAULT_FILE_STORAGE = 'saleor.core.storages.S3MediaStorage'
+    MEDIAFILES_LOCATION = 'media'
+    DEFAULT_FILE_STORAGE = 'bullets.custom_storages.MediaStorage'
+ 
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
