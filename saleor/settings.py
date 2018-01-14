@@ -362,15 +362,10 @@ AWS_QUERYSTRING_AUTH = ast.literal_eval(
     os.environ.get('AWS_QUERYSTRING_AUTH', 'False'))
 
 if AWS_STORAGE_BUCKET_NAME:
-    #STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-    STATICFILES_LOCATION = 'static'
-    STATICFILES_STORAGE = 'bullets.custom_storages.StaticStorage'
+    STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 if AWS_MEDIA_BUCKET_NAME:
-#    DEFAULT_FILE_STORAGE = 'saleor.core.storages.S3MediaStorage'
-    MEDIAFILES_LOCATION = 'media'
-    DEFAULT_FILE_STORAGE = 'bullets.custom_storages.MediaStorage'
- 
+    DEFAULT_FILE_STORAGE = 'saleor.core.storages.S3MediaStorage'
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
