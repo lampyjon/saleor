@@ -3,6 +3,7 @@ import passwordVisible from '../../images/pass-visible.svg';
 
 export default $(document).ready((e) => {
   let $inputPassword = $('input[type=password]');
+  console.log(passwordIvisible);
   $('<img class="passIcon" src=' + passwordIvisible + ' />').insertAfter($inputPassword);
   $inputPassword.parent().addClass('relative');
   $('.passIcon').on('click', (e) => {
