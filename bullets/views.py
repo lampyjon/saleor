@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.decorators.csrf import csrf_exempt
 
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -217,6 +218,7 @@ def unregister(request):
 
 
 # Mailchimp Callback URL
+@csrf_exempt
 def mailchimp_webhook(request, apikey):
     # called when a user manually unsubscribes from the mailing list - so we should mark them as no longer wanting emails and ask if 
     # they no longer wish to be bullets
