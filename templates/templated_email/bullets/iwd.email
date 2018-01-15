@@ -6,7 +6,9 @@
 <p>Hello {{iwd.name}},</p>
 <p>Thank you for registering as a member of the Boldmere Bullets collective International Women's Day events!</p>
 
-<p>If you decide you do not wish to take part in this event, please <a href="{{ unregister_url }}">click here</a>, and we will remove you from the list of participants.</p>
+<p>We have registered you to take part in {{iwd.get_event_display}}. We will be in contact with more details about this soon!</p>
+
+<p>If you decide you do not wish to take part, please <a href="{{ unregister_url }}">click here</a>, and we will remove you from the list of participants.</p>
 
 <p>Best wishes,</p>
 

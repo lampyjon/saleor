@@ -82,7 +82,7 @@ class BulletEventForm(ModelForm):
 class IWDForm(ModelForm):
     class Meta:
         model = IWDRider
-        fields = ['name', 'email', 'club']
+        fields = ['name', 'email', 'club', 'event']
 
 
 

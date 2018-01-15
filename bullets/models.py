@@ -175,7 +175,6 @@ class BulletEvent(models.Model):
     name = models.CharField('Event Name', max_length=200, blank=True)
     link = models.URLField("Link to more info", help_text="If you put a web address in here then we add a link to the events page", blank=True, null=True)
 
-
     def __str__(self):
         return smart_text(self.name)
 
@@ -184,7 +183,17 @@ class BulletEvent(models.Model):
 # For the Womens' Ride
 class IWDRider(Person):
     club = models.CharField("Usual club", max_length=200, blank=True)
-# TODO: need a choice field for which of the events they wish to do?
+
+    EVANS = 'e'
+    RIDE = 'r'
+    BOTH = 'b'
+    EVENT_CHOICES = (
+        (EVANS, 'Bike maintenance evening ONLY'),
+	(RIDE, 'Saturday bike ride ONLY'),
+	(BOTH, 'Take part in both events'),
+    )
+
+    event = models.CharField('Which event?', max_length=1, choices=EVENT_CHOICES, default=BOTH)
 
 
 

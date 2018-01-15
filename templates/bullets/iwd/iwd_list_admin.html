@@ -19,6 +19,7 @@
 			<th>Name</th>
 			<th>Email</th>
 			<th>Club</th>
+			<th>Event</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -28,6 +29,7 @@
 			<td>{{rider.name}}</td>
 			<td>{{rider.email}}</td>
 			<td>{{rider.club}}</td>
+			<td>{{rider.get_event_display}}</td>
 		</tr>
 		{% endfor %}
 	</tbody>

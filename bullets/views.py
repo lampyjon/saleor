@@ -357,7 +357,7 @@ def iwd_register(request):
                 recipient_list=[iwd.email],
                 context=context)
 			
-            messages.success(request, "You have been registered for the International Women's Day ride!");
+            messages.success(request, "You have successfully registered - we will email you to confirm!");
 			            
             return redirect(reverse('index'))
 
@@ -371,7 +371,7 @@ def iwd_register(request):
 def iwd_unregister(request, uuid):
     iwd = get_object_or_404(IWDRider, email_check_ref=uuid)
     if request.method == 'POST':
-        messages.success(request, "Thank you for unregistering from the International Women's Day ride " + str(iwd.name))
+        messages.success(request, "Thank you for unregistering, " + str(iwd.name))
         iwd.delete()
         return redirect(reverse('index'))
     else:
