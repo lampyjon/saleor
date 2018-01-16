@@ -184,16 +184,27 @@ class BulletEvent(models.Model):
 class IWDRider(Person):
     club = models.CharField("Usual club", max_length=200, blank=True)
 
-    EVANS = 'e'
-    RIDE = 'r'
-    BOTH = 'b'
-    EVENT_CHOICES = (
-        (EVANS, 'Bike maintenance evening ONLY'),
-	(RIDE, 'Saturday bike ride ONLY'),
-	(BOTH, 'Take part in both events'),
-    )
+    NO = 'n'
+    SLOWEST = 'a'
+    SLOW = 'b'
+    MEDIUM = 'c'
+    FAST = 'd' 
+    FASTEST = 'e'
 
-    event = models.CharField('Which event?', max_length=1, choices=EVENT_CHOICES, default=BOTH)
+    SPEED_CHOICES = (
+        (NO, 'I do not wish to take part in the ride'),
+	(SLOWEST, '10-11mph'),
+	(SLOW, '12-13mph'),
+        (MEDIUM, '14-15mph'),
+        (FAST, '16-17mph'), 
+        (FASTEST, '18+mph'),
+    )
+    
+    evans = models.BooleanField("Evans Event?", help_text="Check this box if you'd like to take part in the bike maintenance event at Evans", default=True)
+    speed = models.CharField("Women's Ride?", help_text="What speed would you like to do the ride at?", max_length=1, choices=SPEED_CHOICES, default=NO)
+
+    def doing_ride(self):
+        return (self.speed != self.NO)
 
 
 

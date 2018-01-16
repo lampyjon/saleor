@@ -6,7 +6,12 @@
 <p>Hello {{iwd.name}},</p>
 <p>Thank you for registering as a member of the Boldmere Bullets collective International Women's Day events!</p>
 
-<p>We have registered you to take part in {{iwd.get_event_display}}. We will be in contact with more details about this soon!</p>
+{% if iwd.evans %}
+<p>You have been registered to take part in the bike maintenance event at Evans Cycles, Sutton Coldfield, on Thursday 8th March.</p>
+{% endif %}
+{% if iwd.doing_ride %}
+<p>You have requested to take part in the interclub ride on Saturday 10th March, at a speed of {{ iwd.get_speed_display }}.</p>
+{% endif %}
 
 <p>If you decide you do not wish to take part, please <a href="{{ unregister_url }}">click here</a>, and we will remove you from the list of participants.</p>
 
