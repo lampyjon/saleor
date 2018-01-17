@@ -349,7 +349,7 @@ def iwd_register(request):
             iwd = iwd_form.save()
             
             unregister_evans_url = build_absolute_uri(reverse('iwd-unregister', args=['evans', iwd.email_check_ref]))
-            unregister_ride_url = build_absolute_uri(reverse('iwd-unregister', args=['evans', iwd.email_check_ref]))
+            unregister_ride_url = build_absolute_uri(reverse('iwd-unregister', args=['ride', iwd.email_check_ref]))
             ride_info_url = build_absolute_uri(reverse('ride-info'))
 
             context = {'iwd':iwd, 'unregister_evans_url':unregister_evans_url, 'unregister_ride_url':unregister_ride_url, 'ride_info_url':ride_info_url} 
