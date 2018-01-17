@@ -19,7 +19,9 @@
 			<th>Name</th>
 			<th>Email</th>
 			<th>Club</th>
-			<th>Event</th>
+			<th>Evans?</th>
+			<th>Ride?</th>
+                        <th>Speed</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -29,7 +31,9 @@
 			<td>{{rider.name}}</td>
 			<td>{{rider.email}}</td>
 			<td>{{rider.club}}</td>
-			<td>{{rider.get_event_display}}</td>
+			<td>{{rider.evans|yesno|capfirst}}</td>
+			<td>{{rider.doing_ride|yesno|capfirst}}</td>
+                        <td>{% if rider.doing_ride %}{{rider.get_speed_display }}{% endif %}</td>
 		</tr>
 		{% endfor %}
 	</tbody>

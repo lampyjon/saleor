@@ -348,9 +348,11 @@ def iwd_register(request):
         if iwd_form.is_valid():
             iwd = iwd_form.save()
             
-            unregister_url = reverse('iwd-unregister', args=[iwd.email_check_ref])
-            unregister_url = build_absolute_uri(unregister_url)
-            context = {'iwd':iwd, 'unregister_url':unregister_url} 
+            unregister_evans_url = build_absolute_uri(reverse('iwd-unregister', args=['evans', iwd.email_check_ref]))
+            unregister_ride_url = build_absolute_uri(reverse('iwd-unregister', args=['evans', iwd.email_check_ref]))
+            ride_info_url = build_absolute_uri(reverse('ride-info'))
+
+            context = {'iwd':iwd, 'unregister_evans_url':unregister_evans_url, 'unregister_ride_url':unregister_ride_url, 'ride_info_url':ride_info_url} 
 
             send_bullet_mail(
                 template_name='bullets/iwd',
@@ -368,14 +370,28 @@ def iwd_register(request):
     return render(request, "bullets/iwd/register.html", {'form': iwd_form})
 
 # someone no longer wants to do the IWD ride
-def iwd_unregister(request, uuid):
+def iwd_unregister(request, event_type, uuid):
     iwd = get_object_or_404(IWDRider, email_check_ref=uuid)
     if request.method == 'POST':
-        messages.success(request, "Thank you for unregistering, " + str(iwd.name))
-        iwd.delete()
+        if event_type == 'evans':
+            iwd.evans = False
+            messages.success(request, "Thank you for unregistering from the Evans Bike Maintenance event, " + str(iwd.name))
+        elif event_type == 'ride':
+            iwd.speed = IWDRider.NO
+            messages.success(request, "Thank you for unregistering from the Womens Interclub Ride, " + str(iwd.name))
+        elif event_type == 'both':
+            iwd.evans = False
+            iwd.speed = IWDRider.NO
+            messages.success(request, "Thank you for unregistering from these events, " + str(iwd.name))
+
+        iwd.save()
+
+        if ((iwd.evans == False) and (iwd.doing_ride() == False)):
+            iwd.delete()
+
         return redirect(reverse('index'))
     else:
-        return render(request, "bullets/iwd/unregister.html", {'name':iwd.name})
+        return render(request, "bullets/iwd/unregister.html", {'iwd':iwd})
 
 
 
