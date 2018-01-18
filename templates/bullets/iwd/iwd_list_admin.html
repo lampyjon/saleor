@@ -22,6 +22,8 @@
 			<th>Evans?</th>
 			<th>Ride?</th>
                         <th>Speed</th>
+  			<th>Edit</th>
+			<th>Delete</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -34,6 +36,8 @@
 			<td>{{rider.evans|yesno|capfirst}}</td>
 			<td>{{rider.doing_ride|yesno|capfirst}}</td>
                         <td>{% if rider.doing_ride %}{{rider.get_speed_display }}{% endif %}</td>
+			<td><a href="{% url 'iwd-update' rider.pk %}">Edit</a></td>
+			<td><a href="{% url 'iwd-delete' rider.pk %}">Delete</a></td>
 		</tr>
 		{% endfor %}
 	</tbody>

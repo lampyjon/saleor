@@ -49,9 +49,9 @@ urlpatterns = [
     url(r'^events/Womens-Events/register$', views.iwd_register, name='iwd-register'),
     url(r'^events/Womens-Events/unregister/(?P<event_type>evans|ride|both)/(?P<uuid>[0-9a-z-]+)/$', views.iwd_unregister, name='iwd-unregister'),
     url(r'^events/Womens-Events/admin/list/$', views.IWDList.as_view(), name='iwd-list-admin'), 
+    url(r'^events/Womens-Events/admin/update/(?P<pk>[0-9]+)/$', views.IWDUpdate.as_view(), name='iwd-update'),
+    url(r'^events/Womens-Events/admin/delete/(?P<pk>[0-9]+)/$', views.IWDDelete.as_view(), name='iwd-delete'),
   
-
-
     url(r'^info/delivery-times/$', TemplateView.as_view(template_name="bullets/delivery-times.html"), name='delivery-times'),
 
     url(r'^events/$', views.events, name='events'),

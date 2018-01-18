@@ -432,6 +432,19 @@ class IWDList(LoginRequiredMixin, UserPassesTestMixin, ListView):
     def test_func(self):
         return is_core_team(self.request.user)
 
+class IWDUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = IWDRider
+    form_class = IWDForm
+    success_url = reverse_lazy('iwd-list-admin')
+    def test_func(self):
+        return is_core_team(self.request.user)
+
+class IWDDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = IWDRider
+    success_url = reverse_lazy('iwd-list-admin')  
+    def test_func(self):
+        return is_core_team(self.request.user)
+
 
 
 #### News editing code
