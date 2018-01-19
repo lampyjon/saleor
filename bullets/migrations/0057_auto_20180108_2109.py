@@ -35,6 +35,15 @@ class Migration(migrations.Migration):
                 'abstract': False,
             },
         ),
+        migrations.CreateModel(
+            name='BulletEvent',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('date', models.DateField(verbose_name='Event Date')),
+                ('name', models.CharField(blank=True, max_length=200, verbose_name='Event Name')),
+                ('link', models.URLField(blank=True, help_text='If you put a web address in here then we add a link to the events page', null=True, verbose_name='Link to more info')),
+            ],
+        ),
         migrations.AlterField(
             model_name='news',
             name='display_after',
@@ -44,10 +53,5 @@ class Migration(migrations.Migration):
             model_name='news',
             name='redirect_to',
             field=models.URLField(blank=True, help_text="If you put a website address in here, then don't include a story below; the news story will just redirect to this link", null=True, verbose_name='redirection story - where to go?'),
-        ),
-        migrations.AlterField(
-            model_name='velovolunteer',
-            name='bullet',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='bullets.OldBullet'),
         ),
     ]

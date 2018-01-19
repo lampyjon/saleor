@@ -12,6 +12,52 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RenameModel('bullet', 'oldbullet')
+        migrations.RenameModel('bullet', 'oldbullet'),
+        migrations.DeleteModel(
+            name='BulletRunnerPhoto',
+        ),
+        migrations.DeleteModel(
+            name='BulletsRunFeedback',
+        ), 
+        migrations.DeleteModel(
+            name='CharityOfYear',
+        ),
+        migrations.DeleteModel(
+            name='InterclubRider',
+        ),
+        migrations.DeleteModel(
+            name='NewTDBLeaderBoard',
+        ),
+        migrations.DeleteModel(
+            name='TdBLeaderBoard_Entry',
+        ),
+        migrations.DeleteModel(
+            name='TdBStage',
+        ),
+        migrations.DeleteModel(
+            name='VeloFeedback',
+        ),
+        migrations.DeleteModel(
+            name='BulletsRunner',
+        ),
+        migrations.DeleteModel(
+            name='CTSRider',
+        ),
+        migrations.DeleteModel(
+            name='CTSRiderPosition',
+        ),
+        migrations.DeleteModel(
+            name='CTSVehicle',
+        ),
+        migrations.DeleteModel(
+            name='CTSVehiclePosition',
+        ),
+        migrations.DeleteModel(
+           name='VeloVolunteer',
+        ),
+        migrations.DeleteModel(
+            name='SiteValue',
+        ),
+
     ]
 
