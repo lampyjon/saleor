@@ -319,14 +319,29 @@ PAYMENT_HOST = get_host
 
 PAYMENT_MODEL = 'order.Payment'
 
-PAYMENT_VARIANTS = {
-    'default': ('payments.dummy.DummyProvider', {})}
+if DEBUG:
+    PAYMENT_VARIANTS = {
+        'default': ('payments.dummy.DummyProvider', {})}
+else:
+    PAYMENT_VARIANTS = {
+        'paypal': ('payments.paypal.PaypalProvider', {
+            'client_id': os.environ.get('PAYPAL_CLIENT_ID'),	
+            'secret': os.environ.get('PAYPAL_SECRET'),
+            'endpoint': 'https://api.paypal.com',
+            'capture': True}),       
+        }
+
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
-CHECKOUT_PAYMENT_CHOICES = [
-    ('default', 'Dummy provider')]
+if DEBUG:
+    CHECKOUT_PAYMENT_CHOICES = [
+        ('default', 'Dummy provider')]
+else:
+    CHECKOUT_PAYMENT_CHOICES = [
+        ('paypal', 'Paypal')]
+
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'}
