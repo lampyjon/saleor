@@ -175,8 +175,10 @@ class Product(SeoModel):
         return TaxedMoneyRange(start=price, stop=price)
 
     def any_future_shipping(self):
-        x = any(variant.ship_in_future() for variant in self)
-        return (self.future_shipping or x)
+        if not self.variants.exists():
+            return self.future_shipping
+        else:
+            return any(variant.ship_in_future() for variant in self)
 
 
 class ProductVariant(models.Model):
