@@ -134,6 +134,13 @@ class Order(models.Model):
     def get_absolute_url(self):
         return reverse('order:details', kwargs={'token': self.token})
 
+# NOTE: this isn't in HEAD - do we still use it?
+#    def send_confirmation_email(self):
+#        email = self.get_user_current_email()
+#        payment_url = build_absolute_uri(
+#            reverse('order:details', kwargs={'token': self.token}))
+#        emails.send_order_confirmation.delay(email, payment_url, self)
+
     def get_last_payment_status(self):
         last_payment = max(
             self.payments.all(), default=None, key=attrgetter('pk'))
@@ -296,6 +303,13 @@ class Payment(BasePayment):
         return build_absolute_uri(
             reverse(
                 'order:payment-success', kwargs={'token': self.order.token}))
+
+# NOTE: this isn't in HEAD - do we need it?
+#    def send_confirmation_email(self):
+#        email = self.order.get_user_current_email()
+#        order_url = build_absolute_uri(
+#            reverse('order:details', kwargs={'token': self.order.token}))
+#        emails.send_payment_confirmation.delay(email, order_url, self.order)
 
     def get_purchased_items(self):
         lines = [

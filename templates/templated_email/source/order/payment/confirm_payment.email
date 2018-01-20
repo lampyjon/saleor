@@ -1,23 +1,62 @@
-{% load i18n %}
+{% extends 'bullets/base-email.html' %}
+{% load gross from prices_i18n %}
+{% load discount_amount_for from prices %}
+{% load discount_as_negative from voucher %}
+{% block subject %}Boldmere Bullets - Order Confirmation{% endblock subject %}
 
-{% block subject %}
-	{% trans "Payment details" context "Payment confirmation subject" %}
-{% endblock %}
+{% block body %}
 
-{% block plain %}
-{% blocktrans context "Payment confirmation email text" %}
-Hi!
+<p>Hello,</p>
 
-Thank you for your payment. To see your payment details please visit:
-{{ url }}
+<p>Thank you for your order from the Boldmere Bullets online shop. Your payment has been received.</p>
 
-This is an automatically generated email, please do not reply.
+<table>
+ <thead>
+  <tr>
+   <th>Item</th>
+   <th style="text-align:right;">Qty.</th>
+   <th style="text-align:right;">Price</th>
+  </tr>
+ </thead>
+ <tbody>
 
-Sincerely,
-{{ site_name }}
-{% endblocktrans %}
-{% endblock %}
+{% for item in order %}
+  {% for item_line in item %}
+   <tr>
+    <td><p>{{ item_line.product }} {% if item_line.future_shipping %}(*){% endif %}<br>
+         <small>{{ item_line.product_name }}</small></p>
+    </td>
+    <td style="text-align:right;">x{{ item_line.quantity }}</td>
+    <td style="text-align:right;">{% gross item_line.get_total html=True %}</td>
+   </tr> 
+  {% endfor %}
+{% endfor %}
 
-{% block html %}
-{% include 'templated_email/compiled/confirm_payment.html' %}
-{% endblock %}
+{% if order.is_shipping_required %}
+  <tr>
+   <td colspan=2>Shipping total</td>
+   <td style="text-align:right;">{% gross order.shipping_price html=True %}</td>
+  </tr>
+{% endif %}
+
+{% if order.discount_amount %}
+ <tr>
+  <td colspan=2>{{ order.discount_name }}</td>
+  <td style="text-align:right;">{% discount_as_negative order.discount %}</td>
+ </tr>  
+{% endif %}
+<tr>
+ <td colspan=2><b>Total</b></td>
+ <td style="text-align:right;"><b>{% gross order.total html=True %}</b></td
+</tr>
+</table>
+
+
+<p><a href="{{ url }}">View your order online.</a></p>
+
+<p>Best wishes,</p>
+
+<p>The Boldmere Bullets!</p>
+
+{% endblock body %}
+

@@ -1,0 +1,17 @@
+{% extends 'bullets/base-email.html' %}
+{% block subject %}Boldmere Bullets - Order Confirmation{% endblock subject %}
+
+{% block body %}
+
+<p>Hello {{name}},</p>
+
+<p>Thank you for your order from the Boldmere Bullets online shop.</p>
+
+<p><a href="{{ url }}">View your order online.</a></p>
+
+<p>Best wishes,</p>
+
+<p>The Boldmere Bullets!</p>
+
+{% endblock body %}
+
