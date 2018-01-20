@@ -756,9 +756,10 @@ def orders_for_product_variant(request, variant_pk):
         order_filter.qs, settings.DASHBOARD_PAGINATE_BY,
         request.GET.get('page'))
 
-    ctx = {'orders': orders, 'filter': order_filter, 'variant':variant}
+    ctx = {'orders': orders, 'filter_set': order_filter, 'variant':variant, 'is_empty': not order_filter.queryset.exists()}
 
     return TemplateResponse(request, 'dashboard/order/productvariants.html', ctx)
+
  
 # BULLETS
 @staff_member_required
