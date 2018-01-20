@@ -68,7 +68,7 @@ class NewsForm(ModelForm):
 class BulletEventForm(ModelForm):
 	class Meta:
 		model = BulletEvent
-		fields = ['date', 'name', 'link']
+		fields = ['date', 'name', 'link', 'running_event', 'cycling_event', 'social_event']
 		widgets = {
 			'date': forms.TextInput(attrs={'class': 'datepicker'}),
 		}

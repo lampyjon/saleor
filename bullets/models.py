@@ -175,6 +175,11 @@ class BulletEvent(models.Model):
     name = models.CharField('Event Name', max_length=200, blank=True)
     link = models.URLField("Link to more info", help_text="If you put a web address in here then we add a link to the events page", blank=True, null=True)
 
+    running_event = models.BooleanField("Running Event", default=False)
+    cycling_event = models.BooleanField("Cycling Event", default=False)
+    social_event = models.BooleanField("Social Event", default=False)
+
+
     def __str__(self):
         return smart_text(self.name)
 
