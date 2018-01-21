@@ -201,6 +201,9 @@ class Order(models.Model):
 
         return balance
 
+    def get_name(self): # JON: need this to display the name associated with this order
+        return str(self.billing_address.full_name)
+
 
 class OrderLine(models.Model):
     order = models.ForeignKey(
