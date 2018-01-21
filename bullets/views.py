@@ -25,7 +25,7 @@ import os
 from .forms import RegisterForm, UnRegisterForm, ContactForm, NewsForm, RunningEventForm, BulletEventForm, IWDForm
 from .models import Bullet, OldBullet, News, RunningEvent, ActivityCache, BulletEvent, IWDRider
 
-from .utils import send_bullet_mail, who_to_email 
+from .utils import send_bullet_mail, who_to_email, send_manager_email 
 
 # SALEOR imports
 from saleor.core.utils import build_absolute_uri
