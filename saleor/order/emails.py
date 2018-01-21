@@ -56,7 +56,6 @@ def collect_data_for_fullfillment_email(order_pk, template, fulfillment_pk):
     email_data['context'].update({'fulfillment': fulfillment})
     return email_data
 
-
 @shared_task
 def send_order_confirmation(order_pk):
     """Sends order confirmation email."""
@@ -83,7 +82,6 @@ def send_payment_confirmation(order_pk):
     """Sends payment confirmation email."""
     email_data = collect_data_for_email(order_pk, CONFIRM_PAYMENT_TEMPLATE)
     send_templated_mail(**email_data)
-
 
 @shared_task
 def send_note_confirmation(order_pk):

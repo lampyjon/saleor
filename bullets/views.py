@@ -25,11 +25,11 @@ import os
 from .forms import RegisterForm, UnRegisterForm, ContactForm, NewsForm, RunningEventForm, BulletEventForm, IWDForm
 from .models import Bullet, OldBullet, News, RunningEvent, ActivityCache, BulletEvent, IWDRider
 
-from .utils import send_bullet_mail 
+from .utils import send_bullet_mail, who_to_email 
 
 # SALEOR imports
 from saleor.core.utils import build_absolute_uri
-from saleor.userprofile.models import User
+
 
 import mailchimp  # for adding users to our mailing list
 import logging    # For the logging library
@@ -46,11 +46,6 @@ def is_core_team(user):
 # Decorator style for checking login status
 def is_stats_team(user):
     return user.groups.filter(name='StatsTeam').exists()
-
-
-# get list of people to email
-def who_to_email():
-    return User.objects.filter(groups__name='EmailRecipients').values_list('email', flat=True)
 
 
 
@@ -277,11 +272,11 @@ def contact(request):
 		if contact_form.is_valid():
 			context = contact_form.cleaned_data 
 
-			send_bullet_mail(
+			send_manager_email(
         			template_name='bullets/contact',
-        			recipient_list=who_to_email(),
                                 extra_headers={'Reply-To':contact_form.cleaned_data['email']},
         			context=context)
+
 			send_bullet_mail(
         			template_name='bullets/contact_thanks',
                			recipient_list=[contact_form.cleaned_data['email']],
