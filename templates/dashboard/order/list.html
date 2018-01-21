@@ -69,7 +69,7 @@
                     </td>
                     {% trans "Guest" context "Anonymous user account value" as guest %}
                     <td>
-                      {{ order.user|default:guest }}
+                      {{ order.get_name }}
                     </td>
                     <td>
                       {{ order.created }}
