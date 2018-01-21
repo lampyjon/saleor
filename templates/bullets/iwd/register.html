@@ -74,12 +74,12 @@ On the evening of Thursday 8th March (International Women's Day), we are organis
 
 <h2 id="register">Register to take part</h2>
     </p>
-        <form method="post" class="form-horizontal">
+        <form method="post" class="form-horizontal" onsubmit="mySubmit.disabled = true; return true;">
             {% csrf_token %}
             {% bootstrap_form form layout="horizontal" %}
  	    <p>By clicking on 'register' you are agreeing to the <a href="{% url 'collective-code' %}">Collective Code</a>.</p>
             <p class="text-right">
-                <button type="submit" class="btn btn-primary">Sign up now...</button>
+                <button name="mySubmit" type="submit" class="btn btn-primary">Sign up now...</button>
             </p>
         </form>
     </div>
