@@ -1,12 +1,10 @@
 import logging
-
 from django.utils.translation import pgettext_lazy
 
 from ..core import analytics
 from .emails import send_order_confirmation
 
 logger = logging.getLogger(__name__)
-
 
 def order_status_change(sender, instance, **kwargs):
     """Handle payment status change and set suitable order status."""
