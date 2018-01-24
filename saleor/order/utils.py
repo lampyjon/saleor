@@ -173,7 +173,8 @@ def add_variant_to_order(
         quantity=quantity_not_fulfilled,
         variant=variant,
         unit_price=variant.get_price(discounts, taxes),
-        tax_rate=get_tax_rate_by_name(variant.product.tax_rate, taxes))
+        tax_rate=get_tax_rate_by_name(variant.product.tax_rate, taxes),
+        future_shipping=variant.future_shipping)      # BULLETS: future shipping needs to go to the order line
     allocate_stock(variant, quantity_not_fulfilled)
 
 
