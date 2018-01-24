@@ -94,7 +94,7 @@
               {{ form.name|materializecss }}
             </div>
             <div class="row">
-              <div class="col s12">
+              <div class="col s12 m8">
                 <div class="row">
                   {{ form.description|materializecss }}
                 </div>
@@ -103,6 +103,11 @@
                 </div>
                 {% include "dashboard/includes/_google_preview.html" with object=category form=form %}
               </div>
+              <div class="col s12 m4">		
+                 <div class="row">		
+                   {{ form.is_hidden|materializecss:"input-field s12" }}		
+                 </div>		
+               </div>
             </div>
           </div>
           <div class="card-action right-align">

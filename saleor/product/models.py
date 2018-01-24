@@ -33,6 +33,8 @@ class Category(MPTTModel, SeoModel):
         on_delete=models.CASCADE)
     background_image = VersatileImageField(
         upload_to='category-backgrounds', blank=True, null=True)
+    is_hidden = models.BooleanField(default=False)			# BULLETS (we want hidden categories)
+
 
     objects = models.Manager()
     tree = TreeManager()
@@ -61,6 +63,8 @@ class Category(MPTTModel, SeoModel):
         nodes = [node for node in ancestors] + [self]
         return '/'.join([node.slug for node in nodes])
 
+    def set_is_hidden_descendants(self, is_hidden):		
+        self.get_descendants().update(is_hidden=is_hidden)
 
 class ProductType(models.Model):
     name = models.CharField(max_length=128)
