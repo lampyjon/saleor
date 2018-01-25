@@ -51,7 +51,9 @@ $(document)
   .on('click', () => $mobileNav.removeClass('open'));
 $(window)
   .on('resize', renderNavbar);
+
 $searchIcon
   .on('click', () => $searchForm.removeClass('search-form--hidden'));
 $closeSearchIcon
   .on('click', () => $searchForm.addClass('search-form--hidden'));
+

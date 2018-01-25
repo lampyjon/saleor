@@ -3,7 +3,6 @@ import 'jquery.cookie';
 import 'bootstrap';
 
 import '../scss/storefront.scss';
-
 import './components/navbar';
 import './components/cart';
 import './components/sorter';
