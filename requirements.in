@@ -53,7 +53,8 @@ uwsgi>=2.0.0 ; platform_system != "Windows"
 celery[redis]
 weasyprint>=0.42.2
 django-debug-toolbar
-django-autoslug>=1.9.3   # Bullets better slugs
+#django-autoslug>=1.9.3   # Bullets better slugs
+django-autoslug-iplweb	 # Allegedly drop in replacement for above
 mailchimp 		 # for mailing list management
 django_summernote        # for news article editing
 django-ses 	         # for sending emails

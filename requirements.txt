@@ -27,7 +27,7 @@ cssselect2==0.2.1         # via cairosvg, weasyprint
 defusedxml==0.5.0         # via cairosvg, python3-openid, social-auth-core
 dj-database-url==0.5.0
 dj-email-url==0.1.0
-django-autoslug==1.9.3
+django-autoslug-iplweb==1.9.4.dev0
 django-babel==0.6.2
 django-bootstrap3==10.0.1
 django-bootstrap4==0.0.6

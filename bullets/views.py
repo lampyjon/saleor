@@ -12,8 +12,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from django.utils import timezone
 from django.db.models import Q, Sum
-from django.core.urlresolvers import reverse
-from django.urls import reverse_lazy
+# from django.core.urlresolvers import reverse
+from django.urls import reverse_lazy, reverse
 
 # Python imports 
 from datetime import timedelta

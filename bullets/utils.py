@@ -1,6 +1,6 @@
 from django.conf import settings
 from templated_email import send_templated_mail
-from saleor.userprofile.models import User
+from saleor.account.models import User
 
 
 # get list of people to email
