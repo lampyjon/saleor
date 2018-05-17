@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from django.urls import reverse
 from templated_email import send_templated_mail
-from bullets.utils import send_manager_email
+from bullets.utils import send_manager_email, send_bullet_mail
 
 from ..core.utils import build_absolute_uri
 from ..seo.schema.email import get_order_confirmation_markup
@@ -27,6 +27,7 @@ def get_email_context(order_token):
         'domain': site.domain,
         'url': order_url}
     return ctx
+
 
 
 def collect_data_for_email(order_pk, template):
