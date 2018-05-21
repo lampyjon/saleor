@@ -201,7 +201,7 @@ class Order(models.Model):
 
         return balance
 
-    def get_name(self): # JON: need this to display the name associated with this order
+    def get_name(self): # BULLETS: need this to display the name associated with this order
         return str(self.billing_address.full_name)
 
 
@@ -229,6 +229,8 @@ class OrderLine(models.Model):
         net_field='unit_price_net', gross_field='unit_price_gross')
     tax_rate = models.DecimalField(
         max_digits=5, decimal_places=2, default='0.0')
+
+    future_shipping = models.BooleanField(pgettext_lazy('Ordered line field', 'future shipping'), default=False)   # BULLETS: Will this item ship in the future?
 
     def __str__(self):
         return self.product_name

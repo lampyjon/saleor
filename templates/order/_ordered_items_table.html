@@ -53,7 +53,7 @@
                 data-srcset="{% product_first_image line.variant.product size="60x60" method="crop" %} 1x, {% product_first_image line.variant.product size="120x120" method="crop" %} 2x"
                 class="float-left lazyload lazypreload"
                 src="{% placeholder size=60 %}">
-          <span class="order-details__product__description">{{ item_line.product }} {% if item_line.future_shipping %}(*){% endif %}{{ line.product_name }}</span>
+          <span class="order-details__product__description">{{ line.variant.product }} {% if line.future_shipping %}(*){% endif %}{{ line.product_name }}</span>
         </a>
       </div>
       <div class="col-md-4">

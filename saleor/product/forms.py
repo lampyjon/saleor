@@ -31,7 +31,7 @@ class VariantChoiceField(forms.ModelChoiceField):
 		'future': s}	# BULLETS future shipping
         return label
 
-    def update_field_data(self, variants, discounts, taxes):
+    def update_field_data(self, variants, discounts, taxes, product):  # BULLETS add product
         """Initialize variant picker metadata."""
         self.queryset = variants
         self.discounts = discounts
@@ -44,9 +44,10 @@ class VariantChoiceField(forms.ModelChoiceField):
             for variant in variants.all()}
         self.widget.attrs['data-images'] = json.dumps(images_map)
 
+	# BULLETS TWEAK, I HAVE NO RECOLLECTION WHAT THIS DOES NOW!
         qs = self.queryset
-        if self.product.any_future_shipping():
-            qs = qs.annotate(total_stock=Sum('stock__quantity'), allocated_stock=Sum('stock__quantity_allocated')).annotate(stock_left=F('total_stock')-F('allocated_stock')).filter(stock_left__gte=1) #### Remove any variants that have no stock available from the QS
+        if product.any_future_shipping():
+            qs = qs.annotate(stock_left=F('quantity')-F('quantity_allocated')).filter(stock_left__gte=1) #### Remove any variants that have no stock available from the QS
         self.queryset = qs
 
         # Don't display select input if there is only one variant.
@@ -62,7 +63,7 @@ class ProductForm(AddToCartForm):
         super().__init__(*args, **kwargs)
         variant_field = self.fields['variant']
         variant_field.update_field_data(
-            self.product.variants, self.discounts, self.taxes)
+            self.product.variants, self.discounts, self.taxes, self.product)
 
     def get_variant(self, cleaned_data):
         x = cleaned_data.get('variant')

@@ -55,12 +55,9 @@ urlpatterns = [
         views.fulfillment_packing_slips, name='fulfillment-packing-slips'),
     url(r'^(?P<order_pk>\d+)/invoice/$',
         views.order_invoice, name='order-invoice'),
-
-    url(r'^(?P<group_pk>\d+)/packing-slips/$',
-        views.order_packing_slip, name='order-packing-slips'),
-
-    url(r'^(?P<order_pk>\d+)/mark-as-paid/$',				# BULLETS
+    url(r'^(?P<order_pk>\d+)/mark-as-paid/$',				
         views.mark_order_as_paid, name='order-mark-as-paid'),
+
     url(r'^(?P<variant_pk>\d+)/by-variant/$', 				# BULLETS
         views.orders_for_product_variant, name='orders-for-variant'),
     url(r'^(?P<variant_pk>\d+)/by-variant/bulk-ship/$', 		# BULLETS

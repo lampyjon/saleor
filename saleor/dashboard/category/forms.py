@@ -24,7 +24,7 @@ class CategoryForm(forms.ModelForm):
         exclude = ['slug']
         labels = {
             'name': pgettext_lazy('Item name', 'Name'),
-            'description': pgettext_lazy('Description', 'Description')}
+            'description': pgettext_lazy('Description', 'Description'),
             'is_hidden': pgettext_lazy(		
                 'Hide in site navigation toggle',		
                 'Hide in site navigation')}

@@ -20,7 +20,6 @@ def default_currency(request):
 
 # request is a required parameter
 # pylint: disable=W0613
-<<<<<<< HEAD
 def navigation(request):
     menus = Menu.objects.prefetch_related(
         'items__collection', 'items__category', 'items__page'

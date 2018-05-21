@@ -48,8 +48,9 @@ translatable_urlpatterns = [
     url(r'', include('payments.urls')),
     url('', include('social_django.urls', namespace='social'))]
 
-urlpatterns = non_translatable_urlpatterns + i18n_patterns(
-    *translatable_urlpatterns)
+#urlpatterns = non_translatable_urlpatterns + i18n_patterns(
+#    *translatable_urlpatterns)
+urlpatterns = non_translatable_urlpatterns + translatable_urlpatterns
 
 if settings.DEBUG:
     import debug_toolbar

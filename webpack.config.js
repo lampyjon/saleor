@@ -49,12 +49,6 @@ var providePlugin = new webpack.ProvidePlugin({
 });
 
 
-var faviconsWebpackPlugin = new FaviconsWebpackPlugin({
-  logo: './bullets/static/images/bulletfavicon.svg',
-  prefix: 'bulletfavicons/',
-  title: "Bullets"
-});
-
 var config = {
   entry: {
     dashboard: './saleor/static/dashboard/js/dashboard.js',

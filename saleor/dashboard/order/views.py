@@ -42,7 +42,7 @@ from .utils import (
 
 from ...order import OrderStatus
 from ...order.models import Payment
-from ...product.models import ProductVariant, Stock
+from ...product.models import ProductVariant
 
 
 
@@ -780,9 +780,10 @@ def bulkship_orders(request, variant_pk):
                 delivery_group.status = GroupStatus.SHIPPED
                 delivery_group.save()
 
-                for line in delivery_group.lines.all():		
-                     Stock.objects.decrease_stock(line.stock, line.quantity)
-		
+ #               for line in delivery_group.lines.all():		
+ #                    Stock.objects.decrease_stock(line.stock, line.quantity)
+ # TODO: there's no Stock object anymore - need to figure out how this works now.
+ # 		
                 msg = pgettext_lazy(
                     'Dashboard message related to a shipment group',
                     'Shipped %s') % delivery_group
