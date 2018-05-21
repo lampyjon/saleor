@@ -21,9 +21,7 @@
     {% for lang_code, language_name in LANGUAGES %}
       <link rel="alternate" hreflang="{{ lang_code }}" href="{% translate_url url=request.path lang_code=lang_code %}" />
     {% endfor %}
-    <meta name="description" content="{% block meta_description %}{% endblock %}">
     <meta name="author" content="Boldmere Bullets">
-
     <meta name="theme-color" content="#ffffff" />
         
     <meta property="og:type"               content="website" />
