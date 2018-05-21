@@ -18,29 +18,4 @@ class Migration(migrations.Migration):
             name='future_shipping',
             field=models.BooleanField(default=False, verbose_name='future shipping'),
         ),
-        migrations.AlterField(
-            model_name='order',
-            name='discount_amount',
-            field=django_prices.models.PriceField(blank=True, currency='GBP', decimal_places=2, max_digits=12, null=True, verbose_name='discount amount'),
-        ),
-        migrations.AlterField(
-            model_name='order',
-            name='language_code',
-            field=models.CharField(default='en-GB', max_length=35),
-        ),
-        migrations.AlterField(
-            model_name='order',
-            name='shipping_price',
-            field=django_prices.models.PriceField(currency='GBP', decimal_places=4, default=0, editable=False, max_digits=12, verbose_name='shipping price'),
-        ),
-        migrations.AlterField(
-            model_name='order',
-            name='total_net',
-            field=django_prices.models.PriceField(blank=True, currency='GBP', decimal_places=2, max_digits=12, null=True, verbose_name='total net'),
-        ),
-        migrations.AlterField(
-            model_name='order',
-            name='total_tax',
-            field=django_prices.models.PriceField(blank=True, currency='GBP', decimal_places=2, max_digits=12, null=True, verbose_name='total tax'),
-        ),
     ]
