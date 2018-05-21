@@ -73,11 +73,13 @@
             <div class="carousel-inner" role="listbox">
               {% for image in images %}
                 <div class="carousel-item{% if forloop.first %} active{% endif %}">
+		  <a href="#" data-toggle="modal" data-target="#modal-{{ forloop.counter }}">
                   <img class="d-block img-fluid lazyload lazypreload"
                        data-src="{% get_thumbnail image.image method="crop" size="540x540" %}"
                        data-srcset="{% get_thumbnail image.image method="crop" size="540x540" %} 1x, {% get_thumbnail image.image method="crop" size="1080x1080" %} 2x"
                        alt=""
                        src="{% placeholder size=540 %}">
+		   </a>
                 </div>
               {% endfor %}
             </div>
@@ -102,6 +104,23 @@
                 {% endif %}
               {% endfor %}
             </ol>
+
+{% for image in images %}
+  <div class="modal fade" id="modal-{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel{{ forloop.counter }}" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+        	<div class="modal-content">
+			<div class="modal-header">
+                               <h5 class="modal-title" id="myModalLabel{{ forloop.counter }}">{{ product }}</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                         </div>
+
+                         <div class="modal-body">
+                                <img class="img-fluid" src="{{ image.image.url }}" alt="">
+                         </div>
+                </div>
+        </div>
+  </div>
+{% endfor %}	    
           </div>
         {% else %}
           <img data-src="{% placeholder size=540 %}"
