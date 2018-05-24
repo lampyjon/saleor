@@ -2,7 +2,7 @@
   <mj-column>
     <mj-text>
       {% blocktrans trimmed context "Base email text" %}
-        This is an automatically generated email, please do not reply.
+        If you have any questions please get in touch! 
       {% endblocktrans %}
     </mj-text>
   </mj-column>
@@ -11,7 +11,7 @@
   <mj-column>
     <mj-text align="center">
       {% blocktrans trimmed context "Base email footer" %}
-        Sincerely, {{ site_name }}
+        Lots of love - the Boldmere Bullets
       {% endblocktrans %}
     </mj-text>
   </mj-column>

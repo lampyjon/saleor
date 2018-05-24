@@ -26,19 +26,7 @@
             {% price order.shipping_price display_gross=order.display_gross_prices html=False %}
           </td>
         </tr>
-        <tr>
-          <td colspan="3" style="text-align: right;">
-            {% if order.display_gross_prices %}
-              {% trans "Taxes (included)" context "E-mail order lines summary table" %}
-            {% else %}
-              {% trans "Taxes" context "E-mail order lines summary table" %}
-            {% endif %}
-          </td>
-          <td style="text-align: right;">
-            {% price order.total.tax html=False %}
-          </td>
-        </tr>
-        {% if order.discount_amount %}
+          {% if order.discount_amount %}
           <tr>
             <td colspan="3" style="text-align: right;">
               {% trans "Discount" context "E-mail order lines summary table" %}

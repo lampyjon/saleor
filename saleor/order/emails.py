@@ -3,11 +3,12 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from django.urls import reverse
 from templated_email import send_templated_mail
-from bullets.utils import send_manager_email, send_bullet_mail
 
 from ..core.utils import build_absolute_uri
 from ..seo.schema.email import get_order_confirmation_markup
 from .models import Fulfillment, Order
+
+from templated_email import InlineImage
 
 CONFIRM_ORDER_TEMPLATE = 'source/order/confirm_order'
 CONFIRM_FULFILLMENT_TEMPLATE = 'source/order/confirm_fulfillment'
@@ -40,6 +41,17 @@ def collect_data_for_email(order_pk, template):
     order = Order.objects.get(pk=order_pk)
     recipient_email = order.get_user_current_email()
     email_context = get_email_context(order.token)
+
+    # BULLETS - add logo to context
+    # From a file
+    with open('bullets.png', 'rb') as bullets_pic:
+        image = bullets_pic.read()
+       # print(str(image))
+        inline_image = InlineImage(filename="bullets.png", content=image)
+        print(str(inline_image))
+        email_context.update({'bullet_pic': inline_image})
+    print(str(email_context))
+    # BULLETS
 
     # Order confirmation template requires additional information
     if template == CONFIRM_ORDER_TEMPLATE:

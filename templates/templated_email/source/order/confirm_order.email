@@ -29,10 +29,9 @@ Thank you for your order. Below is the list of ordered products. To see your pay
 {% if order.shipping_address %}{{ order.shipping_address }}{% else %}{% trans "No shipping required" context "Order confirmation e-mail text" %}{% endif %}
 
 {% blocktrans context "Order confirmation e-mail text" %}
-This is an automatically generated e-mail, please do not reply.
+If you have any questions please get in touch!
 
-Sincerely,
-{{ site_name }}
+Lots of love, the Boldmere Bullets.:
 {% endblocktrans %}
 {% endblock %}
 
