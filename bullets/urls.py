@@ -65,7 +65,7 @@ urlpatterns = [
 
     url(r'^mailchimp-webhook/(?P<apikey>[0-9a-z-]+)/$', views.mailchimp_webhook, name='mailchimp-webhook'),
 
-
+    url(r'^bullets-run-2018/$', RedirectView.as_view(url="https://www.ole-jcracesolutions.co.uk/Boldmere-bullets-10k-5k-race-p/bb2018.htm", permanent=True)),
 
     ## REDIRECT for leaders app
     url(r'^leaders/$', views.leaders, name='leaders'),
