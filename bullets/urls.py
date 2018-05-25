@@ -10,6 +10,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^privacy/$', TemplateView.as_view(template_name="bullets/privacy.html"), name='privacy'),
 
     url(r'^register/$', views.register, name='register'),
     url(r'^register/success/$', TemplateView.as_view(template_name="bullets/registration/registered.html"), name='registered'),

@@ -90,8 +90,14 @@
           	{% block content %} {% endblock %}
 
         </div>
+
+ 	 
+
         {% block footer %}
         {% endblock %}
+
+{% include 'bullets/snippets/footer.html' %}
+
         {% block footer_scripts %}
      <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
