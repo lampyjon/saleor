@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === 'production') {
     path: resolve('saleor/static/assets/'),
     filename: '[name].[chunkhash].js',
     chunkFilename: '[name].[chunkhash].js',
-    publicPath: process.env.STATIC_URL || '/static/assets/'
+    publicPath: process.env.S3_URL
   };
   fileLoaderPath = 'file-loader?name=[name].[hash].[ext]';
   extractCssPlugin = new MiniCssExtractPlugin({

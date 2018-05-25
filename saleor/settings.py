@@ -376,10 +376,14 @@ AWS_MEDIA_CUSTOM_DOMAIN = os.environ.get('AWS_MEDIA_CUSTOM_DOMAIN')
 AWS_QUERYSTRING_AUTH = ast.literal_eval(
     os.environ.get('AWS_QUERYSTRING_AUTH', 'False'))
 
+S3_URL = STATIC_URL 
+
 if AWS_STORAGE_BUCKET_NAME:
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    if AWS_S3_CUSTOM_DOMAIN:
-        STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_STORAGE_BUCKET_NAME)  # OVERRIDE STATIC_URL so WebPack works
+    S3_URL = 'https://%s.s3.amazonaws.com/assets/' % AWS_STORAGE_BUCKET_NAME
+
+print("S3URL")
+print(str(S3_URL))
 
 if AWS_MEDIA_BUCKET_NAME:
     DEFAULT_FILE_STORAGE = 'saleor.core.storages.S3MediaStorage'
@@ -549,3 +553,6 @@ NORECAPTCHA_SECRET_KEY = os.environ.get('NORECAPTCHA_SECRET_KEY')
 
 CSVFILE_BUCKET_NAME = os.environ.get('CSVFILE_BUCKET_NAME')
 CSVFILE_LOCATION = os.environ.get('CSVFILE_LOCATION')
+
+print("Static URL")
+print(str(STATIC_URL))
