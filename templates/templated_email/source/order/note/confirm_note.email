@@ -1,14 +1,22 @@
-{% extends 'bullets/base-email.html' %}
-{% block subject %}Boldmere Bullets Online Shop{% endblock subject %}
+{% load i18n %}
 
-{% block body %}
+{% block subject %}
+  {% trans "Boldmere Bullets Online Shop - Order Update" context "Note confirmation email subject" %}
+{% endblock %}
 
-<p>Hello,</p>
-<p>A new note has been added to your order on the Boldmere Bullets online shop. To see details please <a href="{{ url }}">click here</a>.</p>
+{% block plain %}
+{% blocktrans context "Note confirmation email text" %}
+Hi!
 
-<p>Best wishes,</p>
+A new note has been added to your order. To see details please visit:
+{{ url }}
 
-<p>The Boldmere Bullets!</p>
+Please get in touch if you have any questions!
 
-{% endblock body %}
+Lots of love, the Boldmere Bullets.
+{% endblocktrans %}
+{% endblock %}
 
+{% block html %}
+{% include 'templated_email/compiled/confirm_note.html' %}
+{% endblock %}

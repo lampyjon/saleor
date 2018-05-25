@@ -3,15 +3,16 @@
 {% load voucher %}
 
 {% block subject %}
-  {% trans "Boldmere Bullets Online Shop - Order Details" context "Order confirmation e-mail subject" %}
+  {% trans "New Bullets Shop Order" context "Manager confirmation e-mail subject" %}
 {% endblock %}
 
 {% block plain %}
-{% blocktrans context "Order confirmation e-mail text" %}
+{% blocktrans context "Manager confirmation e-mail text" %}
 Hi!
 
-Thank you for your order. Below is the list of ordered products. To see your payment details please visit:
-{{ url }}{% endblocktrans %}
+There has been a new order on the Bullets online shop!
+
+{% endblocktrans %}
 {% for line in order %}
 {{ line.quantity }} x {{ line.product_name }}, {% price line.get_total display_gross=order.display_gross_prices html=False %}
 {% endfor %}
@@ -28,13 +29,12 @@ Thank you for your order. Below is the list of ordered products. To see your pay
 {% trans "Shipping address" context "Order confirmation e-mail shipping address" %}
 {% if order.shipping_address %}{{ order.shipping_address }}{% else %}{% trans "No shipping required" context "Order confirmation e-mail text" %}{% endif %}
 
-{% blocktrans context "Order confirmation e-mail text" %}
-If you have any questions please get in touch!
+{% blocktrans context "Manager confirmation e-mail text" %}
 
-Lots of love, the Boldmere Bullets.:
+Lots of love, the Boldmere Bullets.
 {% endblocktrans %}
 {% endblock %}
 
 {% block html %}
-{% include 'templated_email/compiled/confirm_order.html' %}
+{% include 'templated_email/compiled/manager_order.html' %}
 {% endblock %}

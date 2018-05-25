@@ -2,7 +2,7 @@
 
 {% block subject %}
   {% blocktrans trimmed with order=fulfillment.order context "Fulfillment confirmation email subject" %}
-    A shipment from order {{ order }} is on the way
+    Boldmere Bullets Online Shop - Order {{ order }} is on the way to you!
   {% endblocktrans %}
 {% endblock %}
 
@@ -10,11 +10,11 @@
 {% blocktrans context "Fulfillment confirmation email text" %}
 Hi!
 
-Thank you for your order. Below is the list of shipped products.
+Thank you for your order. Below is the list of products which are going to be delivered.
 {% endblocktrans %}
 {% if fulfillment.tracking_number %}
 {% blocktrans trimmed with tracking_number=fulfillment.tracking_number context "Fulfillment confirmation email text" %}
-You can track your shipment with {{ tracking_number }} code.
+You can track your delivery with {{ tracking_number }} code.
 {% endblocktrans %}
 {% endif %}
 
@@ -23,10 +23,7 @@ You can track your shipment with {{ tracking_number }} code.
 {% endfor %}
 
 {% blocktrans context "Fulfillment confirmation email text" %}
-This is an automatically generated email, please do not reply.
-
-Sincerely,
-{{ site_name }}
+Please get in touch if you have any questions. 
 {% endblocktrans %}
 {% endblock %}
 

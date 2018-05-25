@@ -3,12 +3,18 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from django.urls import reverse
 from templated_email import send_templated_mail
+from bullets.utils import send_manager_email, send_bullet_mail
 
 from ..core.utils import build_absolute_uri
 from ..seo.schema.email import get_order_confirmation_markup
 from .models import Fulfillment, Order
 
 from templated_email import InlineImage
+
+# BULLETS
+from bullets.utils import send_manager_email
+MANAGER_ORDER_TEMPLATE = 'source/order/manager_order'
+# BULLETS
 
 CONFIRM_ORDER_TEMPLATE = 'source/order/confirm_order'
 CONFIRM_FULFILLMENT_TEMPLATE = 'source/order/confirm_fulfillment'
@@ -48,16 +54,20 @@ def collect_data_for_email(order_pk, template):
         image = bullets_pic.read()
        # print(str(image))
         inline_image = InlineImage(filename="bullets.png", content=image)
-        print(str(inline_image))
+       # print(str(inline_image))
         email_context.update({'bullet_pic': inline_image})
-    print(str(email_context))
     # BULLETS
 
     # Order confirmation template requires additional information
     if template == CONFIRM_ORDER_TEMPLATE:
         email_markup = get_order_confirmation_markup(order)
         email_context.update(
-            {'order': order, 'schema_markup': email_markup})
+            {'schema_markup': email_markup})
+
+    # BULLETS
+    email_context.update({'order':order})
+   # print(str(email_context))
+    # BULLETS
 
     return {
         'recipient_list': [recipient_email], 'template_name': template,
@@ -96,6 +106,7 @@ def send_payment_confirmation(order_pk):
     """Sends payment confirmation email."""
     email_data = collect_data_for_email(order_pk, CONFIRM_PAYMENT_TEMPLATE)
     send_templated_mail(**email_data)
+    send_manager_email(MANAGER_ORDER_TEMPLATE, email_data['context'])   # BULLETS - also alert the manager!
 
 @shared_task
 def send_note_confirmation(order_pk):

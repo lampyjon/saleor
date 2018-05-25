@@ -47,6 +47,9 @@
       </tfoot>
       <thead class="table-header-row">
         <tr>
+          <th colspan="4" style="text-align: left;">Order reference: {{ order }}</th>
+        </tr>
+        <tr>
           <th>{% trans "Item" context "Ordered item name" %}</th>
           <th>{% trans "Quantity" context "Quantity ordered of a product" %}</th>
           <th>{% trans "Per unit" context "Unit price of a product" %}</th>

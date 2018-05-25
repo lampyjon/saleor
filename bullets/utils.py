@@ -29,6 +29,7 @@ def send_bullet_mail(template_name, recipient_list, context, extra_headers={}, f
 def send_manager_email(template_name, context={}, extra_headers={}):
 #    print(str(context))
 #    print(str(template_name))
+#    print(str(who_to_email()))
     return send_bullet_mail(template_name=template_name,
         recipient_list=who_to_email(),
         context=context,

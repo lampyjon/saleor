@@ -19,7 +19,7 @@
           </mj-text>
           <mj-text>
             {% blocktrans trimmed context "Note confirmation e-mail text" %}
-              A new note has been added to your order. To see details please visit: <a href="{{ url }}">{{ url }}</a>
+              A new note has been added to your order on the Boldmere Bullets Online Shop. You can view these details <a href="{{ url }}">online</a>.
             {% endblocktrans %}
           </mj-text>
         </mj-column>

@@ -16,11 +16,11 @@
       <mj-section>
         <mj-column>
           <mj-text font-size="16px">
-            {% trans "Hi!" context "Order confirmation e-mail text" %}
+            {% trans "Hi!" context "Manager confirmation e-mail text" %}
           </mj-text>
           <mj-text>
             {% blocktrans trimmed context "Order confirmation e-mail text" %}
-              Thank you for your order in the Boldmere Bullets online shop. Your order details are listed below. If you didn't do so during checkout, you can now <a href="{{ url }}">pay online</a>. If you have paid online you should shortly receive another email from us confirming this.
+              There has been a new online order on the Bullets Shop!</a>
             {% endblocktrans %}
           </mj-text>
         </mj-column>
