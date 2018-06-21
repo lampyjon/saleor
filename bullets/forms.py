@@ -86,6 +86,27 @@ class IWDForm(ModelForm):
 
 
 
+class CTSTime(forms.Form):
+    STOPS = ( 
+        ("CP1", "CP 1 (23 miles)"),
+        ("CP2", "CP 2 (32 miles)"),
+        ("SS1", "Stop 1 (42 miles)"),
+        ("SS2", "Stop 2 (71 miles)"),
+        ("CP3", "CP 3 (81 miles)"),
+        ("SS3", "Stop 3 (100 miles)"),
+        ("CP4", "CP 4 (115 miles)"),
+        ("SS4", "Stop 4 (136 miles)"),
+        ("CP5", "CP 5 (150 miles)"),
+        ("SS5", "Stop 5 (166 miles)"),
+        ("SS6", "Stop 6 (186 miles)"),
+        ("DDD", "Do by distance"),
+    )
+
+    stop = forms.ChoiceField(label="Stop", choices=STOPS)
+    distance = forms.IntegerField(label="Distance (miles)", required=False)
+    time_left = forms.TimeField(label="Time riders left")
+
+
 #class BulletsRunnerForm(ModelForm):
 #	class Meta:
 #		model = BulletsRunner

@@ -16,7 +16,8 @@ from django.db.models import Q, Sum
 from django.urls import reverse_lazy, reverse
 
 # Python imports 
-from datetime import timedelta
+#from datetime import timedelta
+import datetime
 import uuid
 import random
 import os
@@ -56,15 +57,15 @@ def index(request):
 
     now = timezone.now()
 
-    week_run_miles =  ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(start_date__gte=(now-timedelta(days=7))).aggregate(Sum('distance'))['distance__sum']
-    week_ride_miles =  ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(start_date__gte=(now-timedelta(days=7))).aggregate(Sum('distance'))['distance__sum']
+    week_run_miles =  ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(start_date__gte=(now-datetime.timedelta(days=7))).aggregate(Sum('distance'))['distance__sum']
+    week_ride_miles =  ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(start_date__gte=(now-datetime.timedelta(days=7))).aggregate(Sum('distance'))['distance__sum']
 
     year_run_miles = ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(start_date__year=now.year).aggregate(Sum('distance'))['distance__sum']
 
     year_ride_miles = ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(start_date__year=now.year).aggregate(Sum('distance'))['distance__sum']
 
-    week_runs = ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(start_date__gte=(now-timedelta(days=7))).count()
-    week_rides = ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(start_date__gte=(now-timedelta(days=7))).count()
+    week_runs = ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(start_date__gte=(now-datetime.timedelta(days=7))).count()
+    week_rides = ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(start_date__gte=(now-datetime.timedelta(days=7))).count()
 
     year_runs = ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(start_date__year=now.year).count()
     year_rides = ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(start_date__year=now.year).count()
@@ -404,8 +405,8 @@ def bullets_core_team(request):
 
     bullets = Bullet.objects.count()
 
-    last_week = timezone.now() - timedelta(days=7)
-    last_month = timezone.now() - timedelta(days=30)
+    last_week = timezone.now() - datetime.timedelta(days=7)
+    last_month = timezone.now() - datetime.timedelta(days=30)
 
     bullets_week = Bullet.objects.filter(date_added__gte=last_week).count()
     bullets_month = Bullet.objects.filter(date_added__gte=last_month).count()
@@ -537,8 +538,130 @@ def run_tuesday_admin_delete(request, pk):
 
 
 
+from bullets.forms import CTSTime
+def cts(request):
+	now = timezone.now()
 
-	
+	if request.POST:
+		cts_timeform = CTSTime(request.POST)
+		# work out results
+		if cts_timeform.is_valid():
+			stop = cts_timeform.cleaned_data['stop']
+			stop_time =cts_timeform.cleaned_data['time_left']
+
+			stop_names = dict(cts_timeform.STOPS)
+			stop_name = stop_names[stop]
+
+			stop_results_dict = {
+					32 : "Cheer Point 2", 
+					42 : "Support Stop 1",
+					71 : "Support Stop 2",
+					81 : "Cheer Point 3",
+					100 : "Support Stop 3",
+					115 : "Cheer Point 4",
+					136 : "Support Stop 4",
+					150 : "Cheer Point 5",
+					166 : "Support Stop 5",
+					186 : "Support Stop 6",
+					209 : "End",
+					}
+			
+			if stop == "CP1":
+				distance = 23
+			elif stop == "CP2":
+				distance = 32
+			elif stop == "CP3":
+				distance = 81
+			elif stop == "CP4":
+				distance = 115
+			elif stop == "CP5":
+				distance = 150
+			elif stop == "SS1":
+				distance = 42
+			elif stop == "SS2":
+				distance = 71
+			elif stop == "SS3":
+				distance = 100
+			elif stop == "SS4":
+				distance = 136
+			elif stop == "SS5":
+				distance = 166
+			elif stop == "SS6":
+				distance = 186
+			else:
+				distance = cts_timeform.cleaned_data['distance']
+				stop_name = str(distance) + " miles"
+		
+			stop_results = {}
+			for key in stop_results_dict:
+				if key > distance:		
+					stop_results[key] = stop_results_dict[key]
+
+			total_delay_mins = 0	
+			if distance >= 42:
+				total_delay_mins = 10
+			if distance >= 71:
+				total_delay_mins = 20
+			if distance >= 100:
+				total_delay_mins = 60
+			if distance >= 136:
+				total_delay_mins = 70
+			if distance >= 166:
+				total_delay_mins = 80
+			if distance >= 186:
+				total_delay_mins = 90
+
+			start_time = datetime.time(hour=4, minute=40)
+
+			elapsed_time = datetime.datetime.combine(datetime.date.today(), stop_time) - datetime.datetime.combine(datetime.date.today(), start_time)		
+	#		print(str(elapsed_time))
+			moving_time = elapsed_time - datetime.timedelta(minutes=total_delay_mins)
+	#		print(str(moving_time))
+
+			speed = round(distance / ((moving_time.seconds / 60) / 60), 1)
+	#		print(str(speed))
+			slower_speed = round(speed - 1, 0)
+			faster_speed = round(speed + 1, 0)
+
+			rows = {}
+
+			for key in stop_results:
+				distance_to_travel = key - distance
+
+				time_to_travel_current = datetime.timedelta(hours=(distance_to_travel / speed))		# Hours
+				time_to_travel_slower =  datetime.timedelta(hours=(distance_to_travel / slower_speed))	
+				time_to_travel_faster =  datetime.timedelta(hours=(distance_to_travel / faster_speed))	
+
+				eta_at_current = datetime.datetime.combine(datetime.date.today(), stop_time) + time_to_travel_current
+				eta_at_slower = datetime.datetime.combine(datetime.date.today(), stop_time) + time_to_travel_slower
+				eta_at_faster = datetime.datetime.combine(datetime.date.today(), stop_time) + time_to_travel_faster
+
+
+			#	print("Stop at " + str(key) + " miles = " + str(stop_results_dict[key]))
+			#	print("Distance to travel = " + str(distance_to_travel))
+			#	print("Time to travel = " + str(time_to_travel_current))
+			#	print("ETA = " + str(eta_at_current))
+			#	print("")
+
+				rows[key] = {
+					'stop': stop_results[key],
+					'continue': eta_at_current.time(),
+					'slower': eta_at_slower.time(),
+					'faster': eta_at_faster.time()}
+		
+			# print(str(rows))
+			results = {'stop': stop_name, 'time': stop_time, 'speed':speed, 'slower_speed':slower_speed, 'faster_speed':faster_speed, 'rows':rows}
+
+
+			print(str())
+
+		else:
+			results = None
+	else:
+		results = None
+		cts_timeform = CTSTime()
+
+	return render(request, "bullets/cts_time.html", {'cts_form':cts_timeform, 'results':results})
 
 
 ### REDIRECT FOR LEADERS APP

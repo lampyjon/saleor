@@ -68,6 +68,9 @@ urlpatterns = [
 
     url(r'^bullets-run-2018/$', RedirectView.as_view(url="https://www.ole-jcracesolutions.co.uk/Boldmere-bullets-10k-5k-race-p/bb2018.htm", permanent=True)),
 
+    url(r'^cts/$', views.cts, name='ctstime'),
+
+
     ## REDIRECT for leaders app
     url(r'^leaders/$', views.leaders, name='leaders'),
 
