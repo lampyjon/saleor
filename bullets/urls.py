@@ -70,6 +70,10 @@ urlpatterns = [
 
     url(r'^cts/$', views.cts, name='ctstime'),
 
+    url(r'^big-bullets-ride/$', views.big_bullets_ride, name="big-bullets-ride"),
+    url(r'^big-bullets-ride/strava-register/(?P<uuid>[0-9a-z-]+)/$', views.big_bullets_ride_confirm_strava, name='big-bullets-confirm-strava'),
+    url(r'^big-bullets-ride/total/$', views.big_bullets_ride_total, name="big-bullets-ride-total"),
+    url(r'^big-bullets-ride/not-coming/(?P<uuid>[0-9a-z-]+)/$', views.big_bullets_ride_delete, name='big-bullets-ride-delete'),
 
     ## REDIRECT for leaders app
     url(r'^leaders/$', views.leaders, name='leaders'),

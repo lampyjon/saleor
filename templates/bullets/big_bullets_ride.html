@@ -1,0 +1,52 @@
+{% extends "simple.html" %}
+{% load static %}
+{% load bootstrap_form from bootstrap3 %}
+
+{% block title %} - Big Bullets Ride{%endblock %}
+{% block topurl %}{% url 'index' %}{% endblock %}
+
+{% block header-links %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-8 col-sm-push-2">
+    <h1>Big Bullets Ride</h1>
+<p>words words words words words   words words words words words   words words words words words   words words words words words   words words words words words   words words words words words   words words words words words   words words words words words   words words words words words   words words words words words   words words words words words   words words words words words   words words words words words   words words words words words   
+ </p>
+<h3>Key Information</h3>
+ 	<div class="row">
+      		<div class="col-sm-4"><strong>Date:</strong></div>
+		<div class="col-sm-8">Sun 16 Sep 2018</div>
+	</div>
+ 	<div class="row">
+      		<div class="col-sm-4"><strong>Start:</strong></div>
+		<div class="col-sm-8">07:45</div>
+	</div>
+ 	<div class="row">
+      		<div class="col-sm-4"><strong>Location:</strong></div>
+		<div class="col-sm-8"><a href="#">Town Gate, Sutton Park</a></div>
+	</div>
+ 	<div class="row">
+      		<div class="col-sm-4"><strong>Duration:</strong></div>
+		<div class="col-sm-8">Depends on distance and speed!</div>
+	</div>
+
+<h2 id="register">Register to take part</h2>
+    </p>
+        <form method="post" class="form-horizontal" onsubmit="mySubmit.disabled = true; return true;">
+            {% csrf_token %}
+            {% bootstrap_form rider_form layout="horizontal" %}
+ 	    <p>By clicking on 'sign up now' you are agreeing to the <a href="{% url 'collective-code' %}">Collective Code</a>.</p>
+            <p class="text-right">
+                <button name="mySubmit" type="submit" class="btn btn-primary">Sign up now...</button>
+            </p>
+        </form>
+    </div>
+</div>
+
+ 
+      {% endblock %}
+
+
+

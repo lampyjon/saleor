@@ -1,0 +1,26 @@
+{% extends 'bullets/base-email.html' %}
+{% block subject %}Boldmere Bullets - Big Bullets Ride Registration{% endblock subject %}
+
+{% block body %}
+
+<p>Hello {{rider.name}},</p>
+<p>Thank you for registering to take part in a Boldmere Bullets event!</p>
+
+<h2>Big Bullets Ride</h2>
+
+<p>We are looking forward to welcoming you to our Big Bullets Ride on Sunday Sep 16th, meeting at Town Gate in Sutton Park at 0745. Riders will leave the park at 0800, and <b>OTHER DETAILS WILL GO HERE</b>.
+</p>
+
+<p>
+If you have authorised us, we will get the distance you ride during the Big Bullets Ride from Strava, and add it to our <a href="{{ total_url }}">grand total</a> for our run and ride events. If you don't use Strava, or didn't want us to do this, we'll send you an email after the event, and there will be a link for you to use to add your distance to the total.
+</p>
+
+<p>If for some reason you are unable to take part in the event, please <a href="{{ cancel_url }}">let us know</a>.</p>
+
+<p>We look forward to seeing you at the Big Bullets Ride! If you have any questions about the event, please send us an email!</p>
+
+<p>Best wishes,</p>
+
+<p>The Boldmere Bullets!</p>
+
+{% endblock body %}

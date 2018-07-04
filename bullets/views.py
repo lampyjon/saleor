@@ -23,8 +23,8 @@ import random
 import os
 
 # Bullets imports
-from .forms import RegisterForm, UnRegisterForm, ContactForm, NewsForm, RunningEventForm, BulletEventForm, IWDForm
-from .models import Bullet, OldBullet, News, RunningEvent, ActivityCache, BulletEvent, IWDRider
+from .forms import RegisterForm, UnRegisterForm, ContactForm, NewsForm, RunningEventForm, BulletEventForm, IWDForm, BigBulletRiderForm
+from .models import Bullet, OldBullet, News, RunningEvent, ActivityCache, BulletEvent, IWDRider, BigBulletRider
 
 from .utils import send_bullet_mail, who_to_email, send_manager_email 
 
@@ -34,6 +34,8 @@ from saleor.core.utils import build_absolute_uri
 
 import mailchimp  # for adding users to our mailing list
 import logging    # For the logging library
+
+from stravalib import Client
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -538,6 +540,75 @@ def run_tuesday_admin_delete(request, pk):
 
 
 
+### big bullets ride registration ###
+
+def big_bullets_ride(request):
+    if request.POST:
+        rider_form = BigBulletRiderForm(request.POST)
+
+        if rider_form.is_valid():
+            rider = rider_form.save()
+
+            total_url = build_absolute_uri(reverse('big-bullets-ride-total'))
+            cancel_url = build_absolute_uri(reverse('big-bullets-ride-delete', args=[rider.email_check_ref])) 
+            rider.send_email(
+                template="bullets/big_bullets_register", 
+                context={'total_url':total_url, 'rider':rider, 'cancel_url': cancel_url}, 
+                override_email_safety=True)
+
+            messages.success(request, "You have been registered!")
+
+            client = Client()
+            url = build_absolute_uri(reverse('big-bullets-confirm-strava', args=[rider.email_check_ref])) 
+            strava_url = client.authorization_url(client_id=settings.STRAVA_CLIENT_ID, redirect_uri=url) 
+            print("URL = " + str(url))
+
+            return render(request, "bullets/big_bullets_ride_strava.html", {'strava_url':strava_url, 'rider':rider})
+
+    else:
+        rider_form = BigBulletRiderForm()
+    
+    return render(request, "bullets/big_bullets_ride.html", {'rider_form':rider_form})
+
+
+
+def big_bullets_ride_confirm_strava(request, uuid):
+    rider = get_object_or_404(BigBulletRider, email_check_ref=uuid)
+
+    code = request.GET.get("code", None)
+
+    if code != None:
+        client = Client()
+        access_token = client.exchange_code_for_token(client_id=settings.STRAVA_CLIENT_ID, client_secret=settings.STRAVA_CLIENT_SECRET, code=code)
+        rider.access_token = access_token
+        rider.save()
+        
+        messages.success(request, "We have successfully authorised your Strava account")
+    else:
+        messages.error(request, "There was a problem authorising us onto your Strava account")
+    
+    return render(request, "bullets/big_bullets_ride_thanks.html", {'rider':rider})    
+
+def big_bullets_ride_total(request):
+    total_distance = 5320
+    # TODO: make it actually work
+    return render(request, "bullets/big_bullets_ride_total.html", {'total_distance': total_distance})  
+ 
+
+
+# someone no longer wants to do the big bullets ride
+def big_bullets_ride_delete(request, uuid):
+    rider = get_object_or_404(BigBulletRider, email_check_ref=uuid)
+    if request.method == 'POST':
+        messages.success(request, "Thank you for unregistering from this event, " + str(rider.name))
+        rider.delete()
+
+        return redirect(reverse('index'))
+    else:
+        return render(request, "bullets/big_bullets_ride_delete.html", {'rider':rider}) 
+
+
+##### Chase the Sun calculator ###########
 from bullets.forms import CTSTime
 def cts(request):
 	now = timezone.now()

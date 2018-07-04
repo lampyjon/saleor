@@ -1,0 +1,34 @@
+{% extends "simple.html" %}
+{% load static %}
+{% load bootstrap_form from bootstrap3 %}
+
+{% block title %} - Big Bullets Ride{%endblock %}
+{% block topurl %}{% url 'index' %}{% endblock %}
+
+{% block header-links %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-8 col-sm-push-2">
+    <h1>Big Bullets Ride - You are registered!</h1>
+    <p>Thank you for registering for the Big Bullets Ride {{rider}}! We look forward to seeing you on Sunday 16 September!</p>
+
+    <h2>Join the totaliser?</h2>
+    <p>We want to achieve over 10,000km walked, run, and ridden over our events for Acacia Family Support. To help us track how we are doing, we would like to ask you to connect us to your Strava account. You do not have to do this to take part in the event, and can update your distance after the event manually if you would prefer. We will only use this access for this event, and will only capture the distance of non-private rides you make on the 16th September 2018. </p>
+
+   <a href="{{ strava_url }}"><img src="{% static 'images/connect-strava.png' %}"></a>
+
+   <h2>Make a donation?</h2>
+   <p>Words about donating, link to Just Giving page</p>
+
+
+<a href="{% url 'index' %}" class="btn btn-primary btn-xl">Back to the main site</a>  
+    </div>
+</div>
+
+ 
+      {% endblock %}
+
+
+

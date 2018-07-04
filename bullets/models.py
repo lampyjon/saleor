@@ -213,6 +213,40 @@ class IWDRider(Person):
 
 
 
+
+
+from stravalib import Client
+
+class BigBulletRider(Person):
+    # need to cache strava API token
+    access_token = models.CharField("Strava access token", max_length=500)
+    # TODO: might need a mileometer field here - need to think about how to capture the data without hitting Strava for every page load - regenerate every ten mins maybe?
+    # TODO: maybe a manual entry mileage figure? Or just the one - if you've got it from Strava or from a manual entry.
+
+    SHORT = 's'
+    MED = 'm'
+    LONG = 'l'
+    VERYLONG = 'v'
+    
+    DISTANCE_CHOICES = (
+        (SHORT, '50km'),
+        (MED, '100km'),
+        (LONG, '150km'),
+        (VERYLONG, '200km'),
+    )
+
+    distance = models.CharField("Which distance would you like to ride?", help_text="Please indicate which distance you would like to ride - you can change on the day!", max_length=1, choices=DISTANCE_CHOICES, default=SHORT)
+
+    def delete(self, *args, **kwargs):
+        # deauth from Strava if registered there
+        if self.access_token != "":
+            client = Client(access_token=self.access_token)
+            client.deauthorize()
+            self.access_token = ""
+
+        super().delete(*args, **kwargs)
+
+
 ################
 ## OLD MODELS ##
 ################

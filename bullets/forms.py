@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Bullet, News, RunningEvent, BulletEvent
+from .models import Bullet, News, RunningEvent, BulletEvent, BigBulletRider
 from .models import IWDRider 
 from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 from nocaptcha_recaptcha.fields import NoReCaptchaField
@@ -105,6 +105,12 @@ class CTSTime(forms.Form):
     stop = forms.ChoiceField(label="Stop", choices=STOPS)
     distance = forms.IntegerField(label="Distance (miles)", required=False)
     time_left = forms.TimeField(label="Time riders left")
+
+
+class BigBulletRiderForm(ModelForm):
+    class Meta:
+        model = BigBulletRider
+        fields = ['name', 'email', 'distance']
 
 
 #class BulletsRunnerForm(ModelForm):
