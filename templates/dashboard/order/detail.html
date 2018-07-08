@@ -181,10 +181,6 @@
                 </a>
               {% endif %}
             </div>
-	  {% else %}
-		<div class="data-table-action">
-		    <a href="{% url 'dashboard:pay-offline' order_pk=order.pk %}" class="btn-flat">Offline Payment</a>
-		</div>
           {% endif %}
         {% endif %}
       </div>
