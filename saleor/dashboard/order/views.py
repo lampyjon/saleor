@@ -749,7 +749,7 @@ def orders_for_product_variant(request, variant_pk):
     variant = get_object_or_404(ProductVariant, pk=variant_pk)
     sku = variant.sku
 
-    orders = Order.objects.filter(groups__lines__product_sku=sku)
+    orders = Order.objects.filter(lines__product_sku=sku)
     order_filter = OrderFilter(request.GET, queryset=orders)
 
     orders = get_paginator_items(
@@ -761,6 +761,9 @@ def orders_for_product_variant(request, variant_pk):
     return TemplateResponse(request, 'dashboard/order/productvariants.html', ctx)
 
  
+
+from ...product.utils import decrease_stock
+
 # BULLETS
 @staff_member_required
 @permission_required('order.edit_order')
@@ -769,27 +772,43 @@ def bulkship_orders(request, variant_pk):
     variant = get_object_or_404(ProductVariant, pk=variant_pk)
     sku = variant.sku
 
-    deliveries_for_sku = DeliveryGroup.objects.filter(lines__product_sku=sku)
+    # Think this is fairly straightforward now 
+    # for each orderline, create a fulfillment object for the order, add a fulfillment line to that fulfillment
+    # (decrease stock accordingly)
+    # 
+    qty_shipped = 0
+    orders_complete = 0
 
-    for delivery_group in deliveries_for_sku:
-	# copy logic from forms.py (surely this should be on the model?) to ship a delivery group
-        if delivery_group.order.status == OrderStatus.OPEN and delivery_group.order.is_fully_paid():
-            # this delivery group is ok to ship
-            if delivery_group.lines.count() == 1:	# only one item in this delivery group - safe to ship!
+    orders = Order.objects.filter(lines__product_sku=sku).to_ship()
+    print("ORDERS = " + str(orders))
+    for order in orders:
+        print("Order = " + str(order))
+        lines = order.lines.filter(product_sku=sku)
+        if lines.exists():  # Really hard to see how we'd get here but...
+            print("lines = " + str(lines))
+            fulfillment = Fulfillment(order=order)
+            fulfillment.save()
 
-                delivery_group.status = GroupStatus.SHIPPED
-                delivery_group.save()
+            for line in lines:  # almost certainly one, but you never know...
+                print("Line = " + str(line))
+                quantity = line.quantity_unfulfilled
+                fulfillment_line = FulfillmentLine(order_line = line, fulfillment=fulfillment, quantity=quantity)
+                fulfillment_line.save()
+                
+                line.quantity_fulfilled += quantity
+                line.save()
+                qty_shipped += quantity
 
- #               for line in delivery_group.lines.all():		
- #                    Stock.objects.decrease_stock(line.stock, line.quantity)
- # TODO: there's no Stock object anymore - need to figure out how this works now.
- # 		
-                msg = pgettext_lazy(
-                    'Dashboard message related to a shipment group',
-                    'Shipped %s') % delivery_group
-                messages.success(request, msg)
-                delivery_group.order.create_history_entry(comment=msg, user=request.user)
-		
+                if line.variant:
+                    decrease_stock(line.variant, quantity)  # TODO: need to do something if we just have a SKU??
+    
+        update_order_status(order)
+        order.history.create(content="Bulk shipped this item", user=request.user)
+        if order.is_open() != True:
+            orders_complete += 1
+
+    messages.success(request, "Shipped " + str(qty_shipped) + " items and closed " + str(orders_complete) + " orders")
+
     return redirect('dashboard:orders-for-variant', variant_pk=variant_pk)
 
 

@@ -659,9 +659,24 @@ def ajax_products_list(request):
     ]
     return JsonResponse({'results': products})
 
+
+
+## BULLETS ##
+from ...order.models import Order, OrderLine
 @staff_member_required
 def view_allocations(request):
-    # table view of all stock allocations in open orders
-    stock_items = Stock.objects.filter(quantity_allocated__gt=0).order_by('location')
+    # table view of av = ol.values_list("product_sku", flat=True)ll stock allocations in open orders
+ #   stock_items = ProductVariant.objects.filter(quantity_allocated__gt=0)  # NOT SURE THIS IS RELIABLE
+
+    open_orders = Order.objects.to_ship()
+    open_orderlines = OrderLine.objects.filter(order__in=open_orders)
+    pv = open_orderlines.values_list("product_sku", flat=True)   
+    pv_items = ProductVariant.objects.filter(sku__in=pv) 
+    stock_items = []
+    for pv in pv_items.all().order_by('name'):
+        item = {'product_id': pv.product.pk, 'variant_id': pv.pk, 'name':pv.display_product(), 'quantity_ordered': open_orderlines.filter(product_sku=pv.sku).count(), 'quantity_allocated':pv.quantity_allocated}
+        stock_items.append(item)
+    
+   
     ctx = {'items':stock_items}
     return TemplateResponse(request, 'dashboard/product/view_allocations.html', ctx)

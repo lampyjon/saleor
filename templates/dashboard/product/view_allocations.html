@@ -21,7 +21,7 @@
   </ul>
 {% endblock %}
 
-{% block menu_allocation_class %} active{% endblock %}
+{% block menu_stock_allocation_class %} active{% endblock %}
 
 {% block content %}
  <div class="row">
@@ -32,20 +32,17 @@
             <table class="highlight bordered data-table">
               <thead>
                 <tr>
-                  {% sorting_header 'name' "Name" is_wide=True %}
-                  
+                  {% sorting_header 'name' "Name" is_wide=True %}                  
 		  <th>Number allocated</th>
-		  <th>Location</th>
+		  <th>Number ordered</th>
                 </tr>
               </thead>
               <tbody>
                 {% for item in items %}
-                  <tr data-action-go="
-                      {% if perms.product.edit_stock_location %}{% url 'dashboard:product-update' item.variant.product.pk %}#variants{% endif %}">
-                    <td>{{item.variant.display_product }}</td>
-		    <td><a href="{% url 'dashboard:orders-for-variant' item.variant.pk %}">{{item.quantity_allocated }}</a></td>
-		    <td>{{item.location}}</td>
-
+                  <tr>
+                    <td><a href="{% url 'dashboard:product-details' item.product_id %}">{{item.name }}</a></td>
+		    <td><a href="{% url 'dashboard:orders-for-variant' item.variant_id %}">{{item.quantity_allocated }}</a></td>
+		    <td><a href="{% url 'dashboard:orders-for-variant' item.variant_id %}">{{item.quantity_ordered }}</a></td>
                   </tr>
                 {% endfor %}
               </tbody>

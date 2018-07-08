@@ -1,8 +1,8 @@
 {% extends "dashboard/base.html" %}
 {% load i18n %}
-{% load prices_i18n %}
 {% load status %}
 {% load utils %}
+{% load price from taxed_prices %}
 
 {% block title %}{% trans "Orders for Product" %} - {{ block.super }}{% endblock %}
 
@@ -49,9 +49,8 @@
                     <td>
                       {% render_status order.status order.get_status_display %}
                     </td>
-                    {% trans "Guest" context "Anonymous user account value" as guest %}
                     <td>
-                      {{ order.user|default:guest }}
+                      {{ order.get_user_current_email }}
                     </td>
                     <td>
                       {{ order.created }}
@@ -60,7 +59,7 @@
                       {% render_status order.get_last_payment_status order.get_last_payment_status_display %}
                     </td>
                     <td class="right-align">
-                      {% gross order.get_total html=True %}
+                      {% price order.total.gross %}
                     </td>
                   </tr>
                 {% endfor %}
@@ -71,6 +70,9 @@
         <div class="row">
           {% paginate orders %}
         </div>
+        <div class="row">
+		<a href="{% url 'dashboard:bulk-ship-variant' variant.pk %}" class="waves-effect waves-light btn">Bulk Ship All Paid Orders</a>
+	</div>
       {% else %}
         {% if is_empty %}
           {% include 'dashboard/order/zero_page.html' %}
@@ -85,10 +87,10 @@
         {% endif %}
       {% endif %}
     </div>
+
     <div class="col s12 l3" id="filters">
       {% if not is_empty %}{% filters filter_set %}{% endif %}
     </div>
   </div>
 
-	<a href="{% url 'dashboard:bulk-ship-variant' variant.pk %}" class="btn-flat">Bulk Ship All Paid Orders</a>
-{% endblock %}
+	{% endblock %}

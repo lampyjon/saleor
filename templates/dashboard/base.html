@@ -169,6 +169,9 @@
                     </a>
                   </li>
                 {% endif %}
+		<li class="{% block menu_stock_allocation_class %}{% endblock %}">
+		  <a href="{% url 'dashboard:view-allocations' %}">Stock Allocations</a>
+                </li>
               </ul>
             </li>
             {% endif %}
