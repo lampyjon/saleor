@@ -247,6 +247,51 @@ class BigBulletRider(Person):
         super().delete(*args, **kwargs)
 
 
+
+
+class FredRider(Person):
+    # need to cache strava API token
+    access_token = models.CharField("Strava access token", max_length=500)
+    checked_upto_date = models.DateTimeField('Checked up to', null=True, blank=True)
+    def delete(self, *args, **kwargs):
+        # deauth from Strava if registered there
+        if self.access_token != "":
+            client = Client(access_token=self.access_token)
+            client.deauthorize()
+            self.access_token = ""
+
+        super().delete(*args, **kwargs)
+
+
+class FredLeaderBoard(models.Model):
+    rider = models.ForeignKey(FredRider, on_delete=models.CASCADE)
+    strava_activity_id = models.CharField("Strava Activity ID", max_length=50)
+    distance = models.PositiveIntegerField('Distance')
+    elevation = models.FloatField('Elevation')
+    start_date = models.DateTimeField('Activity Date')
+
+    ratio = models.FloatField("elevation per mile")
+
+    def save(self, *args, **kwargs):
+        self.ratio = (self.elevation / self.distance)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return str(self.rider) + " rode " + str(self.distance) + "miles with " + str(self.elevation) + "m climbing"
+
+   
+class FredHighLeaderBoard(FredLeaderBoard):
+    class Meta:
+        ordering = ['-elevation']
+
+
+class FredLowLeaderBoard(FredLeaderBoard):
+    class Meta:
+        ordering = ['ratio']
+
+     
+
+
 ################
 ## OLD MODELS ##
 ################

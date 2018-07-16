@@ -75,6 +75,13 @@ urlpatterns = [
     url(r'^big-bullets-ride/total/$', views.big_bullets_ride_total, name="big-bullets-ride-total"),
     url(r'^big-bullets-ride/not-coming/(?P<uuid>[0-9a-z-]+)/$', views.big_bullets_ride_delete, name='big-bullets-ride-delete'),
 
+# Fred Whittington Challenge
+    url(r'^fred-whittington/$', views.fred_reg, name='fred'),
+    url(r'^fred-whittington/strava-register/$', views.fred_confirm_strava, name='fred-confirm-strava'),
+    url(r'^fred-whittington/progress/$', views.fred_progress, name='fred-progress'),
+    url(r'^fred-whittington/refresh/$', views.fred_refresh, name='fred-refresh'),
+    
+
     ## REDIRECT for leaders app
     url(r'^leaders/$', views.leaders, name='leaders'),
 

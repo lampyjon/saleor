@@ -1,0 +1,35 @@
+{% extends "simple.html" %}
+{% load static %}
+{% load bootstrap_form from bootstrap3 %}
+
+{% block title %} - Fred Whittington Challenge{%endblock %}
+{% block topurl %}{% url 'index' %}{% endblock %}
+
+{% block header-links %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-8 col-sm-push-2">
+    <h1>Bullets Fred Whittingon Challenge</h1>
+    <p>Welcome to the Boldmere Bullets Cycling Challenge for the summer of 2018 - the <b>Fred Whittington Challenge</b>!</p>
+    <h2>Isn't it the Fred Whitton Challenge?</h2>
+    <p>Well...there is the <a href="https://www.fredwhittonchallenge.co.uk/">Fred Whitton challenge</a> if you want a 112 mile ride around the Lake District. But we're a bit of a long way from the lakes, and we have Whittington on our doorstep, so... we've decided to create our own.</p>
+    <h2>Intriguing, tell me more!</h2>
+    <p>The concept is simple. Go and do a ride, and ensure it goes through one of these Strava segments in Whittington. Click on the button below to get your ride details from Strava, and see where you end up in our leaderboards.</p>
+    <h2>So is it a race?</h2>
+    <p>No, this is the beauty of our challenge. It's not about how fast you can go, but about how smart you can ride. There are two challenges - the 'long and low', and the 'short and spikey'. The basic gist is the same - go and do a ride through Whittington, but your overall ride will be judged in two ways.</p>
+    <p>
+   
+    <a href="{{ strava_url }}"><img src="{% static 'images/connect-strava.png' %}"></a>
+
+
+<a href="{% url 'index' %}" class="btn btn-primary btn-xl">Back to the main site</a>  
+    </div>
+</div>
+
+ 
+      {% endblock %}
+
+
+

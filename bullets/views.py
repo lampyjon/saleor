@@ -24,7 +24,7 @@ import os
 
 # Bullets imports
 from .forms import RegisterForm, UnRegisterForm, ContactForm, NewsForm, RunningEventForm, BulletEventForm, IWDForm, BigBulletRiderForm
-from .models import Bullet, OldBullet, News, RunningEvent, ActivityCache, BulletEvent, IWDRider, BigBulletRider
+from .models import Bullet, OldBullet, News, RunningEvent, ActivityCache, BulletEvent, IWDRider, BigBulletRider, FredRider, FredHighLeaderBoard, FredLowLeaderBoard 
 
 from .utils import send_bullet_mail, who_to_email, send_manager_email 
 
@@ -35,7 +35,7 @@ from saleor.core.utils import build_absolute_uri
 import mailchimp  # for adding users to our mailing list
 import logging    # For the logging library
 
-from stravalib import Client
+from stravalib import Client, unithelper
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -606,6 +606,113 @@ def big_bullets_ride_delete(request, uuid):
         return redirect(reverse('index'))
     else:
         return render(request, "bullets/big_bullets_ride_delete.html", {'rider':rider}) 
+
+
+
+
+# FRED WHITTINGTON CHALLENGE #
+
+def fred_reg(request):
+    client = Client()
+    url = build_absolute_uri(reverse('fred-confirm-strava')) 
+    strava_url = client.authorization_url(client_id=settings.STRAVA_CLIENT_ID, redirect_uri=url) 
+      
+    return render(request, "bullets/fred/start.html", {'strava_url':strava_url})
+
+
+def fred_confirm_strava(request):
+    code = request.GET.get("code", None)
+
+    if code != None:
+        client = Client()
+        access_token = client.exchange_code_for_token(client_id=settings.STRAVA_CLIENT_ID, client_secret=settings.STRAVA_CLIENT_SECRET, code=code)
+        client.access_token = access_token
+        athlete = client.get_athlete()
+        rider = FredRider()
+        rider.access_token = access_token
+        rider.name = str(athlete.firstname) + " " + str(athlete.lastname)
+        rider.email = str(athlete.email)
+        rider.save()
+
+        fred_leaderboard(rider)
+
+        # TODO: email them?
+        request.session['fred_athlete_id'] = rider.id
+
+        messages.success(request, "We have successfully authorised your Strava account")
+        return redirect(reverse('fred-progress')) 
+    
+    messages.error(request, "There was a problem authorising us onto your Strava account")
+    return redirect(reverse('index'))
+
+
+# Show progress
+def fred_refresh(request):
+    rider_id = request.session.get('fred_athlete_id', None)
+
+    if rider_id == None:
+        return redirect(reverse('fred'))
+
+    rider = get_object_or_404(FredRider, pk=rider_id)
+    x = fred_leaderboard(rider)
+    messages.success(request, "Added " + str(x) + " entries to your leaderboard")
+    return redirect(reverse('fred-progress')) 
+
+
+
+# Show progress
+def fred_progress(request):
+    rider_id = request.session.get('fred_athlete_id', None)
+
+    if rider_id == None:
+        return redirect(reverse('fred'))
+
+    rider = get_object_or_404(FredRider, pk=rider_id)
+    
+    my_low_board = FredLowLeaderBoard.objects.filter(rider=rider)[:10]
+    my_high_board = FredHighLeaderBoard.objects.filter(rider=rider)[:10]
+
+    overall_low_board = FredLowLeaderBoard.objects.all()[:10]
+    overall_high_board = FredHighLeaderBoard.objects.all()[:10]
+
+    return render(request, "bullets/fred/progress.html", {'my_low_board':my_low_board, 'my_high_board': my_high_board, 'overall_low_board':overall_low_board, 'overall_high_board':overall_high_board, 'rider':rider})
+
+
+
+# update the leaderboard for this rider - go and get their most recent activities
+def fred_leaderboard(rider):
+    client = Client()
+    client.access_token = rider.access_token
+    if rider.checked_upto_date:
+        after_date = rider.checked_upto_date - datetime.timedelta(days=30)
+    else:
+        after_date = datetime.datetime(2017, 7, 1)
+    to_date = datetime.datetime.now()
+
+    segment_efforts = client.get_segment_efforts(segment_id=7224903, start_date_local=after_date, end_date_local=to_date)
+    added = 0
+
+    for seg_eff in segment_efforts:
+        activity = seg_eff.activity
+        act_detail = client.get_activity(activity.id)
+        distance = unithelper.miles(act_detail.distance).num 
+        elevation = unithelper.feet(act_detail.total_elevation_gain)
+
+        if (distance > 40.0): # this is an entry for the long & flat leaderboard
+            obj, created = FredLowLeaderBoard.objects.get_or_create(rider=rider, strava_activity_id=activity.id, distance=distance, elevation=elevation, start_date=act_detail.start_date)
+            if created:
+                added = added + 1
+
+        if (distance <= 40.0):
+            obj, created = FredHighLeaderBoard.objects.get_or_create(rider=rider, strava_activity_id=activity.id, distance=distance, elevation=elevation, start_date=act_detail.start_date)
+            if created:
+                added = added + 1
+
+    rider.checked_upto_date = to_date
+    rider.save()
+
+    return added
+
 
 
 ##### Chase the Sun calculator ###########

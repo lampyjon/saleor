@@ -35,6 +35,4 @@ def send_manager_email(template_name, context={}, extra_headers={}):
         context=context,
         extra_headers=extra_headers)
 
-
-
-		
+ 	
