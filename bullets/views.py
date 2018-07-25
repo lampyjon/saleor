@@ -415,11 +415,11 @@ def bullets_core_team(request):
 
     news_items = News.objects.order_by("-date_added")
 
-    iwd_riders = IWDRider.objects.all().count()
+    big_bullets_riders = BigBulletRider.objects.all().count()
 
     can_edit = is_core_team(request.user)
 
-    return render(request, "bullets/admin/core_team.html", {'bullets':bullets, 'bullets_week':bullets_week, 'bullets_month':bullets_month, 'news_items':news_items, 'iwd_riders':iwd_riders, 'can_edit':can_edit})
+    return render(request, "bullets/admin/core_team.html", {'bullets':bullets, 'bullets_week':bullets_week, 'bullets_month':bullets_month, 'news_items':news_items, 'big_bullets_riders':big_bullets_riders, 'can_edit':can_edit})
 
 
 
@@ -539,6 +539,14 @@ def run_tuesday_admin_delete(request, pk):
 	return render(request, "bullets/run_tuesday_delete.html", {'run':run})
 
 
+# Big Bullets Ride / 10-10 thing admin
+class BBRList(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = BigBulletRider
+    template_name = "bullets/big_bullets_ride_list_admin.html"
+    def test_func(self):
+        return is_core_team(self.request.user)
+
+
 
 ### big bullets ride registration ###
 
@@ -561,7 +569,7 @@ def big_bullets_ride(request):
             client = Client()
             url = build_absolute_uri(reverse('big-bullets-confirm-strava', args=[rider.email_check_ref])) 
             strava_url = client.authorization_url(client_id=settings.STRAVA_CLIENT_ID, redirect_uri=url) 
-            print("URL = " + str(url))
+            #print("URL = " + str(url))
 
             return render(request, "bullets/big_bullets_ride_strava.html", {'strava_url':strava_url, 'rider':rider})
 
@@ -594,8 +602,6 @@ def big_bullets_ride_total(request):
     # TODO: make it actually work
     return render(request, "bullets/big_bullets_ride_total.html", {'total_distance': total_distance})  
  
-
-
 # someone no longer wants to do the big bullets ride
 def big_bullets_ride_delete(request, uuid):
     rider = get_object_or_404(BigBulletRider, email_check_ref=uuid)
@@ -606,6 +612,7 @@ def big_bullets_ride_delete(request, uuid):
         return redirect(reverse('index'))
     else:
         return render(request, "bullets/big_bullets_ride_delete.html", {'rider':rider}) 
+
 
 
 ##### Chase the Sun calculator ###########

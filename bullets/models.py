@@ -227,15 +227,19 @@ class BigBulletRider(Person):
     MED = 'm'
     LONG = 'l'
     VERYLONG = 'v'
+    RUN_FIVE = 'r'
+    RUN_TEN = 't'
     
     DISTANCE_CHOICES = (
-        (SHORT, '50km'),
-        (MED, '100km'),
-        (LONG, '150km'),
-        (VERYLONG, '200km'),
+        (RUN_FIVE, '5mile run'),
+        (RUN_TEN, '10mile run'),
+        (SHORT, '50km ride'),
+        (MED, '100km ride'),
+        (LONG, '160km ride'),
+        (VERYLONG, '200km ride'),
     )
 
-    distance = models.CharField("Which distance would you like to ride?", help_text="Please indicate which distance you would like to ride - you can change on the day!", max_length=1, choices=DISTANCE_CHOICES, default=SHORT)
+    distance = models.CharField("Event", help_text="Please indicate which event you would like to do - you can change on the day!", max_length=1, choices=DISTANCE_CHOICES, default=RUN_FIVE)
 
     def delete(self, *args, **kwargs):
         # deauth from Strava if registered there
