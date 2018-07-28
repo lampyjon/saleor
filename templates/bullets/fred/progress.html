@@ -10,7 +10,7 @@
 
 {% block content %}
     <h1>Fred Whittington Challenge</h1>
-<p>Let's track your progress on the Boldmere Bullets Fred Whittington Challenge, {{rider.name}}. We currently have all of your rides up to {{rider.checked_upto_date}}. If you have new rides click this button to get your latest rides.</p>
+<p>Let's track your progress on the Boldmere Bullets Fred Whittington Challenge, {{rider.name}}. We currently have all of your rides up to {{rider.checked_upto_date}} If you have new rides click this button to get your latest rides.</p>
 <a href="{% url 'fred-refresh' %}" class="btn btn-primary">Get new rides from Strava</a> 
 
 
@@ -114,11 +114,12 @@
 </table>
 </div>
 </div>
-
+<br/>
 
 
 <a href="{% url 'index' %}" class="btn btn-primary btn-xl">Back to the main site</a>  
- 
+<br/>
+<br/> 
       {% endblock %}
 
 

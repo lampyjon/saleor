@@ -80,6 +80,8 @@ urlpatterns = [
     url(r'^fred-whittington/strava-register/$', views.fred_confirm_strava, name='fred-confirm-strava'),
     url(r'^fred-whittington/progress/$', views.fred_progress, name='fred-progress'),
     url(r'^fred-whittington/refresh/$', views.fred_refresh, name='fred-refresh'),
+    url(r'^fred-whittington/refresh/in-progress$', views.fred_refreshing_progress, name='fred-refreshing-progress'),
+    url(r'^fred-whittington/refresh/ajax/(?P<task_id>[0-9a-z-]+)/$', views.fred_get_ajax_progress, name='fred-get-ajax-progress'),
     
 
     ## REDIRECT for leaders app

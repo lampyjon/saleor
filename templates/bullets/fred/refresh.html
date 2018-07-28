@@ -1,0 +1,64 @@
+{% extends "simple.html" %}
+{% load static %}
+{% load bootstrap_form from bootstrap3 %}
+
+{% block title %} - Fred Whittington Challenge{%endblock %}
+{% block topurl %}{% url 'index' %}{% endblock %}
+
+{% block header-links %}
+{% endblock %}
+
+{% block content %}
+    <h1>Fred Whittington Challenge</h1>
+
+<h3>One second... just getting your information from Strava...</h3>
+
+<div class="panel panel-default">
+  <div class="panel-body" id="info">
+    Waiting for Strava... 
+  </div>
+</div>
+
+
+<a href="{% url 'index' %}" class="btn btn-primary btn-xl">Back to the main site</a>  
+<br/>
+<br/>
+      {% endblock %}
+
+
+{% block extrafooter %}
+<script>
+
+function getServerStatus() {
+	ajax_url = "{{ ajax_url }}";
+	// console.log("URL = " + ajax_url );
+
+	$.get(ajax_url, {}, function(resp) {
+		console.log(resp);
+		if (resp == "PENDING") {
+			txt = "Waiting for Strava...";
+			refresh = 1000;
+		} else if ((resp == 10) || (resp == "SUCCESS")) {
+			console.log("Time to redirect!");
+			window.location.replace("{% url 'fred-progress' %}");
+			text = "Finished!";
+			refresh = 0;
+		} else {
+			txt = "Processing ride " + resp.activity;
+			refresh = 100;
+		}
+  		$("#info").text(txt);
+		if (refresh != 0) {
+                	setTimeout(getServerStatus, refresh);
+		}
+		});
+}
+
+$( document ).ready(function() {
+    console.log( "ready!" );
+    getServerStatus();
+});
+
+</script>
+{% endblock %}
+
