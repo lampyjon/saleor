@@ -76,6 +76,15 @@ urlpatterns = [
     url(r'^10-10-for-Acacia-Mums/not-coming/(?P<uuid>[0-9a-z-]+)/$', views.big_bullets_ride_delete, name='big-bullets-ride-delete'),
     url(r'^10-10-for-Acacia-Mums/admin/$', views.BBRList.as_view(), name="big-bullets-ride-admin"),
 
+# Fred Whittington Challenge
+    url(r'^fred-whittington/$', views.fred_reg, name='fred'),
+    url(r'^fred-whittington/strava-register/$', views.fred_confirm_strava, name='fred-confirm-strava'),
+    url(r'^fred-whittington/progress/$', views.fred_progress, name='fred-progress'),
+    url(r'^fred-whittington/refresh/$', views.fred_refresh, name='fred-refresh'),
+    url(r'^fred-whittington/refresh/in-progress$', views.fred_refreshing_progress, name='fred-refreshing-progress'),
+    url(r'^fred-whittington/refresh/ajax/(?P<task_id>[0-9a-z-]+)/$', views.fred_get_ajax_progress, name='fred-get-ajax-progress'),
+    
+
     ## REDIRECT for leaders app
     url(r'^leaders/$', views.leaders, name='leaders'),
 
