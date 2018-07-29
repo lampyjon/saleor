@@ -477,6 +477,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_RESULT_BACKEND = 'django-db'
 
+
 # Impersonate module settings
 IMPERSONATE = {
     'URI_EXCLUSIONS': [r'^bullets-shop-management/'],

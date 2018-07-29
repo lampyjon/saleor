@@ -621,13 +621,15 @@ def fred_reg(request):
     if (rider_id != None) and (FredRider.objects.filter(pk=rider_id).exists() != True):
         del request.session['fred_athlete_id']
         del request.session['fred_task_id']
+        rider_id = None
 
+    count = FredRider.objects.all().count()
 
     client = Client()
     url = build_absolute_uri(reverse('fred-confirm-strava')) 
     strava_url = client.authorization_url(client_id=settings.STRAVA_CLIENT_ID, redirect_uri=url) 
       
-    return render(request, "bullets/fred/start.html", {'strava_url':strava_url, 'rider_id':rider_id})
+    return render(request, "bullets/fred/start.html", {'strava_url':strava_url, 'rider_id':rider_id, 'count':count})
 
 
 def fred_confirm_strava(request):
@@ -675,7 +677,7 @@ def fred_refreshing_progress(request):
 # This view refreshes the athlete's leaderboards via a grab from Strava
 def fred_refresh(request):
     rider_id = request.session.get('fred_athlete_id', None)
-    print(str(rider_id))
+ #   print(str(rider_id))
     if rider_id == None:
         return redirect(reverse('fred'))
 
