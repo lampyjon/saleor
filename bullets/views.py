@@ -618,6 +618,10 @@ def big_bullets_ride_delete(request, uuid):
 
 def fred_reg(request):
     rider_id = request.session.get('fred_athlete_id', None)
+    if (rider_id != None) and (FredRider.objects.filter(pk=rider_id).exists() != True):
+        del request.session['fred_athlete_id']
+        del request.session['fred_task_id']
+
 
     client = Client()
     url = build_absolute_uri(reverse('fred-confirm-strava')) 
@@ -671,7 +675,7 @@ def fred_refreshing_progress(request):
 # This view refreshes the athlete's leaderboards via a grab from Strava
 def fred_refresh(request):
     rider_id = request.session.get('fred_athlete_id', None)
-
+    print(str(rider_id))
     if rider_id == None:
         return redirect(reverse('fred'))
 
@@ -708,14 +712,18 @@ def fred_progress(request):
 from celery import shared_task, task
 from celery.result import AsyncResult
 import celery
-import json
+from django.http import JsonResponse
 
 # This is the view that returns which rides we've processed so far so we can have a nice ajax-y page to show import progress
 def fred_get_ajax_progress(request, task_id):
     job = AsyncResult(task_id)
-    data = job.result or job.state
-    return HttpResponse(json.dumps(data), content_type='application/json')
-
+    results = {'state': str(job.state)}
+    if job.state == "PROGRESS":
+        results['activity'] = job.result['activity']
+    elif job.state == "SUCCESS":
+        messages.success(request, "We added " + str(job.result) + " rides to your leaderboards")
+    
+    return JsonResponse(results)
 
 # update the leaderboard for this rider - go and get their most recent activities
 @task(bind=True)
@@ -727,7 +735,7 @@ def fred_update_leaderboard(self, rider_id):
     if rider.checked_upto_date:
         after_date = rider.checked_upto_date - datetime.timedelta(days=30)
     else:
-        after_date = datetime.datetime(2017, 7, 1)
+        after_date = datetime.datetime(2018, 7, 1)
     to_date = datetime.datetime.now()
 
     added = 0
@@ -754,12 +762,12 @@ def fred_update_segments(s, client, after_date, to_date, segment_id, rider):
         elevation = unithelper.feet(act_detail.total_elevation_gain)
 
         if (distance > 40.0): # this is an entry for the long & flat leaderboard
-            obj, created = FredLowLeaderBoard.objects.get_or_create(rider=rider, strava_activity_id=activity.id, distance=distance, elevation=elevation, start_date=act_detail.start_date)
+            obj, created = FredLowLeaderBoard.objects.get_or_create(rider=rider, strava_activity_id=activity.id, defaults={'distance':distance, 'elevation':elevation, 'start_date':act_detail.start_date})
             if created:
                 added = added + 1
 
         if (distance <= 40.0):
-            obj, created = FredHighLeaderBoard.objects.get_or_create(rider=rider, strava_activity_id=activity.id, distance=distance, elevation=elevation, start_date=act_detail.start_date)
+            obj, created = FredHighLeaderBoard.objects.get_or_create(rider=rider, strava_activity_id=activity.id, defaults={'distance':distance, 'elevation':elevation, 'start_date':act_detail.start_date})
             if created:
                 added = added + 1
 

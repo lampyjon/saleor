@@ -29,23 +29,32 @@
 {% block extrafooter %}
 <script>
 
+var overall_tries = 0;
+
 function getServerStatus() {
+ 	overall_tries = overall_tries + 1;
+
+	if (overall_tries > 300) {
+		window.location.replace("{% url 'fred-progress' %}");
+		return;
+	}
+	
 	ajax_url = "{{ ajax_url }}";
 	// console.log("URL = " + ajax_url );
 
 	$.get(ajax_url, {}, function(resp) {
 		console.log(resp);
-		if (resp == "PENDING") {
+		if (resp.state == "PENDING") {
 			txt = "Waiting for Strava...";
 			refresh = 1000;
-		} else if ((resp == 10) || (resp == "SUCCESS")) {
+		} else if (resp.state == "SUCCESS") {
 			console.log("Time to redirect!");
 			window.location.replace("{% url 'fred-progress' %}");
 			text = "Finished!";
 			refresh = 0;
 		} else {
 			txt = "Processing ride " + resp.activity;
-			refresh = 100;
+			refresh = 250;
 		}
   		$("#info").text(txt);
 		if (refresh != 0) {

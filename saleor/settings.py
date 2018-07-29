@@ -382,9 +382,6 @@ if AWS_STORAGE_BUCKET_NAME:
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     S3_URL = 'https://%s.s3.amazonaws.com/assets/' % AWS_STORAGE_BUCKET_NAME
 
-print("S3URL")
-print(str(S3_URL))
-
 if AWS_MEDIA_BUCKET_NAME:
     DEFAULT_FILE_STORAGE = 'saleor.core.storages.S3MediaStorage'
     THUMBNAIL_DEFAULT_STORAGE = DEFAULT_FILE_STORAGE
