@@ -579,7 +579,7 @@ def big_bullets_ride(request):
     return render(request, "bullets/big_bullets_ride.html", {'rider_form':rider_form})
 
 
-
+# Store their details from Strava
 def big_bullets_ride_confirm_strava(request, uuid):
     rider = get_object_or_404(BigBulletRider, email_check_ref=uuid)
 
@@ -597,8 +597,9 @@ def big_bullets_ride_confirm_strava(request, uuid):
     
     return render(request, "bullets/big_bullets_ride_thanks.html", {'rider':rider})    
 
+# The totalliser 
 def big_bullets_ride_total(request):
-    total_distance = 5320
+    total_distance = 0 
     # TODO: make it actually work
     return render(request, "bullets/big_bullets_ride_total.html", {'total_distance': total_distance})  
  
