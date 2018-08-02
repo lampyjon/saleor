@@ -10,7 +10,7 @@
 
 <p>You have registered to take part in the {{ rider.get_distance_display }}.</p>
 
-<p>We are looking forward to welcoming you to our 10/10 For Acacia Mums event on Sunday Sep 16th, meeting at Boldmere Gate in Sutton Park at 0730. Riders and runners will depart at 0800, and <b>OTHER DETAILS WILL GO HERE</b>.
+<p>We are looking forward to welcoming you to our 10/10 For Acacia Mums event on Sunday Sep 16th, meeting at Boldmere Gate in Sutton Park at 0730. Riders and runners will depart at 0800.
 </p>
 
 <p>
