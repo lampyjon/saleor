@@ -777,6 +777,8 @@ def fred_update_segments(s, client, after_date, to_date, segment_id, rider):
     return added
 
 
+
+
 ##### Chase the Sun calculator ###########
 from bullets.forms import CTSTime
 def cts(request):

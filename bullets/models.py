@@ -257,6 +257,7 @@ class FredRider(Person):
     # need to cache strava API token
     access_token = models.CharField("Strava access token", max_length=500)
     checked_upto_date = models.DateTimeField('Checked up to', null=True, blank=True)
+
     def delete(self, *args, **kwargs):
         # deauth from Strava if registered there
         if self.access_token != "":
@@ -277,8 +278,21 @@ class FredLeaderBoard(models.Model):
     ratio = models.FloatField("elevation per mile")
 
     def save(self, *args, **kwargs):
+        
+        last_top = self.__class__.objects.first()
+
         self.ratio = (self.elevation / self.distance)
         super().save(*args, **kwargs)
+        
+        new_top = self.__class__.objects.first()
+        if last_top:
+            if (last_top.rider != new_top.rider):
+                print(str(new_top.rider) + " just stole your spot on the " + str(self.leaderboard_name) + " leaderboard " + str(last_top.rider))
+                ctx = {'old_kom':last_top.rider, 'new_kom':new_top.rider, 'leaderboard':self.leaderboard_name}
+                last_top.rider.send_email(template="bullets/fred_kom", context=ctx, dryrun=False, from_email=None, override_email_safety=True, extra_headers={})
+
+
+
 
     def __str__(self):
         return str(self.rider) + " rode " + str(self.distance) + "miles with " + str(self.elevation) + "m climbing"
@@ -287,11 +301,15 @@ class FredLeaderBoard(models.Model):
 class FredHighLeaderBoard(FredLeaderBoard):
     class Meta:
         ordering = ['-elevation']
+    
+    leaderboard_name = "High and Spikey"
 
 
 class FredLowLeaderBoard(FredLeaderBoard):
     class Meta:
         ordering = ['ratio']
+
+    leaderboard_name = "Low and Flat"
 
      
 

@@ -1,0 +1,16 @@
+{% extends 'bullets/base-email.html' %}
+{% block subject %}Boldmere Bullets - Someone just stole your lead on the Fred Whittington Challenge!{% endblock subject %}
+
+{% block body %}
+
+<p>Hello {{old_kom.name}},</p>
+
+<p>Oh no! {{ new_kom.name }} just stole your top spot on the Boldmere Bullets Fred Whittington challenge "{{ leaderboard }}" leaderboard!</p>
+
+<p>Time to plan another ride through Whittington?</p>
+
+<p>Best wishes,</p>
+
+<p>The Boldmere Bullets!</p>
+
+{% endblock body %}

@@ -52,6 +52,11 @@ function getServerStatus() {
 			window.location.replace("{% url 'fred-progress' %}");
 			text = "Finished!";
 			refresh = 0;
+  		} else if (resp.state == "FAILURE") {
+			console.log("Whoops");
+			window.location.replace("{% url 'fred-progress' %}");
+			text = "Finished!";
+			refresh = 0;
 		} else {
 			txt = "Processing ride " + resp.activity;
 			refresh = 250;
