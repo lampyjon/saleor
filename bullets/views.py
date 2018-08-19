@@ -37,6 +37,7 @@ import logging    # For the logging library
 
 from stravalib import Client, unithelper
 
+
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -924,6 +925,256 @@ def error404(request):
 
 	return render(request, "404.html", {}, status=404)
 
+
+
+
+
+
+
+
+
+#### Squares
+
+from bullets.models import SquareRider, SquareRide
+def squares_start(request):
+    client = Client()
+    url = build_absolute_uri(reverse('squares-map')) 
+    strava_url = client.authorization_url(client_id=settings.STRAVA_CLIENT_ID, redirect_uri=url) 
+      
+    return render(request, "bullets/squares/start.html", {'strava_url':strava_url})
+
+
+def squares_map(request):
+    code = request.GET.get("code", None)
+
+    if code != None:
+        client = Client()
+        access_token = client.exchange_code_for_token(client_id=settings.STRAVA_CLIENT_ID, client_secret=settings.STRAVA_CLIENT_SECRET, code=code)
+        client.access_token = access_token
+        athlete = client.get_athlete()
+
+        rider, created = SquareRider.objects.update_or_create(rider_id=athlete.id, defaults={'access_token':access_token})
+        #created = True # TODO remove for cache
+        ctx = {}
+        result = squares_background_rides.delay(rider_id=rider.id)
+        ctx['token'] = True
+        ctx['url'] = reverse('squares-rides-task', args=[result.task_id])
+        ctx['squares_url'] = reverse('squares-rider-squares', args=[rider.id])
+      #  ctx['rides_url'] = reverse('squares-rides-ride', args=[rider.id])
+        ctx['rides'] = SquareRide.objects.filter(rider=rider)
+  
+        return render(request, "bullets/squares/map.html", ctx)
+
+    return redirect(reverse('squares_start'))
+
+
+
+# update the leaderboard for this rider - go and get their most recent activities
+@task(bind=True)
+def squares_background_rides(self, rider_id):
+    rider = get_object_or_404(SquareRider, pk=rider_id)
+
+    client = Client()
+    client.access_token = rider.access_token  
+    rides = client.get_activities()
+
+    for ride in rides:
+        if SquareRide.objects.filter(rider=rider, strava_id=ride.id).exists() != True:   # Save hitting Strava for every ride every time
+            if ride.map.summary_polyline:
+                detail_ride = client.get_activity(ride.id)
+                if detail_ride.map.polyline:
+                # print(str(detail_ride.name) + " - " + str(detail_ride.map) + " - " + str(detail_ride.map.polyline))
+                    r, created = SquareRide.objects.update_or_create(rider=rider, strava_id=detail_ride.id, defaults={'name':detail_ride.name, 'polyline':detail_ride.map.polyline})
+                #print("Background got " + str(detail_ride.name))
+                    self.update_state(state='PROGRESS', meta={'ride': r.name, 'polyline':r.polyline, 'id':r.id})
+    return 
+
+
+number_of_squares = 650
+uk_north = float(59.478568831926395)
+uk_south = float(49.82380908513249)
+uk_east = float(2.021484375)
+uk_west = float(-10.8544921875)
+north_south = uk_north - uk_south
+east_west = uk_west - uk_east
+tb = north_south / number_of_squares
+ss = east_west / number_of_squares
+     
+print("TB = " + str(tb))
+print("SS = " + str(ss))
+
+
+def make_squares():
+    all_squares = {}
+    for x in range(number_of_squares):
+        for y in range(number_of_squares):
+            all_squares[x,y] = {'north': uk_south + ((y+1)*tb), 'south': uk_south + (y * tb), 'east': uk_east + (x * ss), 'west': uk_east + ((x+1) * ss), 'count':0}
+
+    return all_squares
+
+
+def in_uk(lat, lng):
+    if (lat > uk_south) and (lat < uk_north) and (lng > uk_west) and (lng < uk_east):
+        return True
+    else:
+        return False
+
+
+def get_square_for_point(lat, lng):
+    y = int((lat - uk_south) / tb)
+    x = int((lng - uk_east) / ss)
+    return (x, y)
+
+ 
+from math import radians, floor
+def update_squares_for_line(polyline, squares):
+    results = []
+
+    points = decode_polyline(polyline)
+    for (lat,lng) in points:
+        if in_uk(lat, lng): 
+            (x, y) = get_square_for_point(lat, lng)
+            z = squares[x, y]['count'] 
+            squares[x, y]['count'] = z + 1
+           
+def ride_in_uk(polyline):
+    points = decode_polyline(polyline)
+    for (lat,lng) in points:
+        if in_uk(lat, lng) != True:
+            return False
+    return True
+
+def squares_rides_task(request, task_id):
+    job = AsyncResult(task_id)
+    results = {'state': str(job.state)}
+    if job.state == "PROGRESS":
+        if ride_in_uk(job.result['polyline']):
+            results['id'] = job.result['id']
+            results['ride'] = job.result['ride']
+            results['polyline'] = job.result['polyline']
+        else:
+            results['state'] = "NOTUK" 
+    return JsonResponse(results)
+
+
+def squares_rides_ride(request, ride_id):
+    ride = get_object_or_404(SquareRide, pk=ride_id)
+    if ride_in_uk(ride.polyline):
+        results = {'id':ride.id, 'ride':ride.name, 'polyline':ride.polyline}
+    else:
+        results = {}
+
+    return JsonResponse(results)
+
+
+def squares_rider_squares(request, rider_id):
+    rider = get_object_or_404(SquareRider, pk=rider_id)
+    rides = SquareRide.objects.filter(rider=rider)
+    squares = make_squares()
+    for ride in rides:
+        update_squares_for_line(ride.polyline, squares)  # Hoping pass by reference is a thing here :)
+    
+    result_squares = []
+ 
+    (max_size, i, j) = getMaxSubSquare(squares)
+    print("checking that x is in range " + str(i) + "-" + str(i + max_size))
+
+    for x in range(number_of_squares):
+        for y in range(number_of_squares):
+            square = squares[x, y]
+            if square['count'] > 0: 
+                if ((x <= i) and (x > (i - max_size))) and ((y <= j) and (y > (j - max_size))):
+                    colour = "#FF0000"
+                else:
+                    colour = "#0000FF"
+
+                nw = (square['north'], square['west'])
+                se = (square['south'], square['east'])
+                result_squares.append((nw, se, colour))
+
+    bb_a = squares[i, j]
+    bb_b = squares[i-max_size+1, j-max_size+1]
+ 
+    nw = (bb_a['north'], bb_a['west'])
+    se = (bb_b['south'], bb_b['east'])
+     
+    results = {'squares': result_squares, 'bb':(nw, se), 'max': max_size}
+          
+    return JsonResponse(results)
+
+
+
+def getMaxSubSquare(squares):
+    R = number_of_squares
+    C = number_of_squares
+ 
+    S = [[0 for k in range(C)] for l in range(R)]
+    for i in range(R):
+       if squares[i, 0] != 0:
+           S[i][0] = 1
+
+    for j in range(C):
+        if squares[0, j] != 0:
+            S[0][j] = 1
+ 
+    # Construct other entries
+    for i in range(1, R):
+        for j in range(1, C):
+            if (squares[i, j]['count'] != 0):
+                S[i][j] = min(S[i][j-1], S[i-1][j], S[i-1][j-1]) + 1
+            else:
+                S[i][j] = 0
+     
+    # Find the maximum entry and
+    # indices of maximum entry in S[][]
+    max_of_s = S[0][0]
+    max_i = 0
+    max_j = 0
+    for i in range(R):
+        for j in range(C):
+            if (max_of_s < S[i][j]):
+                max_of_s = S[i][j]
+                max_i = i
+                max_j = j
+
+    print("Max square size = " + str(max_of_s))
+    print("Found at " + str(max_i) + ", " + str(max_j))
+
+    return (max_of_s, max_i, max_j)
+
+
+def decode_polyline(polyline_str):
+    index, lat, lng = 0, 0, 0
+    coordinates = []
+    changes = {'latitude': 0, 'longitude': 0}
+
+    # Coordinates have variable length when encoded, so just keep
+    # track of whether we've hit the end of the string. In each
+    # while loop iteration, a single coordinate is decoded.
+    while index < len(polyline_str):
+        # Gather lat/lon changes, store them in a dictionary to apply them later
+        for unit in ['latitude', 'longitude']: 
+            shift, result = 0, 0
+
+            while True:
+                byte = ord(polyline_str[index]) - 63
+                index+=1
+                result |= (byte & 0x1f) << shift
+                shift += 5
+                if not byte >= 0x20:
+                    break
+
+            if (result & 1):
+                changes[unit] = ~(result >> 1)
+            else:
+                changes[unit] = (result >> 1)
+
+        lat += changes['latitude']
+        lng += changes['longitude']
+
+        coordinates.append((lat / 100000.0, lng / 100000.0))
+
+    return coordinates
 
 
 

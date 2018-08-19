@@ -85,6 +85,16 @@ urlpatterns = [
     url(r'^fred-whittington/refresh/ajax/(?P<task_id>[0-9a-z-]+)/$', views.fred_get_ajax_progress, name='fred-get-ajax-progress'),
     
 
+# Squares
+ 
+    url(r'^squares/$', views.squares_start, name='squares'),
+    url(r'^squares/map$', views.squares_map, name='squares-map'),
+    url(r'^squares/ajax/task/(?P<task_id>[0-9a-z-]+)/$', views.squares_rides_task, name='squares-rides-task'),
+    url(r'^squares/ajax/ride/(?P<ride_id>[0-9]+)/$', views.squares_rides_ride, name='squares-rides-ride'),
+    url(r'^squares/ajax/squares/(?P<rider_id>[0-9]+)/$', views.squares_rider_squares, name='squares-rider-squares'),
+
+
+
     ## REDIRECT for leaders app
     url(r'^leaders/$', views.leaders, name='leaders'),
 

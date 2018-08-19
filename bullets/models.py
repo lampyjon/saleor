@@ -314,6 +314,35 @@ class FredLowLeaderBoard(FredLeaderBoard):
      
 
 
+import json
+
+# Squares 
+class SquareRider(models.Model):
+    # need to cache strava API token
+    rider_id = models.CharField("Strava Rider ID", max_length=20)
+    access_token = models.CharField("Strava access token", max_length=500)
+   
+    def delete(self, *args, **kwargs):
+        # deauth from Strava if registered there
+        if self.access_token != "":
+            client = Client(access_token=self.access_token)
+            client.deauthorize()
+            self.access_token = ""
+
+        super().delete(*args, **kwargs)
+
+class SquareRide(models.Model):
+    rider = models.ForeignKey(SquareRider, on_delete=models.CASCADE)
+    strava_id = models.CharField("Strava Activity ID", max_length=20)
+    name = models.CharField("Ride Name", max_length=500)
+    polyline = models.TextField("Polyline")
+
+    def encoded_polyline(self):
+        return json.dumps(self.polyline)
+
+
+
+
 ################
 ## OLD MODELS ##
 ################
