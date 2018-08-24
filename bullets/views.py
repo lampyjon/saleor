@@ -703,11 +703,17 @@ def fred_progress(request):
 
     rider = get_object_or_404(FredRider, pk=rider_id)
     
-    my_low_board = FredLowLeaderBoard.objects.filter(rider=rider)[:10]
-    my_high_board = FredHighLeaderBoard.objects.filter(rider=rider)[:10]
+    my_low_board_ids = FredLowLeaderBoard.objects.filter(rider=rider).order_by('strava_activity_id').distinct('strava_activity_id').values_list('id', flat=True)
+    my_low_board = FredLowLeaderBoard.objects.filter(id__in=my_low_board_ids)[:10]
 
-    overall_low_board = FredLowLeaderBoard.objects.all()[:10]
-    overall_high_board = FredHighLeaderBoard.objects.all()[:10]
+    my_high_board_ids = FredHighLeaderBoard.objects.filter(rider=rider).order_by('strava_activity_id').distinct('strava_activity_id').values_list('id', flat=True)
+    my_high_board = FredHighLeaderBoard.objects.filter(id__in=my_low_board_ids)[:10]
+
+    overall_low_board_ids = FredLowLeaderBoard.objects.order_by('strava_activity_id').distinct('strava_activity_id').values_list('id', flat=True)
+    overall_low_board = FredLowLeaderBoard.objects.filter(id__in=overall_low_board_ids)[:10]
+
+    overall_high_board_ids = FredHighLeaderBoard.objects.order_by('strava_activity_id').distinct('strava_activity_id').values_list('id', flat=True)
+    overall_high_board = FredHighLeaderBoard.objects.filter(id__in=overall_high_board_ids)[:10]
 
     return render(request, "bullets/fred/progress.html", {'my_low_board':my_low_board, 'my_high_board': my_high_board, 'overall_low_board':overall_low_board, 'overall_high_board':overall_high_board, 'rider':rider})
 
