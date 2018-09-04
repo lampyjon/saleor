@@ -50,8 +50,10 @@ translatable_urlpatterns = [
     url(r'^search/', include((search_urls, 'search'), namespace='search')),
     url(r'', include('payments.urls'))]
 
-urlpatterns = non_translatable_urlpatterns + i18n_patterns(
-    *translatable_urlpatterns)
+#urlpatterns = non_translatable_urlpatterns + i18n_patterns(
+#    *translatable_urlpatterns)
+urlpatterns = non_translatable_urlpatterns + translatable_urlpatterns     # BULLETS: need to include this file
+
 
 if settings.DEBUG:
     import debug_toolbar

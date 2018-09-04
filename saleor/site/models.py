@@ -34,6 +34,9 @@ class SiteSettings(models.Model):
 
     translated = TranslationProxy()
 
+    cyclists = models.PositiveIntegerField(default=0)   # BULLETS: store this centrally
+    runners = models.PositiveIntegerField(default=0)    # BULLETS: store this centrally
+
     class Meta:
         permissions = ((
             'manage_settings', pgettext_lazy(

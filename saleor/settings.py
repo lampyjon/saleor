@@ -32,11 +32,12 @@ SITE_ID = 1
 
 PROJECT_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), '..'))
 
-ROOT_URLCONF = 'saleor.urls'
+ROOT_URLCONF = 'bullets.urls'  # Bullets: make our URLS come first
 
 WSGI_APPLICATION = 'saleor.wsgi.application'
 
 ADMINS = (
+    ( os.environ.get('ADMIN_NAME'),  os.environ.get('ADMIN_EMAIL'))  # BULLETS: make this come from env, not file
     # ('Your Name', 'your_email@example.com'),
 )
 MANAGERS = ADMINS
@@ -54,8 +55,7 @@ DATABASES = {
         default='postgres://saleor:saleor@localhost:5432/saleor',
         conn_max_age=600)}
 
-
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Europe/London'
 LANGUAGE_CODE = 'en'
 LANGUAGES = [
     ('bg', _('Bulgarian')),
@@ -193,6 +193,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'django.contrib.sites',
     'django.contrib.staticfiles',
+    'django.contrib.admin',            # BULLETS: Added back in (dec 2017)
     'django.contrib.auth',
     'django.contrib.postgres',
     'django.forms',
@@ -232,7 +233,11 @@ INSTALLED_APPS = [
     'django_celery_results',
     'impersonate',
     'phonenumber_field',
-    'captcha']
+    'captcha',
+
+    'bullets',		  # BULLETS: add our core app
+    'django_summernote',  # BULLETS: rich text editor
+    ]
 
 if DEBUG:
     MIDDLEWARE.append(
@@ -305,7 +310,7 @@ LOGGING = {
 
 AUTH_USER_MODEL = 'account.User'
 
-LOGIN_URL = '/account/login/'
+LOGIN_URL = '/bullets-shop/account/login/'    # BULLETS: change to reflect our URL layout
 
 DEFAULT_COUNTRY = os.environ.get('DEFAULT_COUNTRY', 'US')
 DEFAULT_CURRENCY = os.environ.get('DEFAULT_CURRENCY', 'USD')
@@ -338,8 +343,18 @@ PAYMENT_HOST = get_host
 
 PAYMENT_MODEL = 'order.Payment'
 
-PAYMENT_VARIANTS = {
-    'default': ('payments.dummy.DummyProvider', {})}
+if DEBUG:
+    PAYMENT_VARIANTS = {
+        'default': ('payments.dummy.DummyProvider', {})}
+else:
+    PAYMENT_VARIANTS = {
+        'paypal': ('payments.paypal.PaypalProvider', {
+            'client_id': os.environ.get('PAYPAL_CLIENT_ID'),   
+            'secret': os.environ.get('PAYPAL_SECRET'),
+            'endpoint': 'https://api.paypal.com',
+            'capture': True}),       
+        }
+
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
@@ -348,8 +363,12 @@ SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 if not CACHES['default']['BACKEND'].endswith('LocMemCache'):
     SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
-CHECKOUT_PAYMENT_CHOICES = [
-    ('default', 'Dummy provider')]
+if DEBUG:
+    CHECKOUT_PAYMENT_CHOICES = [
+        ('default', 'Dummy provider')]
+else:
+    CHECKOUT_PAYMENT_CHOICES = [
+        ('paypal', 'Paypal')]
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'}
@@ -385,8 +404,11 @@ AWS_S3_CUSTOM_DOMAIN = os.environ.get('AWS_STATIC_CUSTOM_DOMAIN')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
 
+S3_URL = STATIC_URL 		# BULLETS: need this to make the various bits of AWS S3 code for custom storages work
+
 if AWS_STORAGE_BUCKET_NAME:
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    S3_URL = 'https://%s.s3.amazonaws.com/assets/' % AWS_STORAGE_BUCKET_NAME   # BULLETS: added this
 
 if AWS_MEDIA_BUCKET_NAME:
     DEFAULT_FILE_STORAGE = 'saleor.core.storages.S3MediaStorage'
@@ -485,7 +507,7 @@ CELERY_RESULT_BACKEND = 'django-db'
 
 # Impersonate module settings
 IMPERSONATE = {
-    'URI_EXCLUSIONS': [r'^dashboard/'],
+    'URI_EXCLUSIONS': [r'^bullets-shop-management/'],    # BULLETS: change to match our URL layout
     'CUSTOM_USER_QUERYSET': 'saleor.account.impersonate.get_impersonatable_users',  # noqa
     'USE_HTTP_REFERER': True,
     'CUSTOM_ALLOW': 'saleor.account.impersonate.can_impersonate'}
@@ -540,3 +562,37 @@ if SENTRY_DSN:
 
 SERIALIZATION_MODULES = {
     'json': 'saleor.core.utils.json_serializer'}
+
+
+
+
+#### Bullets Settings below here ####
+
+## STRAVA SETTINGS
+STRAVA_ACCESS_TOKEN = os.environ.get('STRAVA_ACCESS_TOKEN', None)
+STRAVA_CYCLING_CLUB = os.environ.get('STRAVA_CYCLING_CLUB', '0')
+STRAVA_RUNNING_CLUB = os.environ.get('STRAVA_RUNNING_CLUB', '0')
+STRAVA_CLIENT_ID = os.environ.get('STRAVA_CLIENT_ID', '0')
+STRAVA_CLIENT_SECRET = os.environ.get('STRAVA_CLIENT_SECRET', None)
+
+## FOR MAILCHIMP
+MAILCHIMP_API_KEY = os.environ.get('MAILCHIMP_API_KEY')
+MAILCHIMP_LISTID = os.environ.get('MAILCHIMP_LISTID')
+MAILCHIMP_WEBHOOK_APIKEY = os.environ.get('MAILCHIMP_WEBHOOK_APIKEY')
+
+## STILL NEEDED?
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+## SUMMERNOTE
+SUMMERNOTE_CONFIG = {
+       'default_css': ("//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css",
+                       "https://bullets-web-media.s3.amazonaws.com/static/django_summernote/summernote.css", ),
+       'default_js': (
+                '//code.jquery.com/jquery-1.9.1.min.js',                                
+                '//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js',  
+                        "https://bullets-web-media.s3.amazonaws.com/static/django_summernote/jquery.ui.widget.js",
+                        "https://bullets-web-media.s3.amazonaws.com/static/django_summernote/jquery.iframe-transport.js",
+                "https://bullets-web-media.s3.amazonaws.com/static/django_summernote/jquery.fileupload.js",
+                "https://bullets-web-media.s3.amazonaws.com/static/django_summernote/summernote.min.js",
+       ),
+}
