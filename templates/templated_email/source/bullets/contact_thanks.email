@@ -1,0 +1,15 @@
+{% extends 'bullets/base-email.html' %}
+
+{% block subject %}Boldmere Bullets Contact Form{% endblock subject %}
+
+{% block body %}
+
+<p>Hello,</p>
+
+<p>Thank you for your comment on the Boldmere Bullets website. We'll get back to you as soon as possible.</p>
+
+<p>Best wishes,</p>
+
+<p>The Boldmere Bullets!</p>
+
+{% endblock body %}

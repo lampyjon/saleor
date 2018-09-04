@@ -1,0 +1,43 @@
+<mjml>
+  <mj-head>
+    <mj-include path="../shared/styles" />
+  </mj-head>
+  <mj-body>
+    <mj-container>
+      <mj-include path="../shared/header" />
+      <mj-section>
+        <mj-column>
+          <mj-text font-size="16px">
+           Hello {{ rider.name }}! 
+          </mj-text>	
+
+<mj-text>We hope you are looking forward to taking part in the {{ rider.get_distance_display }} as part of the Boldmere Bullets 10/10 Charity event for Acacia Family Support! The event takes place on Sunday Sep 16th, meeting at Boldmere Gate in Sutton Park at 0730. Riders and runners will depart at 0800. Details of the ride and run routes are <a href="https://www.boldmerebullets.com/10-10-for-Acacia-Mums/">available online</a>.</mj-text>
+
+<mj-text>In advance of the event, we wanted to share the following message from Kate at Acacia Family Support with you:</mj-text>
+
+<mj-text>We are all really excited about the challenge and from everyone at Acacia, I would like to say a big thank you for committing to this event.</mj-text>
+
+<mj-text>Whilst the event is free to enter we are reliant on your fundraising efforts! Setting yourself a personal target to achieve £50-£100 sponsorship or optional voluntary contribution (suggested amount of £25 if you prefer to still contribute but not seek sponsorship), will greatly help us achieve the goal of £10,000 raised and on the day goal of 10,000 combined kilometres from all entrants.</mj-text>
+
+<mj-text>I have attached a sponsorship form and you can also use <a href="https://www.justgiving.com/fundraising/boldmere-bullets-10-10-for-acacia-mums">
+this JustGiving link</a> to share across friends and family via email, text, Facebook, Twitter, or any other way you can think of!</mj-text>
+
+<mj-text>Acacia Family Support is a charity set up to help families suffering from pre and post-natal depression (PND). Every penny of your donation you make will be spent on helping local families across Birmingham access one of our vital services including; individual befriending, Cognitive Behaviour Therapy group work courses, telephone support, couples workshops, free onsite creche facilities, Helping Hands at Home project (practical and emotional support in clients homes).</mj-text>
+
+<mj-text>Below is a quote from a mother who recently attended one of our centres for support:</mj-text>
+
+<mj-text><i>"I went through my entire pregnancy and ten weeks of my baby’s life living in the darkness. Today is the first day that I’ve smiled and can see the light at the end of the tunnel".</i></mj-text>
+
+<mj-text>This is the difference your donations will be making. Thank you.</mj-text>
+
+<mj-text>Kind regards</mj-text>
+
+<mj-text><b>Kate Davarzadeh</b> | Community Fundraising Officer Acacia Family Support | 07462 099003</mj-text>
+
+
+        </mj-column>
+      </mj-section>
+     <mj-include path="../shared/footer" />
+    </mj-container>
+  </mj-body>
+</mjml>

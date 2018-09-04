@@ -134,7 +134,7 @@ def register(request):
             context['confirm_url'] = url
 
             bullet.send_email(
-                template="bullets/register", 
+                template="source/bullets/register", 
                 context=context, 
                 override_email_safety=True)  # Override the safety check as we want them to confirm their email address
  

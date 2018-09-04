@@ -1,0 +1,23 @@
+{% block subject %}Boldmere Bullets Registration{% endblock subject %}
+
+{% block plain %}
+
+Hello {{name}},
+
+Thank you for registering as a member of the Boldmere Bullets collective!
+
+Please confirm your email address by clicking on this URL: {{ confirm_url }}
+
+We can only email you in the future if we have confirmed that this actually is your email address.
+
+We look forward to seeing you on a ride or a run soon!
+
+Best wishes,
+
+The Boldmere Bullets!
+
+{% endblock plain %}
+
+{% block html %}
+{% include 'templated_email/compiled/register.html' %}
+{% endblock %}

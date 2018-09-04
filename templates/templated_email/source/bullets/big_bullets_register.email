@@ -1,0 +1,31 @@
+
+{% block subject %}Boldmere Bullets - 10/10 For Acacia Mums Registration{% endblock subject %}
+
+{% block plain %}
+
+Hello {{rider.name}},
+
+Thank you for registering to take part in a Boldmere Bullets event!
+
+10/10 For Acacia Mums
+
+You have registered to take part in the {{ rider.get_distance_display }}.
+
+We are looking forward to welcoming you to our 10/10 For Acacia Mums event on Sunday Sep 16th, meeting at Boldmere Gate in Sutton Park at 0730. Riders and runners will depart at 0800.
+
+If you have authorised us, we will get the distance you ride or run during the event from Strava, and add it to our grand total for our run and ride events. If you don't use Strava, or didn't want us to do this, we'll send you an email after the event, and there will be a link for you to use to add your distance to the total.
+
+If for some reason you are unable to take part in the event, please let us know: {{ cancel_url }}
+
+We look forward to seeing you there! If you have any questions about the event, please send us an email!
+
+Best wishes,
+
+The Boldmere Bullets!
+
+{% endblock plain %}
+
+
+{% block html %}
+{% include 'templated_email/compiled/big_bullets_register.html' %}
+{% endblock %}

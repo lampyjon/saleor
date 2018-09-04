@@ -1,0 +1,26 @@
+{% extends 'bullets/base-email.html' %}
+{% block subject %}Boldmere Bullets - Event Registration{% endblock subject %}
+
+{% block body %}
+
+<p>Hello {{iwd.name}},</p>
+<p>Thank you for registering to take part in a Boldmere Bullets event!</p>
+
+{% if iwd.evans %}
+<h2>Bike Maintenance Event</h2>
+<p>You have been registered to take part in the bike maintenance event at <a href="https://www.evanscycles.com/store/sutton-coldfield">Evans Cycles, Sutton Coldfield</a>, on Thursday 8th March. The evening will start at 7pm, and will finish at approximately 9:30pm.</p>
+<p>If you no longer wish to attend the maintenance event, please <a href="{{ unregister_evans_url }}">click here</a> and we will remove you from this event.</p>
+{% endif %}
+{% if iwd.doing_ride %}
+<h2>Women's Interclub Ride</h2>
+<p>You have requested to take part in the interclub ride on Saturday 10th March, at a speed of {{ iwd.get_speed_display }}. Registration will be open at the Harvester, Boldmere, from 7am, with the ride itself starting at 8am. Groups will return to the Harvester at around 9:30am. For information about what to expect on the ride, and what to bring, please see <a href="{{ ride_info_url }}">our guide to our rides</a>.</p>
+
+<p>If you decide you do not wish to take part in this ride, please <a href="{{ unregister_ride_url }}">click here</a>, and we will remove you from the list of participants.</p>
+
+{% endif %}
+
+<p>Best wishes,</p>
+
+<p>The Boldmere Bullets!</p>
+
+{% endblock body %}

@@ -3,8 +3,9 @@
     <mj-text>{% load staticfiles %}</mj-text>
   </mj-column>
 </mj-section>
-<mj-section>
-  <mj-column>
-    <mj-image src="{{ bullet_pic }}" height="150px" width="150px"/>
+<mj-section background-color="#FC4C02">
+  <mj-column vertical-align="middle">
+    <mj-image src="{{ bullet_pic }}" height="100px" width="100px"/>
   </mj-column>
 </mj-section>
+

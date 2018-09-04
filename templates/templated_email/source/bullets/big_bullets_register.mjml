@@ -1,0 +1,34 @@
+<mjml>
+  <mj-head>
+    <mj-include path="../shared/styles" />
+  </mj-head>
+  <mj-body>
+    <mj-container>
+      <mj-include path="../shared/header" />
+      <mj-section>
+        <mj-column>
+          <mj-text font-size="16px">
+           Hello {{ rider.name }}! 
+          </mj-text>
+          	<mj-text>Thank you for registering to take part in a Boldmere Bullets event!</mj-text>
+
+<mj-text><b>10/10 For Acacia Mums</b></mj-text>
+
+<mj-text>You have registered to take part in the {{ rider.get_distance_display }}.</mj-text>
+
+<mj-text>We are looking forward to welcoming you to our 10/10 For Acacia Mums event on Sunday Sep 16th, meeting at Boldmere Gate in Sutton Park at 0730. Riders and runners will depart at 0800.</mj-text>
+
+<mj-text>
+If you have authorised us, we will get the distance you ride or run during the event from Strava, and add it to our <a href="{{ total_url }}">grand total</a> for our run and ride events. If you don't use Strava, or didn't want us to do this, we'll send you an email after the event, and there will be a link for you to use to add your distance to the total.
+</mj-text>
+
+<mj-text>If for some reason you are unable to take part in the event, please <a href="{{ cancel_url }}">let us know</a>.</mj-text>
+
+<mj-text>We look forward to seeing you there! If you have any questions about the event, please send us an email!</mj-text>
+
+        </mj-column>
+      </mj-section>
+     <mj-include path="../shared/footer" />
+    </mj-container>
+  </mj-body>
+</mjml>
