@@ -78,4 +78,17 @@ urlpatterns = [
         name='product-attribute-value-delete'),
     url(r'attributes/(?P<attribute_pk>[0-9]+)/values/reorder/$',
         views.ajax_reorder_attribute_choice_values,
-        name='product-attribute-values-reorder')]
+        name='product-attribute-values-reorder'),
+
+
+    url(r'^suppliers/$',					# BULLETS: suppliers
+        views.supplier_list, name='supplier-list'),
+    url(r'^suppliers/add/$',
+        views.supplier_create, name='supplier-add'),
+    url(r'^suppliers/(?P<pk>[0-9]+)/update/$',
+        views.supplier_edit, name='supplier-update'),
+    url(r'^suppliers/(?P<pk>[0-9]+)/detail/$',
+        views.supplier_detail, name='supplier-detail'),
+    url(r'^suppliers/(?P<pk>[0-9]+)/delete/$',
+        views.supplier_delete, name='supplier-delete'),
+    ]

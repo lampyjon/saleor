@@ -29,6 +29,13 @@ from ..core.weight import WeightUnits, zero_weight
 from ..discount.utils import calculate_discounted_price
 from ..seo.models import SeoModel, SeoModelTranslation
 
+## BULLETS 
+class Supplier(models.Model):
+    name = models.CharField(max_length=128)
+    
+    def __str__(self):
+        return self.name
+## </bullets>
 
 class Category(MPTTModel, SeoModel):
     name = models.CharField(max_length=128)
@@ -128,6 +135,11 @@ class Product(SeoModel):
         measurement=Weight, unit_choices=WeightUnits.CHOICES,
         blank=True, null=True)
 
+    supplier = models.ForeignKey(
+        Supplier, related_name='products', on_delete=models.CASCADE)	# BULLETS: suppliers
+
+    allow_future_orders = models.BooleanField(default=True)		# BULLETS: do we allow these to be ordered from suppliers
+
     objects = ProductQuerySet.as_manager()
     translated = TranslationProxy()
 
@@ -214,10 +226,17 @@ class ProductVariant(models.Model):
     attributes = HStoreField(default={}, blank=True)
     images = models.ManyToManyField('ProductImage', through='VariantImage')
     track_inventory = models.BooleanField(default=True)
+
     quantity = models.IntegerField(
-        validators=[MinValueValidator(0)], default=Decimal(1))
+        validators=[MinValueValidator(0)], default=Decimal(1))		# Bullets: amount we physically have
     quantity_allocated = models.IntegerField(
-        validators=[MinValueValidator(0)], default=Decimal(0))
+        validators=[MinValueValidator(0)], default=Decimal(0))		# Bullets: what we have, but have sold
+    quantity_to_order = models.IntegerField(
+        validators=[MinValueValidator(0)], default=Decimal(0))		# Bullets: qty paid for but not yet ordered from supplier
+    quantity_on_order = models.IntegerField(
+        validators=[MinValueValidator(0)], default=Decimal(0))		# Bullets: qty on order from suppliers
+
+
     cost_price = MoneyField(
         currency=settings.DEFAULT_CURRENCY, max_digits=12,
         decimal_places=settings.DEFAULT_DECIMAL_PLACES, blank=True, null=True)
@@ -464,3 +483,9 @@ class CollectionTranslation(SeoModelTranslation):
 
     def __str__(self):
         return self.name
+
+
+
+
+
+    

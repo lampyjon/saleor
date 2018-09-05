@@ -1,0 +1,136 @@
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+{% load materializecss %}
+{% load price from taxed_prices %}
+{% load get_thumbnail from product_images %}
+{% load staticfiles %}
+{% load utils %}
+
+{% block title %}
+    {{ supplier }} - {% trans "Suppliers" context "Dashboard supplier list" %} - {{ block.super }}
+{% endblock %}
+
+{% block body_class %}body-products{% endblock %}
+
+{% block menu_supplier_class %}active{% endblock %}
+
+{% block header_menu %}
+  {% url "dashboard:supplier-list" as url %}
+  {% include "dashboard/includes/_back_link.html" with url=url %}
+{% endblock %}
+
+{% block breadcrumbs %}
+  <ul class="breadcrumbs breadcrumbs--history">
+    <li>
+      <a href="{% url "dashboard:supplier-list" %}" class="breadcrumb">
+        {% trans "Supplier list" context "Dashboard supplier list" %}
+      </a>
+    </li>
+    <li class="back-mobile">
+      <a href="{% url "dashboard:supplier-list" %}">
+        <svg data-src="{% static "dashboard/images/arrow-left.svg" %}" fill="#fff" width="20px" height="20px" />
+      </a>
+    </li>
+    <li>
+      <span class="breadcrumbs--ellipsed-item">
+        {% if supplier.pk %}
+          {{ supplier }}
+        {% else %}
+          {% trans 'Add new supplier' context "Supplier breadcrumbs" %}
+        {% endif %}
+      </span>
+    </li>
+  </ul>
+{% endblock %}
+
+{% block header_extra %}
+  {% if supplier.pk %}
+    <a class="dropdown-button right" href="#" data-activates="context-menu" data-constrainwidth="false">
+      <svg data-src="{% static "dashboard/images/more-vert.svg" %}" height="24" width="24" />
+    </a>
+    <ul id="context-menu" class="dropdown-content">
+      {% if perms.product.manage_products %}
+      <li>
+        <a href="{% url 'dashboard:supplier-update' pk=supplier.pk %}">
+          {% trans "Edit supplier" context "Supplier action" %}
+        </a>
+      </li>
+
+      <li>
+        <a href="#base-modal" data-href="{% url 'dashboard:supplier-delete' pk=supplier.pk %}" class="modal-trigger-custom">
+          {% trans "Remove supplier" context "Supplier action" %}
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+      <div class="col m12 l9">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">
+              {{ supplier.name }}
+            </span>
+          </div>
+          <div class="card-action">
+            <a class="btn-flat waves-effect" href="{% url 'dashboard:supplier-update' pk=supplier.pk %}">
+              {% trans "Edit supplier" context "Supplier detail view action" %}
+            </a>
+            <a href="#base-modal" class="btn-flat waves-effect modal-trigger-custom" data-href="{% url 'dashboard:supplier-delete' pk=supplier.pk %}">
+              {% trans "Remove supplier" context "Supplier detail view action" %}
+            </a>
+          </div>
+        </div>
+      </div>
+  </div>
+
+ <div class="row">
+    <div class="col s12 l9" id="product-list">
+    {% if products %}
+      <div class="card">
+          <div class="data-table-container">
+            <table class="bordered highlight responsive data-table last-right-align">
+          <thead>
+            <tr>
+	      <th></th>
+              <th>Name</th>
+	      <th>Price</th>              
+            </tr>
+          </thead>
+          <tbody>
+          {% for product in products %}
+            <tr class="avatar" data-action-go="{% url 'dashboard:product-details' pk=product.pk %}">
+              <td class="avatar">
+                <img src="{% get_thumbnail product.get_first_image size=60 method="crop" %}"
+                    srcset="{% get_thumbnail product.get_first_image size=60 method="crop" %} 1x, {% get_thumbnail product.get_first_image size=120 method="crop" %} 2x"
+                    alt="">
+              </td>
+              <td>
+                {{ product.name }}
+              </td>
+              <td>
+                {% price product.price %}
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+          </table>
+          </div>
+        </form>
+      </div>
+    {% else %}
+        <div class="col s12">
+          <div class="not-found">
+            <p class="grey-text">
+              {% trans "No products found." context "Empty product list message" %}
+            </p>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+{% endblock %}

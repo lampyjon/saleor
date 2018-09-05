@@ -1,0 +1,41 @@
+{% extends "dashboard/base_modal.html" %}
+
+{% load i18n %}
+{% load staticfiles %}
+
+{% block form_class %}{% endblock %}
+
+{% block action_url %}
+{% url "dashboard:supplier-delete" pk=supplier.pk %}
+{% endblock %}
+
+{% block title %}
+{% blocktrans trimmed context "Modal remove supplier text" %}
+  Remove supplier {{ supplier}}
+{% endblocktrans %}
+{% endblock title %}
+
+{% block content %}
+  <div class="col s12">
+    <p>
+      {% blocktrans trimmed context "Modal remove supplier text" %}
+        Are you sure you want to remove supplier <strong>{{ supplier }}</strong>?
+      {% endblocktrans %}
+    </p>
+    <p>
+      {% if products %}
+        {% blocktrans trimmed context "Modal remove supplier text" with product_count=products.count %}
+          This supplier has {{ product_count }} products.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed context "Modal remove supplier text" %}
+          There are no products associated with this supplier.
+        {% endblocktrans %}
+      {% endif %}
+    </p>
+  </div>
+{% endblock %}
+
+{% block primary_action %}
+{% trans "Remove" context "Dashboard delete action" %}
+{% endblock %}

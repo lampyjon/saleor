@@ -1,0 +1,73 @@
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+{% load materializecss %}
+{% load staticfiles %}
+{% load utils %}
+
+{% block title %}
+  {% trans "Suppliers" context "Dashboard suppliers list" %} - {{ block.super }}
+{% endblock %}
+
+{% block body_class %}body-suppliers{% endblock %}
+
+{% block menu_suppliers_class %}active{% endblock %}
+
+{% block header_extra %}
+  {% if perms.product.manage_products %}
+  <div class="btn-fab-fixed">
+    <a class="btn-fab-default waves-effect waves-light" title="{% trans "Add supplier" context "Supplier list add button text" %}" href="{% url 'dashboard:supplier-add' %}">
+      <svg data-src="{% static "dashboard/images/add.svg" %}" />
+    </a>
+  </div>
+  {% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}
+  <ul class="breadcrumbs">
+    <li class="visible-s">
+      {% trans "Suppliers" context "Dashboard suppliers list" %}
+    </li>
+  </ul>
+{% endblock %}
+
+{% block menu_supplier_class %} active{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col s12 l9">
+      {% if suppliers %}
+        <div class="card">
+          <div class="data-table-container">
+            <table class="bordered highlight data-table data-table-description">
+              <thead>
+                <tr>
+                  <th>{% trans "Name" context "Dashboard suppliers list table header name" %}</th>
+		  <th>{% trans "Products" context "Dashboard suppliers list table header name" %}</th>               
+                </tr>
+              </thead>
+              <tbody>
+              {% for supplier in suppliers %}
+                <tr data-action-go="{% if perms.product.manage_products %}{% url 'dashboard:supplier-detail' pk=supplier.pk %}{% endif %}">
+                  <td>
+                    {{ supplier.name }}
+                  </td>
+		  <td>{{ supplier.products.count }}</td>
+                 </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {% else %}
+          <div class="col s12">
+            <div class="not-found">
+              <p class="grey-text">
+                {% trans "No suppliers found." context "Empty supplier list message" %}
+              </p>
+            </div>
+          </div>
+ 
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

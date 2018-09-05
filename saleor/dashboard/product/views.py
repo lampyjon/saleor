@@ -131,6 +131,7 @@ def product_create(request, type_pk):
     ctx = {
         'product_form': product_form, 'variant_form': variant_form,
         'product': product}
+    print("here!")
     return TemplateResponse(request, 'dashboard/product/form.html', ctx)
 
 
@@ -678,3 +679,90 @@ def ajax_reorder_attribute_choice_values(request, attribute_pk):
         status = 400
         ctx = {'error': form.errors}
     return JsonResponse(ctx, status=status)
+
+
+
+## <BULLETS SUPPLIER MANAGEMENT>
+from ...product.models import Supplier
+
+@staff_member_required
+@permission_required('product.manage_products')
+def supplier_list(request):
+    suppliers = Supplier.objects.all().order_by('name')
+    ctx = {
+        'suppliers': suppliers}
+    return TemplateResponse(
+        request,
+        'dashboard/product/supplier/list.html',
+        ctx)
+
+
+@staff_member_required
+@permission_required('product.manage_products')
+def supplier_create(request):
+    supplier = Supplier()
+    form = forms.SupplierForm(request.POST or None, instance=supplier)
+    if form.is_valid():
+        supplier = form.save()
+        msg = pgettext_lazy(
+            'Dashboard message', 'Added supplier %s') % (supplier,)
+        messages.success(request, msg)
+        return redirect('dashboard:supplier-list')
+    ctx = {'form': form, 'supplier': supplier}
+    return TemplateResponse(
+        request,
+        'dashboard/product/supplier/form.html',
+        ctx)
+
+
+@staff_member_required
+@permission_required('product.manage_products')
+def supplier_edit(request, pk):
+    supplier = get_object_or_404(Supplier, pk=pk)
+    form = forms.SupplierForm(request.POST or None, instance=supplier)
+    if form.is_valid():
+        supplier = form.save()
+        msg = pgettext_lazy(
+            'Dashboard message', 'Updated supplier %s') % (supplier,)
+        messages.success(request, msg)
+        return redirect('dashboard:supplier-list')
+    ctx = {'form': form, 'supplier': supplier}
+    return TemplateResponse(
+        request,
+        'dashboard/product/supplier/form.html',
+        ctx)
+
+
+@staff_member_required
+@permission_required('product.manage_products')
+def supplier_delete(request, pk):
+    supplier = get_object_or_404(Supplier, pk=pk)
+    if request.method == 'POST':
+        supplier.delete()
+        msg = pgettext_lazy(
+            'Dashboard message', 'Removed supplier %s') % (supplier,)
+        messages.success(request, msg)
+        return redirect('dashboard:supplier-list')
+    ctx = {
+        'supplier': supplier,
+        'products': supplier.products.all()}
+    return TemplateResponse(
+        request,
+        'dashboard/product/supplier/modal/confirm_delete.html',
+        ctx)
+
+
+@staff_member_required
+@permission_required('product.manage_products')
+def supplier_detail(request, pk):
+    supplier = get_object_or_404(Supplier, pk=pk)
+    ctx = {
+        'supplier': supplier,
+        'products': supplier.products.all()}
+    return TemplateResponse(
+        request,
+        'dashboard/product/supplier/detail.html',
+        ctx)
+
+## </BULLETS SUPPLIER MANAGEMENT>
+
