@@ -23,7 +23,7 @@ import random
 import os
 
 # Bullets imports
-from .forms import RegisterForm, UnRegisterForm, ContactForm, NewsForm, RunningEventForm, BulletEventForm, IWDForm, BigBulletRiderForm
+from .forms import RegisterForm, UnRegisterForm, ContactForm, NewsForm, RunningEventForm, BulletEventForm, IWDForm, BigBulletRiderForm, BigBulletManualForm
 from .models import Bullet, OldBullet, News, RunningEvent, ActivityCache, BulletEvent, IWDRider, BigBulletRider, FredRider, FredHighLeaderBoard, FredLowLeaderBoard 
 
 from .utils import send_bullet_mail, who_to_email, send_manager_email 
@@ -600,9 +600,46 @@ def big_bullets_ride_confirm_strava(request, uuid):
 
 # The totalliser 
 def big_bullets_ride_total(request):
-    total_distance = 0 
-    # TODO: make it actually work
-    return render(request, "bullets/big_bullets_ride_total.html", {'total_distance': total_distance})  
+    theday = datetime.datetime(2018, 9, 16)
+
+    x = ActivityCache.objects.filter(date_added__year=theday.year, date_added__month=theday.month, date_added__day=theday.day).aggregate(Sum('distance'))
+
+    total_distance = x['distance__sum'] 
+
+    if total_distance > 0:
+        percent = (total_distance / 10000) * 100
+        if percent > 100:
+            percent = 100
+    else:
+        percent = 0
+    
+
+
+ #   activities = BigBulletRide.objects.all()
+    activities = {}
+
+    return render(request, "bullets/big_bullets_ride_total.html", {'total_distance': total_distance, 'activities':activities, 'percent':percent }) 
+
+
+# Manually add some miles
+def big_bullets_ride_manual_add(request):
+    if request.POST:
+        entry_form = BigBulletManualForm(request.POST)
+
+        if entry_form.is_valid():
+            obj, created = ActivityCache.objects.get_or_create(activity_type=entry_form.cleaned_data["activity_type"], distance = entry_form.cleaned_data["distance"], name="10-10 Manual Activity", athlete=entry_form.cleaned_data["email"])
+            if created:
+                messages.success(request, "Your " + str(obj.activity_type) + " was successfully added!")
+            else:
+                messages.info(request, "Your " + str(obj.activity_type) + " was already added")
+            
+            return redirect(reverse('big-bullets-ride-total'))
+    else:
+        entry_form = BigBulletManualForm()
+
+    return render(request, "bullets/big_bullets_ride_manual.html", {'form':entry_form})
+
+ 
  
 # someone no longer wants to do the big bullets ride
 def big_bullets_ride_delete(request, uuid):

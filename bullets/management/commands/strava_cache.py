@@ -20,7 +20,7 @@ class Command(BaseCommand):
         added = 0
         skipped = 0
         for activity in activities:		
-            obj, created = ActivityCache.objects.get_or_create(activity_id=activity.id, activity_type=activity_type, defaults={'distance': unithelper.miles(activity.distance).num, 'start_date': activity.start_date})
+            obj, created = ActivityCache.objects.get_or_create(activity_type=activity_type, distance = unithelper.miles(activity.distance).num, name=activity.name, athlete=activity.athlete)
             if created:
                 added = added + 1	
             else:

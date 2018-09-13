@@ -12,15 +12,28 @@
 <div class="row">
     <div class="col-sm-8 col-sm-push-2">
     <h1>10/10 for Acacia Mums - Total Distance!</h1>
-    <p>So far, we have travelled a grand total of...</p>
+    <p>So far today - September 16th 2018 - we have travelled a grand total of...</p>
 
-    <p><h1 class="text-center">{{ total_distance}}km</h1></p>
+    <p><h1 class="text-center"><strong>{{ total_distance}}km</strong> of our target of 10,000km</h1></p>
    
+<div class="progress">
+  <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ percent }}%">
+    <span class="sr-only">{{ percent }}% Complete</span>
+  </div>
+</div>
+<h2 id="manual">Not on Strava?</h2>
+<p>The total above counts all of the activities of Bullets who are on Strava. If you aren't, you can manually your contribution!</p>
+
+<a href="{% url 'big-bullets-manual-add' %}" class="btn btn-primary btn-xl">Add my run or ride</a>  
+
+
 <h2 id="fundraising">Fundraising</h2>
 <p>There's no charge to take part in these runs or rides! We are seeking to raise money for our charity of the year, Acacia Family Support, so we would encourage a donation to them via our <a href="https://www.justgiving.com/fundraising/boldmere-bullets-10-10-for-acacia-mums">JustGiving page</a> if you are able. </p>
 <p>If you are plannning to get sponsorship for this event, then we'd love you to <a href="https://www.justgiving.com/companyteams/boldmerebullets1010event">join our JustGiving team</a>, so we can see our collective progress!</p>
  
 <a href="{% url 'index' %}" class="btn btn-primary btn-xl">Back to the main site</a>  
+<br/>
+<br/>
     </div>
   
 </div>

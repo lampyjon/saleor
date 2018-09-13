@@ -1,0 +1,30 @@
+{% extends "simple.html" %}
+{% load static %}
+{% load bootstrap_form from bootstrap3 %}
+
+{% block title %} - 10/10 for Acacia Mums{%endblock %}
+{% block topurl %}{% url 'index' %}{% endblock %}
+
+{% block header-links %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-8 col-sm-push-2">
+    <h1>Add your run or ride to our totaliser!</h1>
+<p>Not on Strava? Simply add whatever distance you've run or rode for 10-10 For Acacia Mums manually...</p>
+        <form method="post" class="form-horizontal" onsubmit="mySubmit.disabled = true; return true;">
+            {% csrf_token %}
+            {% bootstrap_form form layout="horizontal" %}
+ 	     <p class="text-right">
+                <button name="mySubmit" type="submit" class="btn btn-primary">Add!</button>
+            </p>
+        </form>
+    </div>
+</div>
+
+ 
+      {% endblock %}
+
+
+

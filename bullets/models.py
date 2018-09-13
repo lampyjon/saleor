@@ -20,14 +20,16 @@ class ActivityCache(models.Model):
         (RIDE, 'Ride'),
         )
 
-    activity_id = models.CharField('Strava ID', max_length=30)
+#    activity_id = models.CharField('Strava ID', max_length=30)
     activity_type = models.CharField('Type',
         max_length=4,
         choices=ACTIVITY_TYPE_CHOICES,
         default=RIDE,
         )
     distance = models.PositiveIntegerField('Distance')
-    start_date = models.DateTimeField('Activity Date')
+    name = models.CharField("Name", max_length=1000)
+    athlete = models.CharField("Athlete", max_length=1000)
+    date_added = models.DateTimeField('Activity Date', auto_now_add=True)
 
 
 
@@ -249,8 +251,6 @@ class BigBulletRider(Person):
             self.access_token = ""
 
         super().delete(*args, **kwargs)
-
-
 
 
 class FredRider(Person):

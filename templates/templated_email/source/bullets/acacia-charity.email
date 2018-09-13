@@ -1,30 +1,45 @@
-{% block subject %}Boldmere Bullets - 10/10 For Acacia Mums - A message from Acacia{% endblock subject %}
+{% block subject %}Boldmere Bullets - 10/10 For Acacia Mums - Event Update{% endblock subject %}
 
 {% block plain %}
 
 Hello {{rider.name}},
 
-We hope you are looking forward to taking part in the {{ rider.get_distance_display }} as part of the Boldmere Bullets 10/10 Charity event for Acacia Family Support! The event takes place on Sunday Sep 16th, meeting at Boldmere Gate in Sutton Park at 0730. Riders and runners will depart at 0800. Details of the ride and run routes are available here: https://www.boldmerebullets.com/10-10-for-Acacia-Mums/
+Thank you for entering our 10/10 for Acacia Mums event on Sunday 16th September 2018, which is being held in memory of Emma Borg, founder of Acacia, who passed away last week. We are very grateful to everyone who has made a donation or sponsored someone to complete a challenge. Your money will make a real difference to families in crisis. 
 
-In advance of the event, we wanted to share the following message from Kate at Acacia Family Support with you:
+Run / Ride Information:
 
-We are all really excited about the challenge and from everyone at Acacia, I would like to say a big thank you for committing to this event.
+Arrive at Boldmere Gate between 7am and 7:30am to sign in at the orange Bullets gazebo. Cyclists go to Miller & Carter car park; Runners meet in usual Sunday morning carpark at Boldmere Gate. 
+Please bring some cash to buy raffle tickets (£2 each, 5 for £5), or make a donation to Acacia.
+We will sort out groups based on speed and distance. Don’t worry - there will be signposts to help you get into the right place.
+Runs and rides will leave in groups from 8am.
 
-Whilst the event is free to enter we are reliant on your fundraising efforts! Setting yourself a personal target to achieve £50-£100 sponsorship or optional voluntary contribution (suggested amount of £25 if you prefer to still contribute but not seek sponsorship), will greatly help us achieve the goal of £10,000 raised and on the day goal of 10,000 combined kilometres from all entrants.
+Our generous sponsors Henwood Court Financial Planning Ltd (https://www.henwoodcourt.co.uk) are providing a free water bottle to everyone who is riding or running on the day. We suggest riders bring one full bottle and one empty cage. Evans Cycles are providing sports drinks. 
+Any unclaimed bottles will be taken to The Harvester to be given out at the evening event.
 
-I have attached a sponsorship form and you can also use: https://www.justgiving.com/fundraising/boldmere-bullets-10-10-for-acacia-mums to share across friends and family via email, text, Facebook, Twitter, or any other way you can think of!<
+Routes
+Rides: 
+50 km - https://www.strava.com/routes/14182391
+100 km - https://www.strava.com/routes/14181618
+100 miles - https://www.strava.com/routes/14181225
+200 km - https://www.strava.com/routes/14180642
 
-Acacia Family Support is a charity set up to help families suffering from pre and post-natal depression (PND). Every penny of your donation you make will be spent on helping local families across Birmingham access one of our vital services including; individual befriending, Cognitive Behaviour Therapy group work courses, telephone support, couples workshops, free onsite creche facilities, Helping Hands at Home project (practical and emotional support in clients homes).
+Runs:
+5 miles - https://www.strava.com/routes/14414057
+10 miles - https://www.strava.com/routes/14413797
 
-Below is a quote from a mother who recently attended one of our centres for support:
+We suggest riders also bring:
+Money for cafe stops, plus your own nutrition to carry for the day.
+Spare inner tube, pump and tools.
+GPS device with loaded route - if you don’t have one, we recommend you print out the route. Note: this is a self-led run/ride, although there will be plenty of leaders acting as “domestiques” to help. 
+Mobile phone
+If you need mechanical support on the ride please call Matt Wilkes on 07801371573.
 
-"I went through my entire pregnancy and ten weeks of my baby’s life living in the darkness. Today is the first day that I’ve smiled and can see the light at the end of the tunnel".
 
-This is the difference your donations will be making. Thank you.
+We are aiming to complete 10,000 km on the day, and we really need your help to achieve this. If you haven't already, please make sure you have joined our running or cycling clubs on Strava, and we will automatically count your distance towards the grand total! During the day you can follow our overall progress at https://www.boldmerebullets.com/10-10-for-Acacia-Mums/total/
 
-Kind regards
+Please come and join us back at the Harvester to celebrate achieving our goal of riding/running 10,000 km together. There will be a FREE buffet from 5.00 pm and live music from 8.00 pm. Please bring along family and friends and make this a great evening celebrating!
 
-Kate Davarzadeh | Community Fundraising Officer, Acacia Family Support | 07462 099003
+VLB!
 
 
 {% endblock plain %}

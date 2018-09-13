@@ -84,8 +84,6 @@ class IWDForm(ModelForm):
         model = IWDRider
         fields = ['name', 'email', 'club', 'evans', 'speed']
 
-
-
 class CTSTime(forms.Form):
     STOPS = ( 
         ("CP1", "CP 1 (23 miles)"),
@@ -111,6 +109,23 @@ class BigBulletRiderForm(ModelForm):
     class Meta:
         model = BigBulletRider
         fields = ['name', 'email', 'distance']
+
+
+
+class BigBulletManualForm(forms.Form):
+    RUN = 'run'
+    RIDE = 'ride'
+
+    ACTIVITY_TYPE_CHOICES = (
+        (RUN, 'Run'),
+        (RIDE, 'Ride'),
+        )
+
+    email = forms.EmailField(label='Your email', max_length=200)
+    activity_type = forms.ChoiceField(label="Activity", choices=ACTIVITY_TYPE_CHOICES)
+    distance = forms.DecimalField(label="Distance (km)", min_value=0, max_value=500)
+#    captcha = NoReCaptchaField(label="")
+
 
 
 #class BulletsRunnerForm(ModelForm):

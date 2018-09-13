@@ -73,6 +73,7 @@ urlpatterns = [
     url(r'^10-10-for-Acacia-Mums/$', views.big_bullets_ride, name="big-bullets-ride"),
     url(r'^10-10-for-Acacia-Mums/strava-register/(?P<uuid>[0-9a-z-]+)/$', views.big_bullets_ride_confirm_strava, name='big-bullets-confirm-strava'),
     url(r'^10-10-for-Acacia-Mums/total/$', views.big_bullets_ride_total, name="big-bullets-ride-total"),
+    url(r'^10-10-for-Acacia-Mums/manual-add/$', views.big_bullets_ride_manual_add, name="big-bullets-manual-add"),
     url(r'^10-10-for-Acacia-Mums/not-coming/(?P<uuid>[0-9a-z-]+)/$', views.big_bullets_ride_delete, name='big-bullets-ride-delete'),
     url(r'^10-10-for-Acacia-Mums/admin/$', views.BBRList.as_view(), name="big-bullets-ride-admin"),
 
