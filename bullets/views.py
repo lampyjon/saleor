@@ -605,6 +605,8 @@ def big_bullets_ride_total(request):
     x = ActivityCache.objects.filter(date_added__year=theday.year, date_added__month=theday.month, date_added__day=theday.day).aggregate(Sum('distance'))
 
     total_distance = x['distance__sum'] 
+    if total_distance == None:
+        total_distance = 0
 
     if total_distance > 0:
         percent = (total_distance / 10000) * 100
