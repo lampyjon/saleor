@@ -60,18 +60,18 @@ def index(request):
 
     now = timezone.now()
 
-    week_run_miles =  ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(start_date__gte=(now-datetime.timedelta(days=7))).aggregate(Sum('distance'))['distance__sum']
-    week_ride_miles =  ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(start_date__gte=(now-datetime.timedelta(days=7))).aggregate(Sum('distance'))['distance__sum']
+    week_run_miles =  ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(date_added__gte=(now-datetime.timedelta(days=7))).aggregate(Sum('distance'))['distance__sum']
+    week_ride_miles =  ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(date_added__gte=(now-datetime.timedelta(days=7))).aggregate(Sum('distance'))['distance__sum']
 
-    year_run_miles = ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(start_date__year=now.year).aggregate(Sum('distance'))['distance__sum']
+    year_run_miles = ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(date_added__year=now.year).aggregate(Sum('distance'))['distance__sum']
 
-    year_ride_miles = ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(start_date__year=now.year).aggregate(Sum('distance'))['distance__sum']
+    year_ride_miles = ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(date_added__year=now.year).aggregate(Sum('distance'))['distance__sum']
 
-    week_runs = ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(start_date__gte=(now-datetime.timedelta(days=7))).count()
-    week_rides = ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(start_date__gte=(now-datetime.timedelta(days=7))).count()
+    week_runs = ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(date_added__gte=(now-datetime.timedelta(days=7))).count()
+    week_rides = ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(date_added__gte=(now-datetime.timedelta(days=7))).count()
 
-    year_runs = ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(start_date__year=now.year).count()
-    year_rides = ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(start_date__year=now.year).count()
+    year_runs = ActivityCache.objects.filter(activity_type=ActivityCache.RIDE).filter(date_added__year=now.year).count()
+    year_rides = ActivityCache.objects.filter(activity_type=ActivityCache.RUN).filter(date_added__year=now.year).count()
  
     qs = News.objects.order_by("-date_added")
     qs = qs.filter(Q(display_after__lte=now) | Q(display_after=None))
