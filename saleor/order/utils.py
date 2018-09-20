@@ -175,7 +175,7 @@ def add_variant_to_order(order, variant, quantity, discounts=None, taxes=None):
             tax_rate=get_tax_rate_by_name(variant.product.tax_rate, taxes))
 
     if variant.track_inventory:
-        allocate_stock(variant, quantity)
+        allocate_stock(variant, quantity)		# TODO: this (or the function called) need to sort out which stock numbers to move
 
 
 def change_order_line_quantity(line, new_quantity):

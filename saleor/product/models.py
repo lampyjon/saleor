@@ -171,8 +171,14 @@ class Product(SeoModel):
     def get_slug(self):
         return slugify(smart_text(unidecode(self.name)))
 
+    def can_order(self):						# BULLETS: figure out if we can display this in the shop?
+        if self.allow_future_orders:
+            return True
+        else:
+            return self.is_in_stock()
+
     def is_in_stock(self):
-        return any(variant.is_in_stock() for variant in self)
+        return any(variant.is_in_stock() for variant in self) 
 
     def is_available(self):
         today = datetime.date.today()
@@ -228,14 +234,15 @@ class ProductVariant(models.Model):
     track_inventory = models.BooleanField(default=True)
 
     quantity = models.IntegerField(
-        validators=[MinValueValidator(0)], default=Decimal(1))		# Bullets: amount we physically have
+        validators=[MinValueValidator(0)], default=Decimal(1))		# Bullets: amount we physically have in total
     quantity_allocated = models.IntegerField(
         validators=[MinValueValidator(0)], default=Decimal(0))		# Bullets: what we have, but have sold
     quantity_to_order = models.IntegerField(
         validators=[MinValueValidator(0)], default=Decimal(0))		# Bullets: qty paid for but not yet ordered from supplier
     quantity_on_order = models.IntegerField(
         validators=[MinValueValidator(0)], default=Decimal(0))		# Bullets: qty on order from suppliers
-
+    quantity_allocated_on_order = models.IntegerField(
+        validators=[MinValueValidator(0)], default=Decimal(0))		# Bullets: qty on order from suppliers which are already sold
 
     cost_price = MoneyField(
         currency=settings.DEFAULT_CURRENCY, max_digits=12,
@@ -249,17 +256,27 @@ class ProductVariant(models.Model):
         app_label = 'product'
 
     def __str__(self):
-        return self.name or self.sku
+        if self.name:
+            return self.name
+        elif self.product.product_type.has_variants:
+            return "%s (%s)" % (self.product.name, self.sku)		# TODO: copy what the order page does about names
+        else:
+            return self.product.name
+     #   return self.name or self.sku
 
     @property
     def quantity_available(self):
         return max(self.quantity - self.quantity_allocated, 0)
 
+    @property								# BULLETS: how many are spare that are coming from supplier?
+    def quantity_spare_in_order(self):
+        return max(self.quantity_on_order - self.quantity_allocated_on_order, 0)
+
     def check_quantity(self, quantity):
         """Check if there is at least the given quantity in stock
         if stock handling is enabled.
         """
-        if self.track_inventory and quantity > self.quantity_available:
+        if self.track_inventory and (quantity > self.quantity_available and not self.product.allow_future_orders):	# BULLETS allow to over spend stock
             raise InsufficientStock(self)
 
     @property
@@ -290,7 +307,7 @@ class ProductVariant(models.Model):
         return self.product.product_type.is_shipping_required
 
     def is_in_stock(self):
-        return self.quantity_available > 0
+        return (self.quantity_available > 0) or (self.product.allow_future_orders)
 
     def display_product(self, translated=False):
         if translated:

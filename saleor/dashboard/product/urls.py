@@ -83,6 +83,7 @@ urlpatterns = [
 
     url(r'^suppliers/$',					# BULLETS: suppliers
         views.supplier_list, name='supplier-list'),
+
     url(r'^suppliers/add/$',
         views.supplier_create, name='supplier-add'),
     url(r'^suppliers/(?P<pk>[0-9]+)/update/$',
@@ -91,4 +92,12 @@ urlpatterns = [
         views.supplier_detail, name='supplier-detail'),
     url(r'^suppliers/(?P<pk>[0-9]+)/delete/$',
         views.supplier_delete, name='supplier-delete'),
+
+    url(r'^suppliers/(?P<pk>[0-9]+)/delivery/$',
+        views.supplier_delivery, name='supplier-delivery'),
+    url(r'^suppliers/(?P<pk>[0-9]+)/order/$',
+        views.supplier_order, name='supplier-order'),
+
+    url(r'^(?P<pk>[0-9]+)/future-orders/$',
+        views.product_toggle_future_orders, name='product-future-orders'),
     ]

@@ -25,7 +25,7 @@
     <p>
       {% if products %}
         {% blocktrans trimmed context "Modal remove supplier text" with product_count=products.count %}
-          This supplier has {{ product_count }} products.
+          This supplier has {{ product_count }} products. This will delete all of these products as well.
         {% endblocktrans %}
       {% else %}
         {% blocktrans trimmed context "Modal remove supplier text" %}

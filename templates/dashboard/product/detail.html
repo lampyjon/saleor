@@ -94,7 +94,6 @@
             <table class="bordered highlight responsive data-table">
               <thead>
                 <tr>
-                  <th>{% trans "SKU" %}</th>
                   <th>{% trans "Name" %}</th>
                   <th>{% trans "Status" %}</th>
                   <th class="right-align">
@@ -104,29 +103,29 @@
                       {% trans "Net price" %}
                     {% endif %}
                   </th>
-                  <th class="right-align">{% trans "Margin" %}</th>
+                  <th class="right-align">{% trans "Stock" %}</th>
+		  <th class="right-align">{% trans "Allocated" %}</th>
+	 	  <th class="right-align">{% trans "To order" %}</th>
+		  <th class="right-align">{% trans "On order" %}</th>
+                  <th class="right-aligh">{% trans "Spare on order" %}</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
                 {% for variant in variants %}
                   <tr data-action-go="{% url "dashboard:variant-details" product_pk=product.pk variant_pk=variant.pk %}">
-                    <td>{{ variant.sku }}</td>
                     <td>{{ variant }}</td>
                     <td class="wide">{% render_variant_availability_status variant %}</td>
                     <td class="right-align">
                       {% price variant.base_price %}
                     </td>
-                    <td class="right-align">
-                      {% margins_for_variant variant=variant as margins %}
-                      {% if margins|length > 1 %}
-                        {{ margins|first }}% - {{ margins|last }}%
-                      {% elif margins %}
-                        {{ margins|first }}%
-                      {% else %}
-                        -
-                      {% endif %}
-                    </td>
+                    <td class="right-align">{{ variant.quantity_available}}</td>
+	   	    <td class="right-align">{{ variant.quantity_allocated }}</td>
+                    <td class="right-align">{{ variant.quantity_to_order }}</td>
+	   	    <td class="right-align">{{ variant.quantity_on_order }}</td>
+		    <td class="right-align">{{ variant.quantity_spare_in_order }}</td>
+
+
                     <td><a href="{% url 'dashboard:variant-update' product_pk=product.pk variant_pk=variant.pk %}" class="btn-flat waves-effect">{% trans "Edit" %}</a></td>
                   </tr>
                 {% empty %}
@@ -221,15 +220,16 @@
               </table>
             </div>
           </div>
-          {% if no_variants %}
+
             <div class="card">
               <div class="data-table-header">
                 <div class="data-table-title">
                   <h5>
                     {% trans "Inventory" context "Product variant inventory card header" %}
-                  </h5>
+                  </h5> 
                 </div>
               </div>
+          {% if no_variants %}
               <div class="data-table-container">
                 <table class="data-table bordered highlight">
                   <tbody>
@@ -238,7 +238,7 @@
                         {% trans "Number in stock" context "Dashboard variant details view" %}
                       </td>
                       <td class="right-align">
-                        {{ only_variant.quantity }}
+                        {{ only_variant.quantity_available }}
                       </td>
                     </tr>
                     <tr>
@@ -249,11 +249,55 @@
                         {{ only_variant.quantity_allocated }}
                       </td>
                     </tr>
+                    <tr>
+                      <td>
+                        {% trans "To order" context "Dashboard variant details view" %}
+                      </td>
+                      <td class="right-align">
+                        {{ only_variant.quantity_to_order }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        {% trans "On order" context "Dashboard variant details view" %}
+                      </td>
+                      <td class="right-align">
+                        {{ only_variant.quantity_on_order }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        {% trans "Spare in order" context "Dashboard variant details view" %}
+                      </td>
+                      <td class="right-align">
+                        {{ only_variant.quantity_spare_in_order }}
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
-            </div>
           {% endif %}
+	    <div class="card-content">
+	      <form id="toggle-publish-form" action="{% url 'dashboard:product-future-orders' product.pk %}">
+              {% csrf_token %}
+                <div class="switch" id="product-future-order">
+                  <label>
+                    <input id="toggle-publish-switch" type="checkbox" {% if product.allow_future_orders %} checked {% endif %}>
+                    <span class="lever"></span>
+                    <span class="label">
+                      {% if product.allow_future_orders %}
+                        {% trans "Allow Future Orders" context "Product field" %}
+                      {% else %}
+                        {% trans "No Future Orders" context "Product field" %}
+                      {% endif %}
+                    </span>
+                  </label>
+                </div>
+		<span>Allow customers to order items even if we have no available stock?</span>
+              </form>
+	     </div>
+
+            </div>
 
             <div class="card">
               <div class="card-content">
@@ -263,7 +307,7 @@
 				<a href="{% url 'dashboard:supplier-detail' product.supplier.pk %}">{{ product.supplier }}</a>
                 	</div>
              	 </div>
-		</div>
+	      </div>
             </div>
 
           <div class="card">

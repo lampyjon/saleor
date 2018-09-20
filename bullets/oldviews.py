@@ -688,3 +688,40 @@ def bullets_run_offline(request):
 #		
 #
 
+
+#from stravalib import Client
+#
+#class BigBulletRider(Person):
+    # need to cache strava API token
+#    access_token = models.CharField("Strava access token", max_length=500)
+    # TODO: might need a mileometer field here - need to think about how to capture the data without hitting Strava for every page load - regenerate every ten mins maybe?
+    # TODO: maybe a manual entry mileage figure? Or just the one - if you've got it from Strava or from a manual entry.
+
+    SHORT = 's'
+    MED = 'm'
+    LONG = 'l'
+    VERYLONG = 'v'
+    RUN_FIVE = 'r'
+    RUN_TEN = 't'
+    
+    DISTANCE_CHOICES = (
+        (RUN_FIVE, '5mile run'),
+        (RUN_TEN, '10mile run'),
+        (SHORT, '50km ride'),
+        (MED, '100km ride'),
+        (LONG, '160km ride'),
+        (VERYLONG, '200km ride'),
+    )
+
+    distance = models.CharField("Event", help_text="Please indicate which event you would like to do - you can change on the day!", max_length=1, choices=DISTANCE_CHOICES, default=RUN_FIVE)
+
+    def delete(self, *args, **kwargs):
+        # deauth from Strava if registered there
+        if self.access_token != "":
+            client = Client(access_token=self.access_token)
+            client.deauthorize()
+            self.access_token = ""
+
+        super().delete(*args, **kwargs)
+
+

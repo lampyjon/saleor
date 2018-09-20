@@ -756,13 +756,123 @@ def supplier_delete(request, pk):
 @permission_required('product.manage_products')
 def supplier_detail(request, pk):
     supplier = get_object_or_404(Supplier, pk=pk)
+    products = ProductVariant.objects.filter(product__supplier=supplier)
     ctx = {
         'supplier': supplier,
-        'products': supplier.products.all()}
+        'products': products}
     return TemplateResponse(
         request,
         'dashboard/product/supplier/detail.html',
         ctx)
+
+
+@staff_member_required
+@permission_required('product.manage_products')
+def supplier_delivery(request, pk):
+    supplier = get_object_or_404(Supplier, pk=pk)
+
+    variants = ProductVariant.objects.filter(product__supplier=supplier)
+
+    if request.method == 'POST':
+	# validate the delivery & update stock levels
+	# TODO: more workflow here about allocation
+        items_count = 0
+        for key, value in request.POST.items():
+            #print(str(key) + " - " + str(value))
+            if key.startswith("product_qty_"):
+                x = key[12:]
+                y = int(x)
+                #print(" product = " + str(y) + " qty = " + str(value))
+                variant = ProductVariant.objects.get(pk=y)
+                variant.quantity = variant.quantity + int(value)
+                variant.quantity_on_order = max(variant.quantity_on_order - int(value), 0)
+
+                x = variant.quantity_allocated_on_order	# how many of this delivery are pre-sold?
+                y = min(int(value), x)				# qty_arrived - pre_sold 
+                variant.quantity_allocated_on_order = variant.quantity_allocated_on_order - y
+                variant.quantity_allocated = variant.quantity_allocated + y
+             
+# e.g. 1 pre_sold, 1 arrived, pre_sold -= 1, allocated += 1
+# e.g. 2 pre_sold, 1 arrived, pre_sold -= 1, allocated += 1
+# e.g. 1 pre_sold, 2 arrived, pre_sold -= 1, allocated += 1
+# e.g. 5 pre_sold, 2 arrived, pre_sold -= 2, allocated += 2  (this is same number, 
+
+                
+                variant.save()
+                items_count = items_count + int(value)
+
+        msg = pgettext_lazy(
+            'Dashboard message', 'Added %d items from delivery') % (items_count,)
+        messages.success(request, msg)
+        
+        redirect_url = reverse('dashboard:supplier-detail', kwargs={'pk': supplier.pk})
+        return redirect(redirect_url)
+
+    ctx = {
+        'supplier': supplier,
+        'products': variants }
+
+    return TemplateResponse(
+        request,
+        'dashboard/product/supplier/delivery.html',
+        ctx)
+
+
+@staff_member_required
+@permission_required('product.manage_products')
+def supplier_order(request, pk):
+    supplier = get_object_or_404(Supplier, pk=pk)
+
+    variants = ProductVariant.objects.filter(product__supplier=supplier).order_by('quantity_to_order')
+
+    if request.method == 'POST':
+	# validate the delivery & update stock levels
+	# TODO: more workflow here about allocation
+        items_count = 0
+        for key, value in request.POST.items():
+            #print(str(key) + " - " + str(value))
+            if key.startswith("product_qty_"):
+                x = key[12:]
+                y = int(x)
+                #print(" product = " + str(y) + " qty = " + str(value))
+                variant = ProductVariant.objects.get(pk=y)
+                order_quantity = int(value)
+                allocated_in_order = min(variant.quantity_to_order, order_quantity)
+
+                variant.quantity_allocated_on_order = variant.quantity_allocated_on_order + allocated_in_order
+                variant.quantity_to_order = max(variant.quantity_to_order - order_quantity, 0)
+                variant.quantity_on_order = variant.quantity_on_order + order_quantity
+                variant.save()
+                items_count = items_count + order_quantity
+
+        msg = pgettext_lazy(
+            'Dashboard message', 'Added %d items to order') % (items_count,)
+        messages.success(request, msg)
+        
+        redirect_url = reverse('dashboard:supplier-detail', kwargs={'pk': supplier.pk})
+        return redirect(redirect_url)
+
+    ctx = {
+        'supplier': supplier,
+        'products': variants }
+
+    return TemplateResponse(
+        request,
+        'dashboard/product/supplier/order.html',
+        ctx)
+
+
+
+
+@require_POST
+@staff_member_required
+@permission_required('product.manage_products')
+def product_toggle_future_orders(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    product.allow_future_orders = not product.allow_future_orders
+    product.save(update_fields=['allow_future_orders'])
+    return JsonResponse(
+        {'success': True, 'allow_future_orders': product.allow_future_orders})
 
 ## </BULLETS SUPPLIER MANAGEMENT>
 

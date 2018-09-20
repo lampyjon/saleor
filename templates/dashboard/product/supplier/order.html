@@ -1,0 +1,120 @@
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+{% load materializecss %}
+{% load staticfiles %}
+
+{% block title %}
+  {% trans "Create order for " context "Supplier order page title" %} {{ supplier }}
+   - {% trans "Suppliers" context "Supplier order page title" %} - {{ block.super }}
+{% endblock %}
+
+{% block body_class %}body-products{% endblock %}
+
+{% block menu_supplier_class %}active{% endblock %}
+
+{% block header_menu %}
+  {% url "dashboard:supplier-list" as url %}
+  {% include "dashboard/includes/_back_link.html" with url=url %}
+{% endblock %}
+
+{% block breadcrumbs %}
+  <ul class="breadcrumbs breadcrumbs--history">
+    <li>
+      <a href="{% url "dashboard:supplier-list" %}" class="breadcrumb">
+        {% trans "Supplier list" context "Dashboard supplier list" %}
+      </a>
+    </li>
+    <li class="back-mobile">
+      <a href="{% url "dashboard:supplier-list" %}">
+        <svg data-src="{% static "dashboard/images/arrow-left.svg" %}" fill="#fff" width="20px" height="20px" />
+      </a>
+    </li>
+    <li>
+      <a href="{% url "dashboard:supplier-detail" supplier.pk %}" class="breadcrumb">
+        {{ supplier }}
+      </a>
+    </li>
+    <li class="back-mobile">
+      <a href="{% url "dashboard:supplier-list" %}">
+        <svg data-src="{% static "dashboard/images/arrow-left.svg" %}" fill="#fff" width="20px" height="20px" />
+      </a>
+    </li>
+    <li>
+      <span class="breadcrumbs--ellipsed-item">
+       Order
+      </span>
+    </li>
+  </ul>
+{% endblock %}
+
+{% block header_extra %}
+  {% if supplier.pk %}
+    <a class="dropdown-button right" href="#" data-activates="context-menu" data-constrainwidth="false">
+      <svg data-src="{% static "dashboard/images/more-vert.svg" %}" height="24" width="24" />
+    </a>
+    <ul id="context-menu" class="dropdown-content">
+      {% if perms.product.manage_products %}
+      <li>
+        <a href="{% url 'dashboard:supplier-update' pk=supplier.pk %}">
+          {% trans "Edit supplier" context "Supplier action" %}
+        </a>
+      </li>
+      <li>
+        <a href="#base-modal" data-href="{% url 'dashboard:supplier-delete' pk=supplier.pk %}" class="modal-trigger-custom">
+          {% trans "Remove supplier" context "Supplier action" %}
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col m12 l9">
+      <div class="card">
+        <form method="post" id="form-product" enctype="multipart/form-data" novalidate>
+          <div class="card-content">
+	    <span class="card-title">{% trans "Order items from supplier" %} {{ supplier }}</span>
+            {% csrf_token %}
+ 	   </div>
+	   <div class="data-table-container card-content-form">
+            <table class="bordered highlight responsive data-table">
+              <thead>
+                <tr>
+		  <th>Item</th>
+		  <th>Quantity needed</th>
+		  <th>Quantity to order</th>
+		</tr>
+	      </thead>
+	      <tbody>
+	        {% for product in products %}
+		<tr>
+		  <td>{{product}}</td>
+		  <td>{{product.quantity_to_order }}</td>
+		  <td><input name="product_qty_{{ product.pk }}" id="product_qty_{{ product.pk }}"  type="number" name="qty" value="{{ product.quantity_to_order }}">
+</td>
+		</tr>
+		{% endfor %}
+	      </tbody>
+	    </table>
+           </div>
+ 	  {% if perms.product.manage_products %}
+          <div class="card-action right-align">
+            <a href="{% url 'dashboard:supplier-detail' supplier.pk %}" class="btn-flat waves-effect">
+              {% trans "Cancel" context "Dashboard cancel action" %}
+            </a>
+              <button type="submit" class="btn waves-effect">
+                {% trans "Save" context "Dashboard update action" %}
+              </button>
+             </div>
+          {% endif %}
+
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+
+          

@@ -40,7 +40,7 @@ $(document).on('mouseup', 'tr[data-action-go] > td:not(.ignore-link)', (e) => {
 });
 
 // Publish / unpublish lever in detail views
-const selectors = ['#product-is-published', '#collection-is-published'];
+const selectors = ['#product-is-published', '#collection-is-published', '#product-future-order'];
 selectors.forEach(selector => {
   $(selector).on('click', (e) => {
     const form = $(e.currentTarget).closest('#toggle-publish-form');

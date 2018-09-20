@@ -157,7 +157,7 @@
           </h2>
         {% endif %}
       {% endif %}
-      {% if is_visible and product.is_in_stock %}
+      {% if is_visible and product.can_order %}
         {% block orderform %}
           {% if show_variant_picker %}
             {% csrf_token %}
@@ -177,6 +177,10 @@
               </div>
             </form>
           {% endif %}
+	  {% if product.allow_future_orders %}
+		<p class="alert alert-warning">
+		{% if product.variants.count > 1 %}Products marked with a (*){%else%}This product{%endif%} can be ordered now, but will take some time to arrive. {% if product.variants.count > 1 %}Other items can be ordered now for immediate delivery.{% endif %} <a href="{% url 'delivery-times' %}">Learn More</a>.</p>
+		{% endif %}
         {% endblock %}
         <div class="product__info__form-error">
           <small class="text-danger"></small>

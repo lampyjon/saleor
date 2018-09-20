@@ -80,10 +80,17 @@ def get_variant_url(variant):
     return get_variant_url_from_product(variant.product, attributes)
 
 
-def allocate_stock(variant, quantity):
-    variant.quantity_allocated = F('quantity_allocated') + quantity
-    variant.save(update_fields=['quantity_allocated'])
+def allocate_stock(variant, quantity):					# Bullets: this is called when something is bought
+#    variant.quantity_allocated = F('quantity_allocated') + quantity
+#    variant.save(update_fields=['quantity_allocated'])
+    x = variant.quantity_available		# eg. 3 available, 5 ordered, y = 5-3=2, to_order += 2, quantity_allocated += 3
+    y = max(quantity - x, 0)			# eg. 5 available, 1 ordered, y = 1-5=0, to_order += 0, quantity_allocated += 1
+    z = quantity - y           			# eg. 0 available, 1 ordered, y = 1-0=1, to_order += 1, quantity_allocated 
 
+    variant.quantity_allocated = F('quantity_allocated') + z
+    variant.quantity_to_order = F('quantity_to_order') + y
+    variant.save(update_fields=['quantity_allocated', 'quantity_to_order'])
+   
 
 def deallocate_stock(variant, quantity):
     variant.quantity_allocated = F('quantity_allocated') - quantity
